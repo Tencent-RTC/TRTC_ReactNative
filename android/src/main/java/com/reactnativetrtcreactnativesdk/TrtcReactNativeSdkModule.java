@@ -16,14 +16,20 @@ import com.tencent.trtc.TRTCCloud;
 import com.tencent.trtc.TRTCCloudDef;
 import com.tencent.trtc.TRTCCloudListener;
 import android.widget.Toast;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.Arguments;
 
 @ReactModule(name = TrtcReactNativeSdkModule.NAME)
 public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     public static final String NAME = "TrtcReactNativeSdk";
     private TRTCCloud trtcCloud;
-    private Context trtcContext;
+    private ReactApplicationContext trtReactContext;
+    private static final String TAG = "TRTCCloudRN";
     public TrtcReactNativeSdkModule(ReactApplicationContext reactContext) {
         super(reactContext);
+        trtReactContext= reactContext;
     }
 
     @Override
@@ -37,11 +43,33 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     // See https://reactnative.dev/docs/native-modules-android
     @ReactMethod
     public void multiply(int a, int b, Promise promise) {
-        trtcCloud = TRTCCloud.sharedInstance(getReactApplicationContext());
-        String version = trtcCloud.getSDKVersion();
-        Toast.makeText(getReactApplicationContext(), "message:"+version, 50000).show();
+//        trtcCloud = TRTCCloud.sharedInstance(getReactApplicationContext());
+//        String version = trtcCloud.getSDKVersion();
+//        Toast.makeText(getReactApplicationContext(), "message:"+version, 50000).show();
         promise.resolve(10);
     }
 
+    @ReactMethod
+    public void test(Promise promise) {
+      trtcCloud = TRTCCloud.sharedInstance(getReactApplicationContext());
+      String version = trtcCloud.getSDKVersion();
+      Toast.makeText(getReactApplicationContext(), version, 50000).show();
+      promise.resolve(version);
+    }
+     @ReactMethod
+    public void invokeMethod(String method, ReadableMap arguments,Promise promise) {
+        //TXLog.i(TAG, "|method=" + method+ "|arguments=" + arguments);
+        promise.resolve(method +"----"+ arguments.getString("a"));
+        WritableMap params = Arguments.createMap();
+        params.putString("eventProperty", "someValue");
+        sendEvent("EventReminder", params);
+    }
+
+    private void sendEvent(String eventName,WritableMap params) {
+        trtReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, params);
+    }
+
     public static native int nativeMultiply(int a, int b);
+    public static native String test();
+    public static native void invokeMethod(String method, ReadableMap arguments);
 }
