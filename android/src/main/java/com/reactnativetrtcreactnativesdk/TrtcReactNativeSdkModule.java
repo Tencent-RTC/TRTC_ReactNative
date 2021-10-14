@@ -56,7 +56,31 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
       Toast.makeText(getReactApplicationContext(), version, 50000).show();
       promise.resolve(version);
     }
-     @ReactMethod
+    @ReactMethod
+    public void getSDKVersion(Promise promise) {
+      trtcCloud = TRTCCloud.sharedInstance(getReactApplicationContext());
+      String version = trtcCloud.getSDKVersion();
+      promise.resolve(version);
+    }
+    @ReactMethod
+    public void enterRoom(ReadableMap params, int scene, Promise promise) {
+      trtcCloud = TRTCCloud.sharedInstance(getReactApplicationContext());
+      TRTCCloudDef.TRTCParams trtcP = new TRTCCloudDef.TRTCParams();
+      trtcP.sdkAppId = params.getInt("sdkAppId");
+      trtcP.userId = params.getString("userId");
+      trtcP.userSig = params.getString("userSig");
+      trtcP.roomId = params.getInt("roomId");
+      trtcP.strRoomId = params.getString("strRoomId");
+      trtcP.role = params.getInt("role");
+      trtcP.streamId = params.getString("streamId");
+      trtcP.userDefineRecordId = params.getString("userDefineRecordId");
+      trtcP.privateMapKey = params.getString("privateMapKey");
+      trtcP.businessInfo = params.getString("businessInfo");
+
+      trtcCloud.enterRoom(trtcP, scene);
+      promise.resolve(100);
+    }
+    @ReactMethod
     public void invokeMethod(String method, ReadableMap arguments,Promise promise) {
         //TXLog.i(TAG, "|method=" + method+ "|arguments=" + arguments);
         promise.resolve(method +"----"+ arguments.getString("a"));
