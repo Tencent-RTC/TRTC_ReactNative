@@ -112,9 +112,6 @@
       "@react-native-community",
       "prettier"
     ],
-    "parserOptions" : {
-      "warnOnUnsupportedTypeScriptVersion" : false
-    },
     "rules": {
       "prettier/prettier": [
         "error",

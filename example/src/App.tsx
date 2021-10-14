@@ -6,7 +6,6 @@ import {
   Text,
   NativeEventEmitter,
   NativeModules,
-  Alert,
   Button,
 } from 'react-native';
 // @ts-ignore
