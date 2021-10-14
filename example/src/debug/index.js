@@ -1,3 +1,4 @@
+/*eslint-disable*/
 /**
  * Attention: 请不要将如下代码发布到您的线上正式版本的 App 中，原因如下：
  *

@@ -127,6 +127,7 @@
   },
   "eslintIgnore": [
     "node_modules/",
+    "example/src/debug",
     "lib/"
   ],
   "prettier": {

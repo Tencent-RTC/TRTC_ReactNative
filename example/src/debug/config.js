@@ -1,3 +1,4 @@
+/*eslint-disable*/
 /**
  * 腾讯云 SDKAppId，需要替换为您自己账号下的 SDKAppId。
  *
