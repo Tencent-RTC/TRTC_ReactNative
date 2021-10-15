@@ -42,11 +42,10 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     // Example method
     // See https://reactnative.dev/docs/native-modules-android
     @ReactMethod
-    public void multiply(int a, int b, Promise promise) {
-//        trtcCloud = TRTCCloud.sharedInstance(getReactApplicationContext());
-//        String version = trtcCloud.getSDKVersion();
-//        Toast.makeText(getReactApplicationContext(), "message:"+version, 50000).show();
-        promise.resolve(10);
+    public void sharedInstance(Promise promise) {
+      trtcCloud = TRTCCloud.sharedInstance(getReactApplicationContext());
+//      trtcCloud.setListener(trtcListener);
+      promise.resolve(null);
     }
 
     @ReactMethod
@@ -78,7 +77,7 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
       trtcP.businessInfo = params.getString("businessInfo");
 
       trtcCloud.enterRoom(trtcP, scene);
-      promise.resolve(100);
+      promise.resolve(null);
     }
     @ReactMethod
     public void invokeMethod(String method, ReadableMap arguments,Promise promise) {

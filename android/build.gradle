@@ -65,5 +65,6 @@ dependencies {
     // compile fileTree(dir: 'libs', include: ['*.jar'])
     //noinspection GradleDynamicVersion
     compile 'com.tencent.liteav:LiteAVSDK_TRTC:8.8.10260'
+    implementation 'com.google.code.gson:gson:2.8.6'
     implementation "com.facebook.react:react-native:+"  // From node_modules
 }

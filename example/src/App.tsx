@@ -3,9 +3,9 @@ import * as React from 'react';
 import {
   StyleSheet,
   View,
-  Text,
   NativeEventEmitter,
   NativeModules,
+  Alert,
   Button,
 } from 'react-native';
 // @ts-ignore
@@ -13,38 +13,31 @@ import { SDKAPPID } from './debug/config';
 // @ts-ignore
 import getLatestUserSig from './debug/index';
 
-import TrtcReactNativeSdk, {
-  TRTCParams,
-} from 'react-native-trtc-react-native-sdk';
+import TRTCCloud, { TRTCParams } from 'react-native-trtc-react-native-sdk';
 
 export default function App() {
-  const [result, setResult] = React.useState<string | undefined>();
+  // const [result, setResult] = React.useState<string | undefined>();
 
   React.useEffect(() => {
-    //TrtcReactNativeSdk.multiply(3, 7).then(setResult);
-    // .then(setResult);
-    TrtcReactNativeSdk.invokeMethod('test', {
-      a: 'x',
-    }).then(setResult);
     const eventEmitter = new NativeEventEmitter(
       NativeModules.TrtcReactNativeSdk
     );
     eventEmitter.addListener('EventReminder', (event) => {
       console.log(event.eventProperty); // "someValue"
-      // Alert.alert(event.eventProperty);
+      Alert.alert(event.eventProperty);
     });
   }, []);
 
   return (
     <View style={styles.container}>
-      <Text>+++Result: {result}</Text>
-      {/* <Button
+      <Button
         title="getSDKVersion"
         onPress={async () => {
-          const version = await TrtcReactNativeSdk.getSDKVersion();
+          const trtcCloud = (await TRTCCloud.sharedInstance())!;
+          const version = await trtcCloud.getSDKVersion();
           Alert.alert(version);
         }}
-      /> */}
+      />
       <Button
         title="enterRoom"
         onPress={async () => {
@@ -58,7 +51,8 @@ export default function App() {
             userSig: getLatestUserSig(userId).userSig,
             roomId: 5666,
           });
-          TrtcReactNativeSdk.enterRoom(params, 3);
+          const trtcCloud = (await TRTCCloud.sharedInstance())!;
+          trtcCloud.enterRoom(params, 3);
         }}
       />
     </View>
