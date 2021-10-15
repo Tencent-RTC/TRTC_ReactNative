@@ -1,4 +1,4 @@
-package com.reactnativetrtcreactnativesdk.listener;
+package com.trtcreactnativesdk.listener;
 
 /**
  * 回调通知枚举

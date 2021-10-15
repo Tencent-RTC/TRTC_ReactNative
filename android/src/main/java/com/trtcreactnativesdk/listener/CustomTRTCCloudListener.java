@@ -1,4 +1,4 @@
-package com.reactnativetrtcreactnativesdk.listener;
+package com.trtcreactnativesdk.listener;
 
 import android.os.Bundle;
 

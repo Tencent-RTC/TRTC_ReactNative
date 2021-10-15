@@ -1,4 +1,4 @@
-package com.example.reactnativetrtcreactnativesdk;
+package com.example.trtcreactnativesdk;
 
 import com.facebook.react.ReactActivity;
 

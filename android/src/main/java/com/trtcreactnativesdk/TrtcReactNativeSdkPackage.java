@@ -1,4 +1,4 @@
-package com.reactnativetrtcreactnativesdk;
+package com.trtcreactnativesdk;
 
 import androidx.annotation.NonNull;
 
