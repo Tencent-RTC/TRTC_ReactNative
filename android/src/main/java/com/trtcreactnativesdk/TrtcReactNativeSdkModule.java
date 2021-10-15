@@ -1,4 +1,5 @@
 package com.trtcreactnativesdk;
+import com.trtcreactnativesdk.listener.CustomTRTCCloudListener;
 
 import androidx.annotation.NonNull;
 import android.content.Context;
@@ -27,9 +28,11 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     private TRTCCloud trtcCloud;
     private ReactApplicationContext trtReactContext;
     private static final String TAG = "TRTCCloudRN";
+    private CustomTRTCCloudListener trtcListener;
     public TrtcReactNativeSdkModule(ReactApplicationContext reactContext) {
         super(reactContext);
         trtReactContext= reactContext;
+        trtcListener = new CustomTRTCCloudListener(reactContext);
     }
 
     @Override
@@ -44,7 +47,7 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void sharedInstance(Promise promise) {
       trtcCloud = TRTCCloud.sharedInstance(getReactApplicationContext());
-//      trtcCloud.setListener(trtcListener);
+      trtcCloud.setListener(trtcListener);
       promise.resolve(null);
     }
 
@@ -77,6 +80,11 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
       trtcP.businessInfo = params.getString("businessInfo");
 
       trtcCloud.enterRoom(trtcP, scene);
+      promise.resolve(null);
+    }
+    @ReactMethod
+    public void exitRoom(Promise promise) {
+      trtcCloud.exitRoom();
       promise.resolve(null);
     }
     @ReactMethod

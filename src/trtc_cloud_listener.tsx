@@ -1,6 +1,5 @@
-/*eslint-disable*/
 /// 监听器类型枚举
-enum TRTCCloudListener {
+export enum TRTCCloudListener {
   /// 错误回调，表示 SDK 不可恢复的错误，一定要监听并分情况给用户适当的界面提示
   ///
   /// 参数param：
@@ -10,7 +9,7 @@ enum TRTCCloudListener {
   /// errMsg	错误信息
   ///
   /// extraInfo	扩展信息字段，个别错误码可能会带额外的信息帮助定位问题
-  onError,
+  onError = 'onError',
 
   /// 警告回调，用于告知您一些非严重性问题，例如出现卡顿或者可恢复的解码失败。
   ///
@@ -21,7 +20,7 @@ enum TRTCCloudListener {
   /// warningMsg	警告信息
   ///
   /// extraInfo	扩展信息字段，个别警告码可能会带额外的信息帮助定位问题
-  onWarning,
+  onWarning = 'onWarning',
 
   /// 已加入房间的回调
   ///
@@ -34,7 +33,7 @@ enum TRTCCloudListener {
   /// 参数param：
   ///
   /// result > 0 时为进房耗时（ms），result < 0 时为进房错误码
-  onEnterRoom,
+  onEnterRoom = 'onEnterRoom',
 
   /// 离开房间的事件回调
   ///
@@ -45,7 +44,7 @@ enum TRTCCloudListener {
   /// 参数param：
   ///
   /// reason	离开房间原因，0：主动调用 exitRoom 退房；1：被服务器踢出当前房间；2：当前房间整个被解散。
-  onExitRoom,
+  onExitRoom = 'onExitRoom',
 
   /// 切换角色的事件回调
   ///
@@ -56,7 +55,7 @@ enum TRTCCloudListener {
   /// errCode	错误码，0代表切换成功
   ///
   /// errMsg	错误信息。
-  onSwitchRole,
+  onSwitchRole = 'onSwitchRole',
 
   /// 有用户加入当前房间。
   ///
@@ -69,7 +68,7 @@ enum TRTCCloudListener {
   /// 参数param：
   ///
   /// userId	用户标识
-  onRemoteUserEnterRoom,
+  onRemoteUserEnterRoom = 'onRemoteUserEnterRoom',
 
   /// 有用户离开当前房间。
   ///
@@ -84,7 +83,7 @@ enum TRTCCloudListener {
   /// userId	用户标识
   ///
   /// reason	离开原因，0表示用户主动退出房间，1表示用户超时退出，2表示被踢出房间。
-  onRemoteUserLeaveRoom,
+  onRemoteUserLeaveRoom = 'onRemoteUserLeaveRoom',
 
   /// 请求跨房通话（主播 PK）的结果回调
   ///
@@ -97,10 +96,10 @@ enum TRTCCloudListener {
   /// errCode 错误码，ERR_NULL 代表切换成功，其他请参见[错误码](https://cloud.tencent.com/document/product/647/32257)。
   ///
   /// errMsg 错误信息
-  onConnectOtherRoom,
+  onConnectOtherRoom = 'onConnectOtherRoom',
 
   /// 结束跨房通话（主播 PK）的结果回调
-  onDisConnectOtherRoom,
+  onDisConnectOtherRoom = 'onDisConnectOtherRoom',
 
   /// 切换房间 (switchRoom) 的结果回调
   ///
@@ -109,7 +108,7 @@ enum TRTCCloudListener {
   /// errCode 错误码
   ///
   /// errMsg 错误信息
-  onSwitchRoom,
+  onSwitchRoom = 'onSwitchRoom',
 
   /// 远端用户是否存在可播放的主路画面（一般用于摄像头）
   ///
@@ -122,7 +121,7 @@ enum TRTCCloudListener {
   /// userId	用户标识
   ///
   /// available	画面是否开启
-  onUserVideoAvailable,
+  onUserVideoAvailable = 'onUserVideoAvailable',
 
   /// 远端用户是否存在可播放的辅路画面（一般用于屏幕分享）
   ///
@@ -131,7 +130,7 @@ enum TRTCCloudListener {
   /// userId	用户标识
   ///
   /// available	屏幕分享是否开启
-  onUserSubStreamAvailable,
+  onUserSubStreamAvailable = 'onUserSubStreamAvailable',
 
   /// 远端用户是否存在可播放的音频数据
   ///
@@ -140,7 +139,7 @@ enum TRTCCloudListener {
   /// userId	用户标识
   ///
   /// available	声音是否开启
-  onUserAudioAvailable,
+  onUserAudioAvailable = 'onUserAudioAvailable',
 
   /// 开始渲染本地或远程用户的首帧画面
   ///
@@ -157,14 +156,14 @@ enum TRTCCloudListener {
   /// width	画面宽度
   ///
   /// height	画面高度
-  onFirstVideoFrame,
+  onFirstVideoFrame = 'onFirstVideoFrame',
 
   /// 开始播放远程用户的首帧音频（本地声音暂不通知）。
   ///
   /// 参数param：
   ///
   /// userId	远程用户 ID。
-  onFirstAudioFrame,
+  onFirstAudioFrame = 'onFirstAudioFrame',
 
   /// 首帧本地音频数据已经被送出。
   ///
@@ -173,12 +172,12 @@ enum TRTCCloudListener {
   /// 参数param：
   ///
   /// streamType	视频流类型，大画面、小画面或辅流画面（屏幕分享）
-  onSendFirstLocalVideoFrame,
+  onSendFirstLocalVideoFrame = 'onSendFirstLocalVideoFrame',
 
   /// 首帧本地音频数据已经被送出
   ///
   /// SDK 会在 enterRoom() 并 startLocalAudio() 成功后开始麦克风采集，并将采集到的声音进行编码。 当 SDK 成功向云端送出第一帧音频数据后，会抛出这个回调事件。
-  onSendFirstLocalAudioFrame,
+  onSendFirstLocalAudioFrame = 'onSendFirstLocalAudioFrame',
 
   /// 网络质量：该回调每2秒触发一次，统计当前网络的上行和下行质量。
   ///
@@ -189,7 +188,7 @@ enum TRTCCloudListener {
   /// localQuality	上行网络质量
   ///
   /// remoteQuality	下行网络质量
-  onNetworkQuality,
+  onNetworkQuality = 'onNetworkQuality',
 
   /// 技术指标统计回调
   ///
@@ -200,16 +199,16 @@ enum TRTCCloudListener {
   /// 参数param：
   ///
   /// statics	状态数据
-  onStatistics,
+  onStatistics = 'onStatistics',
 
   /// SDK 跟服务器的连接断开
-  onConnectionLost,
+  onConnectionLost = 'onConnectionLost',
 
   /// SDK 尝试重新连接到服务器。
-  onTryToReconnect,
+  onTryToReconnect = 'onTryToReconnect',
 
   /// SDK 跟服务器的连接恢复。
-  onConnectionRecovery,
+  onConnectionRecovery = 'onConnectionRecovery',
 
   /// 服务器测速的回调，SDK 对多个服务器 IP 做测速，每个 IP 的测速结果通过这个回调通知。
   ///
@@ -220,13 +219,13 @@ enum TRTCCloudListener {
   /// finishedCount	已完成测速的服务器数量
   ///
   /// totalCount	需要测速的服务器总数量
-  onSpeedTest,
+  onSpeedTest = 'onSpeedTest',
 
   /// 摄像头准备就绪。
-  onCameraDidReady,
+  onCameraDidReady = 'onCameraDidReady',
 
   /// 麦克风准备就绪
-  onMicDidReady,
+  onMicDidReady = 'onMicDidReady',
 
   /// 用于提示音量大小的回调，包括每个 userId 的音量和远端总音量。
   ///
@@ -239,7 +238,7 @@ enum TRTCCloudListener {
   /// userVolumes	所有正在说话的房间成员的音量，取值范围0 - 100。
   ///
   /// totalVolume	所有远端成员的总音量, 取值范围0 - 100。
-  onUserVoiceVolume,
+  onUserVoiceVolume = 'onUserVoiceVolume',
 
   /// 收到自定义消息回调
   ///
@@ -254,7 +253,7 @@ enum TRTCCloudListener {
   /// seq	消息序号
   ///
   /// message	消息数据
-  onRecvCustomCmdMsg,
+  onRecvCustomCmdMsg = 'onRecvCustomCmdMsg',
 
   /// 自定义消息丢失回调
   ///
@@ -273,7 +272,7 @@ enum TRTCCloudListener {
   /// errCode	错误码，当前版本为-1
   ///
   /// missed	丢失的消息数量
-  onMissCustomCmdMsg,
+  onMissCustomCmdMsg = 'onMissCustomCmdMsg',
 
   /// 收到 SEI 消息的回调
   ///
@@ -284,7 +283,7 @@ enum TRTCCloudListener {
   /// userId	用户标识
   ///
   /// message	数据
-  onRecvSEIMsg,
+  onRecvSEIMsg = 'onRecvSEIMsg',
 
   /// 开始向腾讯云的直播 CDN 推流的回调，对应于 TRTCCloud 中的 startPublishing() 接口
   ///
@@ -293,7 +292,7 @@ enum TRTCCloudListener {
   /// errCode	0表示成功，其余值表示失败
   ///
   /// errMsg	具体错误原因
-  onStartPublishing,
+  onStartPublishing = 'onStartPublishing',
 
   /// 停止向腾讯云的直播 CDN 推流的回调，对应于 TRTCCloud 中的 stopPublishing() 接口
   ///
@@ -302,7 +301,7 @@ enum TRTCCloudListener {
   /// errCode	0表示成功，其余值表示失败
   ///
   /// errMsg	具体错误原因
-  onStopPublishing,
+  onStopPublishing = 'onStopPublishing',
 
   /// 启动旁路推流到 CDN 完成的回调
   ///
@@ -315,7 +314,7 @@ enum TRTCCloudListener {
   /// errCode	0表示成功，其余值表示失败
   ///
   /// errMsg	具体错误原因
-  onStartPublishCDNStream,
+  onStartPublishCDNStream = 'onStartPublishCDNStream',
 
   /// 停止旁路推流到 CDN 完成的回调
   ///
@@ -326,7 +325,7 @@ enum TRTCCloudListener {
   /// errCode	0表示成功，其余值表示失败
   ///
   /// errMsg	具体错误原因
-  onStopPublishCDNStream,
+  onStopPublishCDNStream = 'onStopPublishCDNStream',
 
   /// 设置云端的混流转码参数的回调，对应于 TRTCCloud 中的 setMixTranscodingConfig() 接口。
   ///
@@ -335,26 +334,26 @@ enum TRTCCloudListener {
   /// errCode	0表示成功，其余值表示失败
   ///
   /// errMsg	具体错误原因
-  onSetMixTranscodingConfig,
+  onSetMixTranscodingConfig = 'onSetMixTranscodingConfig',
 
   /// 背景音乐开始播放
-  onMusicObserverStart,
+  onMusicObserverStart = 'onMusicObserverStart',
 
   /// 背景音乐的播放进度
-  onMusicObserverPlayProgress,
+  onMusicObserverPlayProgress = 'onMusicObserverPlayProgress',
 
   /// 背景音乐已播放完毕
-  onMusicObserverComplete,
+  onMusicObserverComplete = 'onMusicObserverComplete',
 
   /// 截图完成时回调
   ///
   /// 参数
   ///
   /// errorCode为0表示截图成功，其他值表示失败
-  onSnapshotComplete,
+  onSnapshotComplete = 'onSnapshotComplete',
 
   ///当屏幕分享开始时，SDK 会通过此回调通知
-  onScreenCaptureStarted,
+  onScreenCaptureStarted = 'onScreenCaptureStarted',
 
   ///当屏幕分享暂停时，SDK 会通过此回调通知
   ///
@@ -363,7 +362,7 @@ enum TRTCCloudListener {
   /// reason	原因，0：用户主动暂停；1：屏幕窗口不可见暂停
   ///
   /// 注意：回调的值只针对ios生效
-  onScreenCapturePaused,
+  onScreenCapturePaused = 'onScreenCapturePaused',
 
   ///当屏幕分享恢复时，SDK 会通过此回调通知
   ///
@@ -372,14 +371,14 @@ enum TRTCCloudListener {
   /// reason	恢复原因，0：用户主动恢复；1：屏幕窗口恢复可见从而恢复分享
   ///
   /// 注意：回调的值只针对ios生效
-  onScreenCaptureResumed,
+  onScreenCaptureResumed = 'onScreenCaptureResumed',
 
   ///当屏幕分享停止时，SDK 会通过此回调通知
   ///
   ///参数
   ///
   ///reason	停止原因，0：用户主动停止；1：屏幕窗口关闭导致停止
-  onScreenCaptureStoped,
+  onScreenCaptureStoped = 'onScreenCaptureStoped',
 
   /// 本地设备通断回调
   ///
@@ -392,7 +391,7 @@ enum TRTCCloudListener {
   /// type 设备类型
   ///
   /// state 事件类型
-  onDeviceChange,
+  onDeviceChange = 'onDeviceChange',
 
   /// 麦克风测试音量回调
   ///
@@ -403,7 +402,7 @@ enum TRTCCloudListener {
   /// 参数：
   ///
   /// volume 音量值，取值范围0 - 100
-  onTestMicVolume,
+  onTestMicVolume = 'onTestMicVolume',
 
   /// 扬声器测试音量回调
   ///
@@ -414,5 +413,5 @@ enum TRTCCloudListener {
   /// 参数：
   ///
   /// volume 音量值，取值范围0 - 100
-  onTestSpeakerVolume,
+  onTestSpeakerVolume = 'onTestSpeakerVolume',
 }

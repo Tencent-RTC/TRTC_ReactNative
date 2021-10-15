@@ -1,6 +1,7 @@
 import { NativeModules, NativeEventEmitter } from 'react-native';
 import TXAudioEffectManager from './tx_audio_effect_manager';
 import TXDeviceManager from './tx_device_manager';
+import { TRTCCloudListener } from './trtc_cloud_listener';
 import {
   TRTCParams,
   // TRTCSwitchRoomConfig,
@@ -22,16 +23,13 @@ const { TrtcReactNativeSdk } = NativeModules;
 const TRTCEventEmitter = new NativeEventEmitter(TrtcReactNativeSdk);
 
 export default class TRTCCloud {
-  private _listeners: Map<any, any>;
   static _trtcCloud: TRTCCloud | undefined;
-  constructor() {
-    this._listeners = new Map();
-  }
+  constructor() {}
   /// 创建 TRTCCloud 单例。
-  static sharedInstance() {
+  static async sharedInstance() {
     if (!this._trtcCloud) {
       this._trtcCloud = new TRTCCloud();
-      TrtcReactNativeSdk.sharedInstance();
+      await TrtcReactNativeSdk.sharedInstance();
     }
     return this._trtcCloud;
   }
@@ -48,22 +46,16 @@ export default class TRTCCloud {
    * @param listener
    * @returns {{remove: remove}}
    */
-  registerListener(event: any, listener: any) {
-    const callback = (res: any) => {
-      listener(res);
-    };
-    let map = this._listeners.get(event);
-    if (map === undefined) {
-      map = new Map();
-      this._listeners.set(event, map);
-    }
-    TRTCEventEmitter.addListener(event, callback);
-    map.set(listener, callback);
-    return {
-      remove: () => {
-        this.unRegisterListener(event, listener);
-      },
-    };
+  registerListener(listener: { (type: TRTCCloudListener, params: any): void }) {
+    TRTCEventEmitter.addListener('onListener', (args) => {
+      let params;
+      try {
+        params = JSON.parse(args.params);
+      } catch (e) {
+        console.log(e);
+      }
+      listener(args.type, params);
+    });
   }
 
   /**
@@ -71,27 +63,10 @@ export default class TRTCCloud {
    * @param event
    * @param listener
    */
-  unRegisterListener(event: any, listener: any) {
-    const map = this._listeners.get(event);
-    if (map === undefined) return;
-    TRTCEventEmitter.removeListener(event, map.get(listener));
-    map.delete(listener);
-  }
-
-  /**
-   * 移除所有事件
-   * @param event
-   */
-  unRegisterAllListener(event: any) {
-    if (event === undefined) {
-      this._listeners.forEach((key) => {
-        TRTCEventEmitter.removeAllListeners(key);
-      });
-      this._listeners.clear();
-      return;
-    }
-    TRTCEventEmitter.removeAllListeners(event);
-    this._listeners.delete(event);
+  unRegisterListener(listener: {
+    (type: TRTCCloudListener, params: any): void;
+  }) {
+    TRTCEventEmitter.removeListener('onListener', listener);
   }
 
   static invokeMethod(method: string, scene: number) {
@@ -146,4 +121,4 @@ export default class TRTCCloud {
     return TrtcReactNativeSdk.getSDKVersion();
   }
 }
-export { TRTCParams };
+export { TRTCParams, TRTCCloudListener };

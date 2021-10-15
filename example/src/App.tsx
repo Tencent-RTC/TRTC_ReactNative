@@ -1,32 +1,40 @@
 import * as React from 'react';
 
-import {
-  StyleSheet,
-  View,
-  NativeEventEmitter,
-  NativeModules,
-  Button,
-  Alert,
-} from 'react-native';
+import { StyleSheet, View, Button, Alert } from 'react-native';
 // @ts-ignore
 import { SDKAPPID } from './debug/config';
 // @ts-ignore
 import getLatestUserSig from './debug/index';
 
-import TRTCCloud, { TRTCParams } from 'react-native-trtc-react-native-sdk';
+import TRTCCloud, {
+  TRTCParams,
+  TRTCCloudListener,
+} from 'react-native-trtc-react-native-sdk';
 
 export default function App() {
   // const [result, setResult] = React.useState<string | undefined>();
 
   React.useEffect(() => {
-    const eventEmitter = new NativeEventEmitter(
-      NativeModules.TrtcReactNativeSdk
-    );
-    eventEmitter.addListener('EventReminder', (event) => {
-      console.log(event.eventProperty); // "someValue"
-      Alert.alert(event.eventProperty);
-    });
+    // const eventEmitter = new NativeEventEmitter(
+    //   NativeModules.TrtcReactNativeSdk
+    // );
+    // eventEmitter.addListener('EventReminder', (event) => {
+    //   console.log(event.eventProperty); // "someValue"
+    //   Alert.alert(event.eventProperty);
+    // });
+    initInfo();
   }, []);
+
+  async function initInfo() {
+    const trtcCloud = (await TRTCCloud.sharedInstance())!;
+    trtcCloud.registerListener((type: TRTCCloudListener, params: any) => {
+      console.log('type', type);
+      console.log('params', params);
+      if (type === TRTCCloudListener.onEnterRoom) {
+        console.log('enterRoom', params);
+      }
+    });
+  }
 
   return (
     <View style={styles.container}>
@@ -53,6 +61,13 @@ export default function App() {
           });
           const trtcCloud = (await TRTCCloud.sharedInstance())!;
           trtcCloud.enterRoom(params, 3);
+        }}
+      />
+      <Button
+        title="exitRoom"
+        onPress={async () => {
+          const trtcCloud = (await TRTCCloud.sharedInstance())!;
+          trtcCloud.exitRoom();
         }}
       />
     </View>

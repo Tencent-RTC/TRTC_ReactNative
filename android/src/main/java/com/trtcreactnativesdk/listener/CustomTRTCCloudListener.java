@@ -2,7 +2,11 @@ package com.trtcreactnativesdk.listener;
 
 import android.os.Bundle;
 
-import com.google.gson.Gson;
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.tencent.trtc.TRTCCloudDef;
 import com.tencent.trtc.TRTCCloudListener;
 import com.tencent.trtc.TRTCStatistics;
@@ -10,6 +14,7 @@ import com.tencent.trtc.TRTCStatistics;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import com.google.gson.Gson;
 
 /**
  * 腾讯云音视频通信监听器
@@ -22,9 +27,9 @@ public class CustomTRTCCloudListener extends TRTCCloudListener {
      * 监听器回调的方法名
      */
     private static final String LISTENER_FUNC_NAME = "onListener";
-
-    public CustomTRTCCloudListener() {
-
+    private ReactApplicationContext trtReactContext;
+    public CustomTRTCCloudListener(ReactApplicationContext context) {
+      trtReactContext = context;
     }
 
     /**
@@ -34,13 +39,15 @@ public class CustomTRTCCloudListener extends TRTCCloudListener {
      * @param params 参数
      */
     private void invokeListener(CallBackNoticeEnum type, Object params) {
-        Gson gson = new Gson();
-        Map<String, Object> resultParams = new HashMap<>(2, 1);
-        resultParams.put("type", type);
-        if (params != null) {
-            resultParams.put("params", params);
-        }
-//        channel.invokeMethod(LISTENER_FUNC_NAME, gson.toJson(resultParams));
+      Gson gson = new Gson();
+      WritableMap backParams = Arguments.createMap();
+      backParams.putString("type", type.toString());
+      backParams.putString("params", gson.toJson(params));
+      sendEvent(LISTENER_FUNC_NAME, backParams);
+    }
+
+    private void sendEvent(String eventName, WritableMap params) {
+      trtReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, params);
     }
 
     //背景音乐开始播放
@@ -109,6 +116,8 @@ public class CustomTRTCCloudListener extends TRTCCloudListener {
     @Override
     public void onEnterRoom(long l) {
         super.onEnterRoom(l);
+        Map<String, Object> params = new HashMap<>(1, 1);
+        params.put("result", l);
         this.invokeListener(CallBackNoticeEnum.onEnterRoom, l);
     }
 
