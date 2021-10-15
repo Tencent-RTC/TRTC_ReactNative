@@ -5,8 +5,8 @@ import {
   View,
   NativeEventEmitter,
   NativeModules,
-  Alert,
   Button,
+  Alert,
 } from 'react-native';
 // @ts-ignore
 import { SDKAPPID } from './debug/config';

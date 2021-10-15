@@ -1,7 +1,23 @@
 import { NativeModules, NativeEventEmitter } from 'react-native';
-import { TRTCParams } from './trtc_cloud_def';
 import TXAudioEffectManager from './tx_audio_effect_manager';
 import TXDeviceManager from './tx_device_manager';
+import {
+  TRTCParams,
+  // TRTCSwitchRoomConfig,
+  // TRTCVideoEncParam,
+  // TRTCNetworkQosParam,
+  // TRTCRenderParams,
+  // TRTCMixUser,
+  // TRTCTranscodingConfig,
+  // AudioMusicParam,
+  // TRTCAudioRecordingParams,
+  // TRTCPublishCDNParam,
+  // CustomLocalRender,
+  // CustomRemoteRender,
+  // TRTCCloudDef,
+  // TXVoiceChangerType,
+  // TXVoiceReverbType
+} from './trtc_cloud_def';
 const { TrtcReactNativeSdk } = NativeModules;
 const TRTCEventEmitter = new NativeEventEmitter(TrtcReactNativeSdk);
 
