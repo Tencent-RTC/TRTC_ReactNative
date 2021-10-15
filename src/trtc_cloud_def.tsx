@@ -702,7 +702,7 @@ export type TRTCParams = {
 };
 */
 /// 切换房间参数
-interface TRTCSwitchRoomConfig {
+export type TRTCSwitchRoomConfig = {
   /// 【字段含义】用户签名 [必填]，当前 userId 对应的验证签名，相当于使用云服务的登录密码。
   ///
   /// 【推荐取值】具体计算方法请参见 [如何计算UserSig](https://cloud.tencent.com/document/product/647/17275)。
@@ -723,13 +723,13 @@ interface TRTCSwitchRoomConfig {
   /// 【推荐取值】仅建议有高级别安全需求的客户使用，更多详情请参见 [进房权限保护](https://cloud.tencent.com/document/product/647/32240)。
 
   privateMapKey: string; // 房间签名 [非必填]，当您希望某个房间只能让特定的 userId 进入时，需要使用 privateMapKey 进行权限保护。
-}
+};
 
 /// 编码参数
 ///
 /// 视频编码器相关参数，该设置决定了远端用户看到的画面质量（同时也是云端录制出的视频文件的画面质量）
 
-interface TRTCVideoEncParam {
+export type TRTCVideoEncParam = {
   ///【字段含义】 视频分辨率
   ///
   ///【推荐取值】
@@ -789,13 +789,13 @@ interface TRTCVideoEncParam {
   ///
   ///【特别说明】若有录制需求，选择 true 时，请确保通话过程中，调整分辨率不会影响您的录制效果。
   enableAdjustRes: boolean;
-}
+};
 
 /// 网络流控相关参数
 ///
 /// 该设置决定 SDK 在各种网络环境下的调控方向（例如弱网下选择“保清晰”或“保流畅”）
 
-type TRTCNetworkQosParam = {
+export type TRTCNetworkQosParam = {
   ///【字段含义】弱网下选择“保清晰”或“保流畅”
   ///
   ///【特别说明】
@@ -814,7 +814,7 @@ type TRTCNetworkQosParam = {
 };
 
 /// 远端图像参数
-type TRTCRenderParams = {
+export type TRTCRenderParams = {
   ///【字段含义】图像顺时针旋转角度
   ///
   ///【特别说明】
@@ -844,7 +844,7 @@ type TRTCRenderParams = {
 /// 云端混流中每一路子画面的位置信息
 ///
 /// TRTCMixUser 用于指定每一路（即每一个 userId）视频画面的具体摆放位置
-type TRTCMixUser = {
+export type TRTCMixUser = {
   /// 参与混流的 userId
   userId: string;
 
@@ -873,7 +873,7 @@ type TRTCMixUser = {
 /// 云端混流（转码）配置
 ///
 /// 包括最终编码质量和各路画面的摆放位置
-type TRTCTranscodingConfig = {
+export type TRTCTranscodingConfig = {
   ///【字段含义】腾讯云直播 AppID
   ///【推荐取值】请在 [实时音视频控制台](https://console.cloud.tencent.com/trtc) 选择已经创建的应用，单击【帐号信息】后，在“直播信息”中获取
   appId?: number;
@@ -1005,7 +1005,7 @@ export class TXVoiceReverbType {
 }
 
 /// 音乐和人声设置接口参数
-type AudioMusicParam = {
+export type AudioMusicParam = {
   /// 【字段含义】音乐 ID
   /// 【特殊说明】SDK 允许播放多路音乐，因此需要音乐 ID 进行标记，用于控制音乐的开始、停止、音量等
   id?: number;
@@ -1037,12 +1037,12 @@ type AudioMusicParam = {
 /// 【字段含义】文件路径（必填），录音文件的保存路径。该路径需要用户自行指定，请确保路径存在且可写。
 ///
 /// 【特别说明】该路径需精确到文件名及格式后缀，格式后缀决定录音文件的格式，目前支持的格式有 PCM、WAV 和 AAC。 例如，指定路径为 path/to/audio.aac，则会生成一个 AAC 格式的文件。 请指定一个有读写权限的合法路径，否则录音文件无法生成。
-type TRTCAudioRecordingParams = {
+export type TRTCAudioRecordingParams = {
   filePath: string;
 };
 
 /// CDN 转推参数
-type TRTCPublishCDNParam = {
+export type TRTCPublishCDNParam = {
   /// 腾讯云 AppID，请在 实时音视频控制台[https://console.cloud.tencent.com/trtc] 选择已经创建的应用，单击【应用信息】，在“旁路直播信息”中获取
   appId: number;
 
@@ -1054,7 +1054,7 @@ type TRTCPublishCDNParam = {
 };
 
 /// 本地外接纹理渲染本地视频参数
-type CustomLocalRender = {
+export type CustomLocalRender = {
   /// 用户标识
   userId: string;
 
@@ -1072,7 +1072,7 @@ type CustomLocalRender = {
 };
 
 /// 外接纹理渲染远端视频参数
-type CustomRemoteRender = {
+export type CustomRemoteRender = {
   /// 用户标识
   userId: string;
 
