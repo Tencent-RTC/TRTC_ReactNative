@@ -1,24 +1,6 @@
 import { NativeModules } from 'react-native';
 const { TrtcReactNativeSdk } = NativeModules;
 
-import type {
-  TRTCParams,
-  TRTCCloudDef,
-  TRTCSwitchRoomConfig,
-  TRTCVideoEncParam,
-  TRTCNetworkQosParam,
-  TRTCRenderParams,
-  TRTCMixUser,
-  TRTCTranscodingConfig,
-  TXVoiceChangerType,
-  TXVoiceReverbType,
-  AudioMusicParam,
-  TRTCAudioRecordingParams,
-  TRTCPublishCDNParam,
-  CustomLocalRender,
-  CustomRemoteRender,
-} from './trtc_cloud_def';
-
 /// 设备管理
 export default class TXDeviceManager {
   /// 是否使用前置摄像头

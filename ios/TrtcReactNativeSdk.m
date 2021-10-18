@@ -2,8 +2,7 @@
 
 @interface RCT_EXTERN_MODULE(TrtcReactNativeSdk, NSObject)
 
-RCT_EXTERN_METHOD(sharedInstance:(int)a
-				 resolver:(RCTPromiseResolveBlock)resolve
+RCT_EXTERN_METHOD(sharedInstance: (RCTPromiseResolveBlock)resolve
 				 withRejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(getSDKVersion: (RCTPromiseResolveBlock)resolve

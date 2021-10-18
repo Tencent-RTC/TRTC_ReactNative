@@ -10,17 +10,16 @@ type Config = {
 }
 
 // 创建 TRTCCloud 单例
-let trtcCloud = TRTCCloud.sharedInstance();
+const trtcCloud = TRTCCloud.sharedInstance();
 // 获取设备管理模块
-let txDeviceManager = trtcCloud.getDeviceManager();
+const txDeviceManager = trtcCloud.getDeviceManager(); 
 // 获取美颜管理对象
-// let txBeautyManager = trtcCloud.getBeautyManager();
+// const txBeautyManager = trtcCloud.getBeautyManager();
 // 获取音效管理类 TXAudioEffectManager
-let txAudioManager = trtcCloud.getAudioEffectManager();
+const txAudioManager = trtcCloud.getAudioEffectManager();
 // 注册事件回调
 // trtcCloud.registerListener(onRtcListener);
-
-export const config: Array<Config> = [
+const demoParamsGroup: Array<Config> = [
   {
     title: "getSDKVersion",
     handler: async () => {
@@ -547,5 +546,6 @@ export const config: Array<Config> = [
     }
   },
   // device manager end
-]
+];
 
+export { demoParamsGroup }

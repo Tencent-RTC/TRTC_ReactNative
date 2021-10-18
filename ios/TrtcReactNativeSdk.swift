@@ -5,8 +5,8 @@ class TrtcReactNativeSdk: NSObject {
 	
 	private var txCloudManager: TRTCCloud = TRTCCloud.sharedInstance();
 
-	@objc(sharedInstance:resolver:withRejecter:)
-	func sharedInstance(a: Int, resolve: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+	@objc(sharedInstance:withRejecter:)
+	func sharedInstance(resolve: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
 //		TRTCCloud.sharedInstance();
 		resolve(0);
 	}

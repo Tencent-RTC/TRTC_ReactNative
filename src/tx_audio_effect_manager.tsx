@@ -1,20 +1,20 @@
 import { NativeModules } from 'react-native';
 import type {
-  TRTCParams,
-  TRTCCloudDef,
-  TRTCSwitchRoomConfig,
-  TRTCVideoEncParam,
-  TRTCNetworkQosParam,
-  TRTCRenderParams,
-  TRTCMixUser,
-  TRTCTranscodingConfig,
+  // TRTCParams,
+  // TRTCCloudDef,
+  // TRTCSwitchRoomConfig,
+  // TRTCVideoEncParam,
+  // TRTCNetworkQosParam,
+  // TRTCRenderParams,
+  // TRTCMixUser,
+  // TRTCTranscodingConfig,
   TXVoiceChangerType,
   TXVoiceReverbType,
   AudioMusicParam,
-  TRTCAudioRecordingParams,
-  TRTCPublishCDNParam,
-  CustomLocalRender,
-  CustomRemoteRender,
+  // TRTCAudioRecordingParams,
+  // TRTCPublishCDNParam,
+  // CustomLocalRender,
+  // CustomRemoteRender,
 } from './trtc_cloud_def';
 const { TrtcReactNativeSdk } = NativeModules;
 

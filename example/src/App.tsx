@@ -15,12 +15,16 @@ import {
 import { SDKAPPID } from './debug/config';
 // @ts-ignore
 import getLatestUserSig from './debug/index';
-import { config } from './config';
+import { demoParamsGroup } from './demoParamsGroup';
+ 
+// import TRTCCloud, {
+//   TRTCParams,
+//   TRTCCloudListener, 
+// } from 'react-native-trtc-react-native-sdk';
 
 export default function App() {
   // const [result, setResult] = React.useState<string | undefined>();
-
-  React.useEffect(() => {
+  React.useEffect(() => { 
     // const eventEmitter = new NativeEventEmitter(
     //   NativeModules.TrtcReactNativeSdk
     // );
@@ -28,17 +32,29 @@ export default function App() {
     //   console.log(event.eventProperty); // "someValue"
     //   Alert.alert(event.eventProperty);
     // });
-  }, []);
+    initInfo(); 
+  }, []); 
+
+  async function initInfo() { 
+    // const trtcCloud = (await TRTCCloud.sharedInstance())!;
+    // trtcCloud.registerListener((type: TRTCCloudListener, params: any) => {
+    //   console.log('type', type);
+    //   console.log('params', params);
+    //   if (type === TRTCCloudListener.onEnterRoom) {
+    //     console.log('enterRoom', params);
+    //   }
+    // });
+  }
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
-         {config.map(value => {
+           {demoParamsGroup.map(value => {
             return <Button
               title={value.title}
               key={value.title}
               onPress={() => {
-                value.handler();
+                value.handler(); 
               }}
             />
           })}
