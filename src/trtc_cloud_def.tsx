@@ -974,7 +974,7 @@ export enum TXVoiceChangerType {
   TXLiveVoiceChangerType_10 = 10,
 
   /// 空灵
-  TXLiveVoiceChangerType_11 = 11
+  TXLiveVoiceChangerType_11 = 11,
 }
 
 /// 变声类型定义（KTV、小房间、大会堂、低沉、洪亮...）
@@ -1001,7 +1001,7 @@ export enum TXVoiceReverbType {
   TXLiveVoiceReverbType_6 = 6,
 
   /// 磁性
-  TXLiveVoiceReverbType_7 = 7
+  TXLiveVoiceReverbType_7 = 7,
 }
 
 /// 音乐和人声设置接口参数
@@ -1072,7 +1072,7 @@ export type CustomLocalRender = {
 };
 
 /// 外接纹理渲染远端视频参数
-export type CustomRemoteRender = {
+export type CustomRemoteRender = { 
   /// 用户标识
   userId: string;
 

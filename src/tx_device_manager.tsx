@@ -19,14 +19,14 @@ export default class TXDeviceManager {
   ///
   /// isFrontCamera：false 后置摄像头
 
-  switchCamera(isFrontCamera: boolean) : Promise<void> {
+  switchCamera(isFrontCamera: boolean): Promise<void> {
     return TrtcReactNativeSdk.switchCamera({ isFrontCamera });
   }
 
   /// 获取摄像头的缩放因子
   ///
   /// 注意：此接口只支持和Android和iOS平台
-  getCameraZoomMaxRatio() : Promise<void> {
+  getCameraZoomMaxRatio(): Promise<void> {
     return TrtcReactNativeSdk.getCameraZoomMaxRatio();
   }
 
@@ -41,9 +41,9 @@ export default class TXDeviceManager {
   /// value	取值范围为1 - 5，数值越大，焦距越远
   ///
   /// 返回  0：操作成功 负数：失败
-  setCameraZoomRatio(value: number) : Promise<void> {
+  setCameraZoomRatio(value: number): Promise<void> {
     return TrtcReactNativeSdk.setCameraZoomRatio({
-      "value": value.toString(),
+      value: value.toString(),
     });
   }
 
@@ -56,9 +56,9 @@ export default class TXDeviceManager {
   /// enable true：开启；false：关闭，默认值：true
   ///
   /// 返回值：0：操作成功 负数：失败
-  enableCameraAutoFocus(enable: boolean) : Promise<void> {
+  enableCameraAutoFocus(enable: boolean): Promise<void> {
     return TrtcReactNativeSdk.enableCameraAutoFocus({
-      "enable": enable,
+      enable: enable,
     });
   }
 
@@ -67,7 +67,7 @@ export default class TXDeviceManager {
   /// 注意：此接口只支持和Android和iOS平台
   ///
   /// 返回值：true 支持  false：不支持
-  isAutoFocusEnabled() : Promise<boolean> {
+  isAutoFocusEnabled(): Promise<boolean> {
     return TrtcReactNativeSdk.isAutoFocusEnabled();
   }
 
@@ -80,10 +80,10 @@ export default class TXDeviceManager {
   /// x	对焦位置 x 坐标
   ///
   /// y	对焦位置 y 坐标
-  setCameraFocusPosition(x: number, y: number) : Promise<void> {
+  setCameraFocusPosition(x: number, y: number): Promise<void> {
     return TrtcReactNativeSdk.setCameraFocusPosition({
-      "x": x,
-      "y": y,
+      x: x,
+      y: y,
     });
   }
 
@@ -94,9 +94,9 @@ export default class TXDeviceManager {
   /// 参数：
   ///
   /// enable	true：开启；false：关闭，默认值：false
-  enableCameraTorch(enable: boolean) : Promise<void> {
+  enableCameraTorch(enable: boolean): Promise<void> {
     return TrtcReactNativeSdk.enableCameraTorch({
-      "enable": enable,
+      enable: enable,
     });
   }
 
@@ -123,9 +123,9 @@ export default class TXDeviceManager {
   /// 参数：
   ///
   /// type	系统音量类型，如无特殊需求，不推荐您自行设置。
-  setSystemVolumeType(type: number) : Promise<void> {
+  setSystemVolumeType(type: number): Promise<void> {
     return TrtcReactNativeSdk.setSystemVolumeType({
-      "type": type,
+      type: type,
     });
   }
 
@@ -138,10 +138,9 @@ export default class TXDeviceManager {
   /// 参数：
   ///
   /// route	音频路由，即声音由哪里输出（扬声器、听筒），请参考 TRTCCloudDef.TRTC_AUDIO_ROUTE_SPEAKER，默认值：TRTCCloudDef.TRTC_AUDIO_ROUTE_SPEAKER
-  setAudioRoute(route: number) : Promise<void> {
+  setAudioRoute(route: number): Promise<void> {
     return TrtcReactNativeSdk.setSystemVolumeType({
-      "route": route,
+      route: route,
     });
   }
-
 }

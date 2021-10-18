@@ -17,7 +17,7 @@ import {
   // CustomRemoteRender,
   TRTCCloudDef,
   TXVoiceChangerType,
-  TXVoiceReverbType
+  TXVoiceReverbType,
 } from './trtc_cloud_def';
 const { TrtcReactNativeSdk } = NativeModules;
 const TRTCEventEmitter = new NativeEventEmitter(TrtcReactNativeSdk);
@@ -95,7 +95,7 @@ export default class TRTCCloud {
   enterRoom(params: TRTCParams, scene: number): Promise<void> {
     return TrtcReactNativeSdk.enterRoom(params, scene);
   }
-/*
+  /*
   /// @nodoc
   ///
   /// 开始本地视频自定义视频渲染，利用外接纹理的方式进视频渲染，目前仅支持android
@@ -187,15 +187,6 @@ export default class TRTCCloud {
     return TrtcReactNativeSdk.getSDKVersion();
   }
 
-
-
-
-
-
-
-
-
-
   /// 请求跨房通话（主播 PK）
   ///
   /// TRTC 中两个不同音视频房间中的主播，可以通过“跨房通话”功能拉通连麦通话功能。使用此功能时， 两个主播无需退出各自原来的直播间即可进行“连麦 PK”。
@@ -225,16 +216,16 @@ export default class TRTCCloud {
   /// 参数：
   ///
   /// param	JSON 字符串连麦参数，roomId 代表目标房间号，userId 代表目标用户 ID。
-  connectOtherRoom(param: string) : Promise<void>  {
+  connectOtherRoom(param: string): Promise<void> {
     return TrtcReactNativeSdk.connectOtherRoom({
-      "param": param,
+      param: param,
     });
   }
 
   /// 退出跨房通话
   ///
   /// 跨房通话的退出结果会通过onDisconnectOtherRoom 回调通知给您。
-  disconnectOtherRoom() : Promise<void>  {
+  disconnectOtherRoom(): Promise<void> {
     return TrtcReactNativeSdk.disconnectOtherRoom();
   }
 
@@ -250,9 +241,9 @@ export default class TRTCCloud {
   ///
   /// TRTCCloudDef.TRTCRoleAudience 观众，只能观看，不能上行视频和音频，一个房间里的观众人数没有上限。
 
-  switchRole(role: number) : Promise<void>  {
+  switchRole(role: number): Promise<void> {
     return TrtcReactNativeSdk.switchRole({
-      "role": role,
+      role: role,
     });
   }
 
@@ -267,10 +258,13 @@ export default class TRTCCloud {
   /// autoRecvVideo	true：自动接收视频数据；false：需要调用 startRemoteView/stopRemoteView 进行请求或取消。默认值：true
   ///
   /// 注意：需要在进房前设置才能生效。
-  setDefaultStreamRecvMode(autoRecvAudio: boolean, autoRecvVideo: boolean) : Promise<void>  {
+  setDefaultStreamRecvMode(
+    autoRecvAudio: boolean,
+    autoRecvVideo: boolean
+  ): Promise<void> {
     return TrtcReactNativeSdk.setDefaultStreamRecvMode({
-      "autoRecvAudio": autoRecvAudio,
-      "autoRecvVideo": autoRecvVideo,
+      autoRecvAudio: autoRecvAudio,
+      autoRecvVideo: autoRecvVideo,
     });
   }
 
@@ -279,12 +273,12 @@ export default class TRTCCloud {
   /// 调用接口后，会退出原来的房间，并且停止原来房间的音视频数据发送和所有远端用户的音视频播放，但不会停止本地视频的预览。 进入新房间成功后，会自动恢复原来的音视频数据发送状态。
   ///
   /// 接口调用结果会通过onSwitchRoom(errCode, errMsg) 回调。
-  switchRoom(config: TRTCSwitchRoomConfig) : Promise<void>  {
+  switchRoom(config: TRTCSwitchRoomConfig): Promise<void> {
     return TrtcReactNativeSdk.switchRoom({
-      "config": config,
+      config: config,
     });
   }
-/*
+  /*
   /// 开始向腾讯云的直播 CDN 推流
   ///
   /// 该接口会指定当前用户的音视频流在腾讯云 CDN 所对应的 StreamId，进而可以指定当前用户的 CDN 播放地址。
@@ -650,14 +644,14 @@ export default class TRTCCloud {
   /// 该函数会启动麦克风采集，并将音频数据传输给房间里的其他用户。 SDK 不会默认开启本地音频采集和上行，您需要调用该函数开启，否则房间里的其他用户将无法听到您的声音。
   ///
   /// 主播端的音质越高，观众端的听感越好，但传输所依赖的带宽也就越高，在带宽有限的场景下也更容易出现卡顿。
-  startLocalAudio(quality: number) : Promise<void>  {
-    return TrtcReactNativeSdk.startLocalAudio({"quality": quality});
+  startLocalAudio(quality: number): Promise<void> {
+    return TrtcReactNativeSdk.startLocalAudio({ quality: quality });
   }
 
   /// 关闭本地音频的采集和上行。
   ///
   /// 当关闭本地音频的采集和上行，房间里的其它成员会收到 onUserAudioAvailable(false) 回调通知。
-  stopLocalAudio() : Promise<void>  {
+  stopLocalAudio(): Promise<void> {
     return TrtcReactNativeSdk.stopLocalAudio();
   }
 
@@ -670,9 +664,9 @@ export default class TRTCCloud {
   /// 参数：
   ///
   /// mute	true：静音；false：取消静音
-  muteLocalAudio(mute: boolean) : Promise<void>  {
+  muteLocalAudio(mute: boolean): Promise<void> {
     return TrtcReactNativeSdk.muteLocalAudio({
-      "mute": mute,
+      mute: mute,
     });
   }
 
@@ -685,10 +679,10 @@ export default class TRTCCloud {
   /// mute	true：静音；false：取消静音
   ///
   /// 注意：静音时会停止接收该用户的远端音频流并停止播放，取消静音时会自动拉取该用户的远端音频流并进行播放。
-  muteRemoteAudio(userId: string, mute: boolean) : Promise<void>  {
+  muteRemoteAudio(userId: string, mute: boolean): Promise<void> {
     return TrtcReactNativeSdk.muteRemoteAudio({
-      "userId": userId,
-      "mute": mute,
+      userId: userId,
+      mute: mute,
     });
   }
 
@@ -699,9 +693,9 @@ export default class TRTCCloud {
   /// mute	true：静音；false：取消静音
   ///
   /// 注意：静音时会停止接收所有用户的远端音频流并停止播放，取消静音时会自动拉取所有用户的远端音频流并进行播放。
-  muteAllRemoteAudio(mute: boolean) : Promise<void>  {
+  muteAllRemoteAudio(mute: boolean): Promise<void> {
     return TrtcReactNativeSdk.muteAllRemoteAudio({
-      "mute": mute,
+      mute: mute,
     });
   }
 
@@ -712,10 +706,10 @@ export default class TRTCCloud {
   /// userId	远程用户 ID
   ///
   /// volume	音量大小，取值0 - 100
-  setRemoteAudioVolume(userId: string, volume: number) : Promise<void>  {
+  setRemoteAudioVolume(userId: string, volume: number): Promise<void> {
     return TrtcReactNativeSdk.setRemoteAudioVolume({
-      "userId": userId,
-      "volume": volume,
+      userId: userId,
+      volume: volume,
     });
   }
 
@@ -724,14 +718,14 @@ export default class TRTCCloud {
   /// 参数：
   ///
   /// volume	音量大小，取值0 - 100
-  setAudioCaptureVolume(volume: number) : Promise<void>  {
+  setAudioCaptureVolume(volume: number): Promise<void> {
     return TrtcReactNativeSdk.setAudioCaptureVolume({
-      "volume": volume,
+      volume: volume,
     });
   }
 
   /// 获取 SDK 采集音量。
-  getAudioCaptureVolume() : Promise<void>  {
+  getAudioCaptureVolume(): Promise<void> {
     return TrtcReactNativeSdk.getAudioCaptureVolume();
   }
 
@@ -742,14 +736,14 @@ export default class TRTCCloud {
   /// 参数：
   ///
   /// volume	音量大小，取值0 - 100
-  setAudioPlayoutVolume(volume: number) : Promise<void>  {
+  setAudioPlayoutVolume(volume: number): Promise<void> {
     return TrtcReactNativeSdk.setAudioPlayoutVolume({
-      "volume": volume,
+      volume: volume,
     });
   }
 
   /// 获取 SDK 播放音量
-  getAudioPlayoutVolume() : Promise<void>  {
+  getAudioPlayoutVolume(): Promise<void> {
     return TrtcReactNativeSdk.getAudioPlayoutVolume();
   }
 
@@ -760,9 +754,9 @@ export default class TRTCCloud {
   /// 参数：
   ///
   /// intervalMs	决定了 onUserVoiceVolume 回调的触发间隔，单位为ms，最小间隔为100ms，如果小于等于0则会关闭回调，建议设置为300ms；详细的回调规则请参考 onUserVoiceVolume 的注释说明
-  enableAudioVolumeEvaluation(intervalMs: number) : Promise<void>  {
+  enableAudioVolumeEvaluation(intervalMs: number): Promise<void> {
     return TrtcReactNativeSdk.enableAudioVolumeEvaluation({
-      "intervalMs": intervalMs,
+      intervalMs: intervalMs,
     });
   }
 
@@ -777,19 +771,19 @@ export default class TRTCCloud {
   /// 返回：
   ///
   /// 0：成功；-1：录音已开始；-2：文件或目录创建失败；-3：后缀指定的音频格式不支持; -1001:参数错误
-  startAudioRecording(param: TRTCAudioRecordingParams) : Promise<void> {
+  startAudioRecording(param: TRTCAudioRecordingParams): Promise<void> {
     return TrtcReactNativeSdk.startAudioRecording({
-      "param": param,
+      param: param,
     });
   }
 
   /// 停止录音。
   ///
   /// 如果调用 exitRoom 时还在录音，录音会自动停止。
-  stopAudioRecording() : Promise<void>  {
+  stopAudioRecording(): Promise<void> {
     return TrtcReactNativeSdk.stopAudioRecording();
   }
-/*
+  /*
   /// 添加水印
   ///
   /// 水印的位置是通过 x, y, width 来指定的
@@ -901,12 +895,17 @@ export default class TRTCCloud {
   /// * 将 reliable 和 ordered 同时设置为 true 或 false，暂不支持交叉设置。
   ///
   /// * 强烈建议不同类型的消息使用不同的 cmdID，这样可以在要求有序的情况下减小消息时延。
-  sendCustomCmdMsg(cmdID: number, data: string, reliable: number, ordered: number) : Promise<void>  {
+  sendCustomCmdMsg(
+    cmdID: number,
+    data: string,
+    reliable: number,
+    ordered: number
+  ): Promise<void> {
     return TrtcReactNativeSdk.sendCustomCmdMsg({
-      "cmdID": cmdID,
-      "data": data,
-      "reliable": reliable,
-      "ordered": ordered,
+      cmdID: cmdID,
+      data: data,
+      reliable: reliable,
+      ordered: ordered,
     });
   }
 
@@ -939,8 +938,11 @@ export default class TRTCCloud {
   /// 若指定多次发送（repeatCount > 1），则数据会被带在后续的连续 repeatCount 个视频帧中发送出去，同样会导致视频码率增大。
   ///
   /// 如果 repeatCount > 1，多次发送，接收消息 onRecvSEIMsg 回调也可能会收到多次相同的消息，需要去重。
-  sendSEIMsg(data: string, repeatCount: number) : Promise<void>  {
-    return TrtcReactNativeSdk.sendSEIMsg({"data": data, "repeatCount": repeatCount});
+  sendSEIMsg(data: string, repeatCount: number): Promise<void> {
+    return TrtcReactNativeSdk.sendSEIMsg({
+      data: data,
+      repeatCount: repeatCount,
+    });
   }
 
   /// 开始进行网络测速（视频通话期间请勿测试，以免影响通话质量）
@@ -956,16 +958,20 @@ export default class TRTCCloud {
   /// userId	用户标识
   ///
   /// userSig	用户签名
-  startSpeedTest(sdkAppId: number, userId: string, userSig: string) : Promise<void>  {
+  startSpeedTest(
+    sdkAppId: number,
+    userId: string,
+    userSig: string
+  ): Promise<void> {
     return TrtcReactNativeSdk.startSpeedTest({
-      "sdkAppId": sdkAppId,
-      "userId": userId,
-      "userSig": userSig,
+      sdkAppId: sdkAppId,
+      userId: userId,
+      userSig: userSig,
     });
   }
 
   /// 停止服务器测速。
-  stopSpeedTest() : Promise<void>  {
+  stopSpeedTest(): Promise<void> {
     return TrtcReactNativeSdk.stopSpeedTest();
   }
 
@@ -974,8 +980,8 @@ export default class TRTCCloud {
   /// 参数：
   ///
   /// level	请参见 TRTC_LOG_LEVEL，默认值：TRTCCloudDef.TRTC_LOG_LEVEL_NULL
-  setLogLevel(level: number) : Promise<void>  {
-    return TrtcReactNativeSdk.setLogLevel({"level": level});
+  setLogLevel(level: number): Promise<void> {
+    return TrtcReactNativeSdk.setLogLevel({ level: level });
   }
 
   /// 启用或禁用控制台日志打印
@@ -983,9 +989,9 @@ export default class TRTCCloud {
   /// 参数：
   ///
   /// enabled	指定是否启用，默认为禁止状态
-  setConsoleEnabled(enabled: boolean) : Promise<void>  {
+  setConsoleEnabled(enabled: boolean): Promise<void> {
     return TrtcReactNativeSdk.setConsoleEnabled({
-      "enabled": enabled,
+      enabled: enabled,
     });
   }
 
@@ -996,9 +1002,9 @@ export default class TRTCCloud {
   /// 参数：
   ///
   /// enabled	指定是否启用，默认为启用状态
-  setLogCompressEnabled(enabled: boolean) : Promise<void>  {
+  setLogCompressEnabled(enabled: boolean): Promise<void> {
     return TrtcReactNativeSdk.setLogCompressEnabled({
-      "enabled": enabled,
+      enabled: enabled,
     });
   }
 
@@ -1009,9 +1015,9 @@ export default class TRTCCloud {
   /// 参数：
   ///
   /// path 存储日志路径
-  setLogDirPath(path: string) : Promise<void>  {
+  setLogDirPath(path: string): Promise<void> {
     return TrtcReactNativeSdk.setLogDirPath({
-      "path": path,
+      path: path,
     });
   }
 
@@ -1022,9 +1028,9 @@ export default class TRTCCloud {
   /// 参数：
   ///
   /// showType	0：不显示；1：显示精简版；2：显示全量版，默认为不显示
-  showDebugView(showType: number) : Promise<void>  {
+  showDebugView(showType: number): Promise<void> {
     return TrtcReactNativeSdk.showDebugView({
-      "mode": showType,
+      mode: showType,
     });
   }
 
@@ -1033,11 +1039,16 @@ export default class TRTCCloud {
   /// 注意：该接口用于调用一些实验性功能
   ///
   /// 参数：jsonStr	接口及参数描述的 JSON 字符串
-  callExperimentalAPI(jsonStr: string) : Promise<void>  {
+  callExperimentalAPI(jsonStr: string): Promise<void> {
     return TrtcReactNativeSdk.callExperimentalAPI({
-      "jsonStr": jsonStr,
+      jsonStr: jsonStr,
     });
   }
-
 }
-export { TRTCParams, TRTCCloudDef, TXVoiceChangerType, TXVoiceReverbType, TRTCCloudListener };
+export {
+  TRTCParams,
+  TRTCCloudDef,
+  TXVoiceChangerType,
+  TXVoiceReverbType,
+  TRTCCloudListener,
+};

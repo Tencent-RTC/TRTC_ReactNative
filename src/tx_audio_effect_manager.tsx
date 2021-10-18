@@ -18,7 +18,6 @@ import type {
 } from './trtc_cloud_def';
 const { TrtcReactNativeSdk } = NativeModules;
 
-
 /// 腾讯云视频通话功能音乐和人声设置接口
 export default class TXAudioEffectManager {
   constructor() {}
@@ -33,7 +32,7 @@ export default class TXAudioEffectManager {
   ///
   /// enable	true：开启；false：关闭
   enableVoiceEarMonitor(enable: boolean): Promise<void> {
-    return TrtcReactNativeSdk.enableVoiceEarMonitor({enable});
+    return TrtcReactNativeSdk.enableVoiceEarMonitor({ enable });
   }
 
   /// 设置耳返音量。
@@ -42,7 +41,7 @@ export default class TXAudioEffectManager {
   ///
   /// volume	音量大小，取值0 - 100，默认值为100
   setVoiceEarMonitorVolume(volume: number): Promise<void> {
-    return TrtcReactNativeSdk.enableVoiceEarMonitor({volume});
+    return TrtcReactNativeSdk.enableVoiceEarMonitor({ volume });
   }
 
   /// 设置人声的混响效果（KTV、小房间、大会堂、低沉、洪亮...）
@@ -94,7 +93,7 @@ export default class TXAudioEffectManager {
   ///
   /// id	音乐 ID
   stopPlayMusic(id: number): Promise<void> {
-    return TrtcReactNativeSdk.stopPlayMusic({"id": id});
+    return TrtcReactNativeSdk.stopPlayMusic({ id: id });
   }
 
   /// 暂停播放背景音乐
@@ -102,8 +101,8 @@ export default class TXAudioEffectManager {
   /// 参数：
   ///
   /// id	音乐 ID
-  pausePlayMusic(id: number) : Promise<void> {
-    return TrtcReactNativeSdk.pausePlayMusic({"id": id});
+  pausePlayMusic(id: number): Promise<void> {
+    return TrtcReactNativeSdk.pausePlayMusic({ id: id });
   }
 
   /// 恢复播放背景音乐
@@ -111,8 +110,8 @@ export default class TXAudioEffectManager {
   /// 参数：
   ///
   /// id	音乐 ID
-  resumePlayMusic(id: number) : Promise<void> {
-    return TrtcReactNativeSdk.resumePlayMusic({"id": id});
+  resumePlayMusic(id: number): Promise<void> {
+    return TrtcReactNativeSdk.resumePlayMusic({ id: id });
   }
 
   /// 设置背景音乐的远端音量大小，即主播可以通过此接口设置远端观众能听到的背景音乐的音量大小。
@@ -122,8 +121,8 @@ export default class TXAudioEffectManager {
   /// id	音乐 ID
   ///
   /// volume	音量大小，100为正常音量，取值范围为0 - 100；默认值：100
-  setMusicPublishVolume(id: number, volume: number) : Promise<void> {
-    return TrtcReactNativeSdk.setMusicPublishVolume({"id": id, "volume": volume});
+  setMusicPublishVolume(id: number, volume: number): Promise<void> {
+    return TrtcReactNativeSdk.setMusicPublishVolume({ id: id, volume: volume });
   }
 
   /// 设置背景音乐的本地音量大小，即主播可以通过此接口设置主播自己本地的背景音乐的音量大小。
@@ -133,8 +132,8 @@ export default class TXAudioEffectManager {
   /// id	音乐 ID
   ///
   /// volume	音量大小，100为正常音量，取值范围为0 - 100；默认值：100
-  setMusicPlayoutVolume(id: number, volume: number) : Promise<void> {
-    return TrtcReactNativeSdk.setMusicPublishVolume({"id": id, "volume": volume});
+  setMusicPlayoutVolume(id: number, volume: number): Promise<void> {
+    return TrtcReactNativeSdk.setMusicPublishVolume({ id: id, volume: volume });
   }
 
   /// 设置全局背景音乐的本地和远端音量的大小
@@ -142,8 +141,8 @@ export default class TXAudioEffectManager {
   /// 参数：
   ///
   /// volume	音量大小，100为正常音量，取值范围为0 - 100；默认值：100
-  setAllMusicVolume(volume: number) : Promise<void> {
-    return TrtcReactNativeSdk.setAllMusicVolume({"volume": volume});
+  setAllMusicVolume(volume: number): Promise<void> {
+    return TrtcReactNativeSdk.setAllMusicVolume({ volume: volume });
   }
 
   /// 调整背景音乐的音调高低
@@ -153,8 +152,11 @@ export default class TXAudioEffectManager {
   /// id	音乐 ID
   ///
   /// pitch	音调，默认值是0.0f，范围是：[-1 ~ 1] 之间的浮点数；
-  setMusicPitch(id: number, pitch: number) : Promise<void> {
-    return TrtcReactNativeSdk.setMusicPitch({"id": id, "pitch": pitch.toString()});
+  setMusicPitch(id: number, pitch: number): Promise<void> {
+    return TrtcReactNativeSdk.setMusicPitch({
+      id: id,
+      pitch: pitch.toString(),
+    });
   }
 
   /// 调整背景音乐的变速效果
@@ -164,8 +166,11 @@ export default class TXAudioEffectManager {
   /// id	音乐 ID
   ///
   /// speedRate	速度，默认值是1.0f，范围是：[0.5 ~ 2] 之间的浮点数；
-  setMusicSpeedRate(id: number, speedRate: number) : Promise<void> {
-    return TrtcReactNativeSdk.setMusicSpeedRate({"id": id, "speedRate": speedRate.toString()});
+  setMusicSpeedRate(id: number, speedRate: number): Promise<void> {
+    return TrtcReactNativeSdk.setMusicSpeedRate({
+      id: id,
+      speedRate: speedRate.toString(),
+    });
   }
 
   /// 获取背景音乐当前的播放进度（单位：毫秒）
@@ -175,8 +180,8 @@ export default class TXAudioEffectManager {
   /// id	音乐 ID
   ///
   /// 返回：成功返回当前播放时间，单位：毫秒，失败返回-1
-  getMusicCurrentPosInMS(id: number) : Promise<number> {
-    return TrtcReactNativeSdk.getMusicCurrentPosInMS({"id": id});
+  getMusicCurrentPosInMS(id: number): Promise<number> {
+    return TrtcReactNativeSdk.getMusicCurrentPosInMS({ id: id });
   }
 
   /// 设置背景音乐的播放进度（单位：毫秒）
@@ -188,8 +193,8 @@ export default class TXAudioEffectManager {
   /// id	音乐 ID
   ///
   /// pts	单位: 毫秒
-  seekMusicToPosInMS(id: number, pts: number) : Promise<void> {
-    return TrtcReactNativeSdk.getMusicCurrentPosInMS({"id": id, "pts": pts});
+  seekMusicToPosInMS(id: number, pts: number): Promise<void> {
+    return TrtcReactNativeSdk.getMusicCurrentPosInMS({ id: id, pts: pts });
   }
 
   /// 获取景音乐文件的总时长（单位：毫秒）
@@ -199,8 +204,7 @@ export default class TXAudioEffectManager {
   /// path	音乐文件路径，如果 path 为空，那么返回当前正在播放的 music 时长。
   ///
   /// 返回：成功返回时长，失败返回-1
-  getMusicDurationInMS(path: string) : Promise<number> {
-    return TrtcReactNativeSdk.getMusicCurrentPosInMS({"path": path});
+  getMusicDurationInMS(path: string): Promise<number> {
+    return TrtcReactNativeSdk.getMusicCurrentPosInMS({ path: path });
   }
-
 }

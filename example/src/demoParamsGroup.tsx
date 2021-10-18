@@ -1,18 +1,23 @@
-import { Alert } from "react-native";
-import TRTCCloud, { TRTCParams, TRTCCloudDef, TXVoiceChangerType, TXVoiceReverbType } from "react-native-trtc-react-native-sdk";
+import { Alert } from 'react-native';
+import TRTCCloud, {
+  TRTCParams,
+  TRTCCloudDef,
+  TXVoiceChangerType,
+  TXVoiceReverbType,
+} from 'react-native-trtc-react-native-sdk';
 // @ts-ignore
 import getLatestUserSig from './debug/index';
 // @ts-ignore
 import { SDKAPPID } from './debug/config';
 type Config = {
-  title: string, 
-  handler: Function
-}
+  title: string;
+  handler: Function;
+};
 
 // 创建 TRTCCloud 单例
 const trtcCloud = TRTCCloud.sharedInstance();
 // 获取设备管理模块
-const txDeviceManager = trtcCloud.getDeviceManager(); 
+const txDeviceManager = trtcCloud.getDeviceManager();
 // 获取美颜管理对象
 // const txBeautyManager = trtcCloud.getBeautyManager();
 // 获取音效管理类 TXAudioEffectManager
@@ -21,14 +26,14 @@ const txAudioManager = trtcCloud.getAudioEffectManager();
 // trtcCloud.registerListener(onRtcListener);
 const demoParamsGroup: Array<Config> = [
   {
-    title: "getSDKVersion",
+    title: 'getSDKVersion',
     handler: async () => {
       const version = await trtcCloud.getSDKVersion();
       Alert.alert(version);
-    }
-  }, 
+    },
+  },
   {
-    title: "enterRoom",
+    title: 'enterRoom',
     handler: async () => {
       const userId = 'lexuslin';
       const userSig = getLatestUserSig(userId).userSig;
@@ -36,53 +41,53 @@ const demoParamsGroup: Array<Config> = [
         sdkAppId: SDKAPPID,
         userId,
         userSig,
-        roomId: 2366
+        roomId: 2366,
       });
       trtcCloud.enterRoom(params, 3);
-    }
+    },
   },
   {
-    title: "exitRoom",
+    title: 'exitRoom',
     handler: async () => {
       trtcCloud.exitRoom();
-    }
+    },
   },
   // cloud manager begin
   {
-    title: "connectOtherRoom",
+    title: 'connectOtherRoom',
     handler: async () => {
-        // trtcCloud.connectOtherRoom();
-    }
+      // trtcCloud.connectOtherRoom();
+    },
   },
   {
-    title: "disconnectOtherRoom",
+    title: 'disconnectOtherRoom',
     handler: async () => {
-        trtcCloud.disconnectOtherRoom();
-    }
+      trtcCloud.disconnectOtherRoom();
+    },
   },
   {
-    title: "switchRole",
+    title: 'switchRole',
     handler: async () => {
-        trtcCloud.switchRole(TRTCCloudDef.TRTCRoleAnchor);
-    }
+      trtcCloud.switchRole(TRTCCloudDef.TRTCRoleAnchor);
+    },
   },
   {
-    title: "setDefaultStreamRecvMode",
+    title: 'setDefaultStreamRecvMode',
     handler: async () => {
-        trtcCloud.setDefaultStreamRecvMode(true, true);
-    }
+      trtcCloud.setDefaultStreamRecvMode(true, true);
+    },
   },
   {
-    title: "switchRoom",
+    title: 'switchRoom',
     handler: async () => {
-        // trtcCloud.switchRoom();
-    }
+      // trtcCloud.switchRoom();
+    },
   },
   {
-    title: "startPublishing",
+    title: 'startPublishing',
     handler: async () => {
-        // trtcCloud.startPublishing();
-    }
+      // trtcCloud.startPublishing();
+    },
   },
   /*
   {
@@ -213,82 +218,82 @@ const demoParamsGroup: Array<Config> = [
   },
   */
   {
-    title: "startLocalAudio",
+    title: 'startLocalAudio',
     handler: async () => {
-        trtcCloud.startLocalAudio(100);
-    }
+      trtcCloud.startLocalAudio(100);
+    },
   },
   {
-    title: "stopLocalAudio",
+    title: 'stopLocalAudio',
     handler: async () => {
-        trtcCloud.stopLocalAudio();
-    }
+      trtcCloud.stopLocalAudio();
+    },
   },
   {
-    title: "muteLocalAudio",
+    title: 'muteLocalAudio',
     handler: async () => {
-        trtcCloud.muteLocalAudio(true);
-    }
+      trtcCloud.muteLocalAudio(true);
+    },
   },
   {
-    title: "muteRemoteAudio",
+    title: 'muteRemoteAudio',
     handler: async () => {
-        trtcCloud.muteRemoteAudio("lexuslin3", true);
-    }
+      trtcCloud.muteRemoteAudio('lexuslin3', true);
+    },
   },
   {
-    title: "muteAllRemoteAudio",
+    title: 'muteAllRemoteAudio',
     handler: async () => {
-        trtcCloud.muteAllRemoteAudio(true);
-    }
+      trtcCloud.muteAllRemoteAudio(true);
+    },
   },
   {
-    title: "setRemoteAudioVolume",
+    title: 'setRemoteAudioVolume',
     handler: async () => {
-        trtcCloud.setRemoteAudioVolume("lexuslin3", 80);
-    }
+      trtcCloud.setRemoteAudioVolume('lexuslin3', 80);
+    },
   },
   {
-    title: "setAudioCaptureVolume",
+    title: 'setAudioCaptureVolume',
     handler: async () => {
-        trtcCloud.setAudioCaptureVolume(80);
-    }
+      trtcCloud.setAudioCaptureVolume(80);
+    },
   },
   {
-    title: "getAudioCaptureVolume",
+    title: 'getAudioCaptureVolume',
     handler: async () => {
-        trtcCloud.getAudioCaptureVolume();
-    }
+      trtcCloud.getAudioCaptureVolume();
+    },
   },
   {
-    title: "setAudioPlayoutVolume",
+    title: 'setAudioPlayoutVolume',
     handler: async () => {
-        trtcCloud.setAudioPlayoutVolume(80);
-    }
+      trtcCloud.setAudioPlayoutVolume(80);
+    },
   },
   {
-    title: "getAudioPlayoutVolume",
+    title: 'getAudioPlayoutVolume',
     handler: async () => {
-        trtcCloud.getAudioPlayoutVolume();
-    }
+      trtcCloud.getAudioPlayoutVolume();
+    },
   },
   {
-    title: "enableAudioVolumeEvaluation",
+    title: 'enableAudioVolumeEvaluation',
     handler: async () => {
-        trtcCloud.enableAudioVolumeEvaluation(300);
-    }
+      trtcCloud.enableAudioVolumeEvaluation(300);
+    },
   },
   {
-    title: "startAudioRecording",
+    title: 'startAudioRecording',
     handler: async () => {
-        // trtcCloud.startAudioRecording();
-    }
+      // trtcCloud.startAudioRecording();
+    },
   },
   {
-    title: "stopAudioRecording",
+    title: 'stopAudioRecording',
     handler: async () => {
-        trtcCloud.stopAudioRecording();
-    }
+      trtcCloud.stopAudioRecording();
+    },
   },
   /*
   {
@@ -317,235 +322,241 @@ const demoParamsGroup: Array<Config> = [
   },
   */
   {
-    title: "sendCustomCmdMsg",
+    title: 'sendCustomCmdMsg',
     handler: async () => {
-        // trtcCloud.sendCustomCmdMsg();
-    }
+      // trtcCloud.sendCustomCmdMsg();
+    },
   },
   {
-    title: "sendSEIMsg",
+    title: 'sendSEIMsg',
     handler: async () => {
-        // trtcCloud.sendSEIMsg();
-    }
+      // trtcCloud.sendSEIMsg();
+    },
   },
   {
-    title: "startSpeedTest",
+    title: 'startSpeedTest',
     handler: async () => {
-        // trtcCloud.startSpeedTest();
-    }
+      // trtcCloud.startSpeedTest();
+    },
   },
   {
-    title: "stopSpeedTest",
+    title: 'stopSpeedTest',
     handler: async () => {
-        trtcCloud.stopSpeedTest();
-    }
+      trtcCloud.stopSpeedTest();
+    },
   },
   {
-    title: "setLogLevel",
+    title: 'setLogLevel',
     handler: async () => {
-        trtcCloud.setLogLevel(TRTCCloudDef.TRTC_LOG_LEVEL_NULL);
-    }
+      trtcCloud.setLogLevel(TRTCCloudDef.TRTC_LOG_LEVEL_NULL);
+    },
   },
   {
-    title: "setConsoleEnabled",
+    title: 'setConsoleEnabled',
     handler: async () => {
-        trtcCloud.setConsoleEnabled(true);
-    }
+      trtcCloud.setConsoleEnabled(true);
+    },
   },
   {
-    title: "setLogCompressEnabled",
+    title: 'setLogCompressEnabled',
     handler: async () => {
-        trtcCloud.setLogCompressEnabled(true);
-    }
+      trtcCloud.setLogCompressEnabled(true);
+    },
   },
   {
-    title: "setLogDirPath",
+    title: 'setLogDirPath',
     handler: async () => {
-        trtcCloud.setLogDirPath("~/Downloads/trtc-react-natibe-sdk-log");
-    }
+      trtcCloud.setLogDirPath('~/Downloads/trtc-react-natibe-sdk-log');
+    },
   },
   {
-    title: "showDebugView",
+    title: 'showDebugView',
     handler: async () => {
-        trtcCloud.showDebugView(2);
-    }
+      trtcCloud.showDebugView(2);
+    },
   },
   {
-    title: "callExperimentalAPI",
+    title: 'callExperimentalAPI',
     handler: async () => {
-        // trtcCloud.callExperimentalAPI();
-    }
+      // trtcCloud.callExperimentalAPI();
+    },
   },
-  
+
   // cloud manager end
   // audio manager begin
   {
-    title: "enableVoiceEarMonitor",
+    title: 'enableVoiceEarMonitor',
     handler: async () => {
-        txAudioManager.enableVoiceEarMonitor(true);
-    }
+      txAudioManager.enableVoiceEarMonitor(true);
+    },
   },
   {
-    title: "setVoiceEarMonitorVolume",
+    title: 'setVoiceEarMonitorVolume',
     handler: async () => {
-        txAudioManager.setVoiceEarMonitorVolume(100);
-    }
+      txAudioManager.setVoiceEarMonitorVolume(100);
+    },
   },
   {
-    title: "setVoiceReverbType",
+    title: 'setVoiceReverbType',
     handler: async () => {
-        txAudioManager.setVoiceReverbType(TXVoiceReverbType.TXLiveVoiceReverbType_1);
-    }
+      txAudioManager.setVoiceReverbType(
+        TXVoiceReverbType.TXLiveVoiceReverbType_1
+      );
+    },
   },
   {
-    title: "setVoiceChangerType",
+    title: 'setVoiceChangerType',
     handler: async () => {
-        txAudioManager.setVoiceChangerType(TXVoiceChangerType.TXLiveVoiceChangerType_1);
-    }
+      txAudioManager.setVoiceChangerType(
+        TXVoiceChangerType.TXLiveVoiceChangerType_1
+      );
+    },
   },
   {
-    title: "setVoiceCaptureVolume",
+    title: 'setVoiceCaptureVolume',
     handler: async () => {
-        txAudioManager.setVoiceCaptureVolume(80);
-    }
+      txAudioManager.setVoiceCaptureVolume(80);
+    },
   },
   {
-    title: "startPlayMusic",
+    title: 'startPlayMusic',
     handler: async () => {
-        // txAudioManager.startPlayMusic();
-    }
+      // txAudioManager.startPlayMusic();
+    },
   },
   {
-    title: "stopPlayMusic",
+    title: 'stopPlayMusic',
     handler: async () => {
-        txAudioManager.stopPlayMusic(1001);
-    }
+      txAudioManager.stopPlayMusic(1001);
+    },
   },
   {
-    title: "pausePlayMusic",
+    title: 'pausePlayMusic',
     handler: async () => {
-        txAudioManager.pausePlayMusic(1001);
-    }
+      txAudioManager.pausePlayMusic(1001);
+    },
   },
   {
-    title: "resumePlayMusic",
+    title: 'resumePlayMusic',
     handler: async () => {
-        txAudioManager.resumePlayMusic(1001);
-    }
+      txAudioManager.resumePlayMusic(1001);
+    },
   },
   {
-    title: "setMusicPublishVolume",
+    title: 'setMusicPublishVolume',
     handler: async () => {
-        txAudioManager.setMusicPublishVolume(1001, 80);
-    }
+      txAudioManager.setMusicPublishVolume(1001, 80);
+    },
   },
   {
-    title: "setMusicPlayoutVolume",
+    title: 'setMusicPlayoutVolume',
     handler: async () => {
-        txAudioManager.setMusicPlayoutVolume(1001, 80);
-    }
+      txAudioManager.setMusicPlayoutVolume(1001, 80);
+    },
   },
   {
-    title: "setAllMusicVolume",
+    title: 'setAllMusicVolume',
     handler: async () => {
-        txAudioManager.setAllMusicVolume(80);
-    }
+      txAudioManager.setAllMusicVolume(80);
+    },
   },
   {
-    title: "setMusicPitch",
+    title: 'setMusicPitch',
     handler: async () => {
-        txAudioManager.setMusicPitch(1001, 0.5);
-    }
+      txAudioManager.setMusicPitch(1001, 0.5);
+    },
   },
   {
-    title: "setMusicSpeedRate",
+    title: 'setMusicSpeedRate',
     handler: async () => {
-        txAudioManager.setMusicSpeedRate(1001, 2);
-    }
+      txAudioManager.setMusicSpeedRate(1001, 2);
+    },
   },
   {
-    title: "getMusicCurrentPosInMS",
+    title: 'getMusicCurrentPosInMS',
     handler: async () => {
-        txAudioManager.getMusicCurrentPosInMS(1001);
-    }
+      txAudioManager.getMusicCurrentPosInMS(1001);
+    },
   },
   {
-    title: "seekMusicToPosInMS",
+    title: 'seekMusicToPosInMS',
     handler: async () => {
-        txAudioManager.seekMusicToPosInMS(1001, 3000);
-    }
+      txAudioManager.seekMusicToPosInMS(1001, 3000);
+    },
   },
   {
-    title: "getMusicDurationInMS",
+    title: 'getMusicDurationInMS',
     handler: async () => {
-        txAudioManager.getMusicDurationInMS("");
-    }
+      txAudioManager.getMusicDurationInMS('');
+    },
   },
-  
+
   // andio menager end
   // device manager begin
   {
-    title: "isFrontCamera",
+    title: 'isFrontCamera',
     handler: async () => {
       const res = await txDeviceManager.isFrontCamera();
       Alert.alert(res.toString());
-    }
+    },
   },
   {
-    title: "switchCamera",
+    title: 'switchCamera',
     handler: async () => {
       txDeviceManager.switchCamera(true);
-    }
+    },
   },
   {
-    title: "getCameraZoomMaxRatio",
+    title: 'getCameraZoomMaxRatio',
     handler: async () => {
       txDeviceManager.getCameraZoomMaxRatio();
-    }
+    },
   },
   {
-    title: "setCameraZoomRatio",
+    title: 'setCameraZoomRatio',
     handler: async () => {
       txDeviceManager.setCameraZoomRatio(2);
-    }
+    },
   },
   {
-    title: "enableCameraAutoFocus",
+    title: 'enableCameraAutoFocus',
     handler: async () => {
       txDeviceManager.enableCameraAutoFocus(true);
-    }
+    },
   },
   {
-    title: "isAutoFocusEnabled",
+    title: 'isAutoFocusEnabled',
     handler: async () => {
       txDeviceManager.isAutoFocusEnabled();
-    }
+    },
   },
   {
-    title: "setCameraFocusPosition",
+    title: 'setCameraFocusPosition',
     handler: async () => {
       txDeviceManager.setCameraFocusPosition(100, 100);
-    }
+    },
   },
   {
-    title: "enableCameraTorch",
+    title: 'enableCameraTorch',
     handler: async () => {
       txDeviceManager.enableCameraTorch(true);
-    }
+    },
   },
   {
-    title: "setSystemVolumeType",
+    title: 'setSystemVolumeType',
     handler: async () => {
-      txDeviceManager.setSystemVolumeType(TRTCCloudDef.TRTCSystemVolumeTypeAuto);
-    }
+      txDeviceManager.setSystemVolumeType(
+        TRTCCloudDef.TRTCSystemVolumeTypeAuto
+      );
+    },
   },
   {
-    title: "setAudioRoute",
+    title: 'setAudioRoute',
     handler: async () => {
       txDeviceManager.setAudioRoute(TRTCCloudDef.TRTC_AUDIO_ROUTE_SPEAKER);
-    }
+    },
   },
   // device manager end
 ];
 
-export { demoParamsGroup }
+export { demoParamsGroup };
