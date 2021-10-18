@@ -1072,7 +1072,7 @@ export type CustomLocalRender = {
 };
 
 /// 外接纹理渲染远端视频参数
-export type CustomRemoteRender = { 
+export type CustomRemoteRender = {
   /// 用户标识
   userId: string;
 
