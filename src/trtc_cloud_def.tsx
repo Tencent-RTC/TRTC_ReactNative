@@ -939,69 +939,69 @@ export type TRTCTranscodingConfig = {
 };
 
 /// 变声类型定义（萝莉、大叔、重金属、外国人...）
-export class TXVoiceChangerType {
+export enum TXVoiceChangerType {
   /// 关闭变声
-  static TXLiveVoiceChangerType_0: number = 0;
+  TXLiveVoiceChangerType_0 = 0,
 
   /// 熊孩子
-  static TXLiveVoiceChangerType_1: number = 1;
+  TXLiveVoiceChangerType_1 = 1,
 
   /// 萝莉
-  static TXLiveVoiceChangerType_2: number = 2;
+  TXLiveVoiceChangerType_2 = 2,
 
   /// 大叔
-  static TXLiveVoiceChangerType_3: number = 3;
+  TXLiveVoiceChangerType_3 = 3,
 
   /// 重金属
-  static TXLiveVoiceChangerType_4: number = 4;
+  TXLiveVoiceChangerType_4 = 4,
 
   /// 感冒
-  static TXLiveVoiceChangerType_5: number = 5;
+  TXLiveVoiceChangerType_5 = 5,
 
   /// 外国人
-  static TXLiveVoiceChangerType_6: number = 6;
+  TXLiveVoiceChangerType_6 = 6,
 
   /// 困兽
-  static TXLiveVoiceChangerType_7: number = 7;
+  TXLiveVoiceChangerType_7 = 7,
 
   /// 死肥仔
-  static TXLiveVoiceChangerType_8: number = 8;
+  TXLiveVoiceChangerType_8 = 8,
 
   /// 强电流
-  static TXLiveVoiceChangerType_9: number = 9;
+  TXLiveVoiceChangerType_9 = 9,
 
   /// 重机械
-  static TXLiveVoiceChangerType_10: number = 10;
+  TXLiveVoiceChangerType_10 = 10,
 
   /// 空灵
-  static TXLiveVoiceChangerType_11: number = 11;
+  TXLiveVoiceChangerType_11 = 11
 }
 
 /// 变声类型定义（KTV、小房间、大会堂、低沉、洪亮...）
-export class TXVoiceReverbType {
+export enum TXVoiceReverbType {
   /// 关闭混响
-  static TXLiveVoiceReverbType_0: number = 0;
+  TXLiveVoiceReverbType_0 = 0,
 
   /// KTV
-  static TXLiveVoiceReverbType_1: number = 1;
+  TXLiveVoiceReverbType_1 = 1,
 
   /// 小房间
-  static TXLiveVoiceReverbType_2: number = 2;
+  TXLiveVoiceReverbType_2 = 2,
 
   /// 大会堂
-  static TXLiveVoiceReverbType_3: number = 3;
+  TXLiveVoiceReverbType_3 = 3,
 
   /// 低沉
-  static TXLiveVoiceReverbType_4: number = 4;
+  TXLiveVoiceReverbType_4 = 4,
 
   /// 洪亮
-  static TXLiveVoiceReverbType_5: number = 5;
+  TXLiveVoiceReverbType_5 = 5,
 
   /// 金属声
-  static TXLiveVoiceReverbType_6: number = 6;
+  TXLiveVoiceReverbType_6 = 6,
 
   /// 磁性
-  static TXLiveVoiceReverbType_7: number = 7;
+  TXLiveVoiceReverbType_7 = 7
 }
 
 /// 音乐和人声设置接口参数
