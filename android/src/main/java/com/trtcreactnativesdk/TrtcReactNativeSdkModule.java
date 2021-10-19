@@ -50,14 +50,14 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
       trtcCloud.setListener(trtcListener);
       promise.resolve(null);
     }
-
     @ReactMethod
-    public void test(Promise promise) {
-      trtcCloud = TRTCCloud.sharedInstance(getReactApplicationContext());
-      String version = trtcCloud.getSDKVersion();
-      Toast.makeText(getReactApplicationContext(), version, 50000).show();
-      promise.resolve(version);
+    public void destroySharedInstance(Promise promise) {
+      TRTCCloud.destroySharedInstance();
+      trtcCloud.setListener(trtcListener);
+      trtcCloud = null;
+      promise.resolve(null);
     }
+
     @ReactMethod
     public void getSDKVersion(Promise promise) {
       trtcCloud = TRTCCloud.sharedInstance(getReactApplicationContext());
@@ -88,19 +88,13 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
       promise.resolve(null);
     }
     @ReactMethod
-    public void invokeMethod(String method, ReadableMap arguments,Promise promise) {
-        //TXLog.i(TAG, "|method=" + method+ "|arguments=" + arguments);
-        promise.resolve(method +"----"+ arguments.getString("a"));
-        WritableMap params = Arguments.createMap();
-        params.putString("eventProperty", "someValue");
-        sendEvent("EventReminder", params);
+    public void connectOtherRoom(String param, Promise promise) {
+      trtcCloud.ConnectOtherRoom(param);
+      promise.resolve(null);
     }
-
-    private void sendEvent(String eventName,WritableMap params) {
-        trtReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, params);
+    @ReactMethod
+    public void disconnectOtherRoom(Promise promise) {
+      trtcCloud.DisconnectOtherRoom();
+      promise.resolve(null);
     }
-
-    public static native int nativeMultiply(int a, int b);
-    public static native String test();
-    public static native void invokeMethod(String method, ReadableMap arguments);
 }
