@@ -370,12 +370,6 @@ const demoParamsGroup: Array<Config> = [
     },
   },
   {
-    title: 'showDebugView',
-    handler: async () => {
-      trtcCloud.showDebugView(2);
-    },
-  },
-  {
     title: 'callExperimentalAPI',
     handler: async () => {
       // trtcCloud.callExperimentalAPI();

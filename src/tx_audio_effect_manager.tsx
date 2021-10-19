@@ -1,20 +1,8 @@
 import { NativeModules } from 'react-native';
 import type {
-  // TRTCParams,
-  // TRTCCloudDef,
-  // TRTCSwitchRoomConfig,
-  // TRTCVideoEncParam,
-  // TRTCNetworkQosParam,
-  // TRTCRenderParams,
-  // TRTCMixUser,
-  // TRTCTranscodingConfig,
   TXVoiceChangerType,
   TXVoiceReverbType,
   AudioMusicParam,
-  // TRTCAudioRecordingParams,
-  // TRTCPublishCDNParam,
-  // CustomLocalRender,
-  // CustomRemoteRender,
 } from './trtc_cloud_def';
 const { TrtcReactNativeSdk } = NativeModules;
 
@@ -83,7 +71,7 @@ export default class TXAudioEffectManager {
   /// 返回：
   ///
   /// true: 成功; false: 失败
-  startPlayMusic(musicParam: AudioMusicParam): Promise<void> {
+  startPlayMusic(musicParam: AudioMusicParam): Promise<boolean> {
     return TrtcReactNativeSdk.startPlayMusic(musicParam);
   }
 

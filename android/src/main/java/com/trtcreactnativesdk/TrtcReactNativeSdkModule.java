@@ -98,8 +98,9 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
       promise.resolve(null);
     }
     @ReactMethod
-    public void switchRole(int role, Promise promise) {
-      trtcCloud.switchRole();
+    public void switchRole(ReadableMap params, Promise promise) {
+      int role = params.getInt("role");
+      trtcCloud.switchRole(role);
       promise.resolve(null);
     }
     @ReactMethod
