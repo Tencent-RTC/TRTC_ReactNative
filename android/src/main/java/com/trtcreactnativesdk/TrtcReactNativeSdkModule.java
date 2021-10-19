@@ -26,12 +26,16 @@ import com.facebook.react.bridge.Arguments;
 public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     public static final String NAME = "TrtcReactNativeSdk";
     private TRTCCloud trtcCloud;
+    private TXDeviceManager txDeviceManager;
+    private TXBeautyManager txBeautyManager;
+    private TXAudioEffectManager txAudioEffectManager;
     private ReactApplicationContext trtReactContext;
     private static final String TAG = "TRTCCloudRN";
     private CustomTRTCCloudListener trtcListener;
     public TrtcReactNativeSdkModule(ReactApplicationContext reactContext) {
         super(reactContext);
         trtReactContext= reactContext;
+        trtcCloud = TRTCCloud.sharedInstance(getReactApplicationContext());
         trtcListener = new CustomTRTCCloudListener(reactContext);
     }
 
@@ -40,7 +44,6 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     public String getName() {
         return NAME;
     }
-
 
     // Example method
     // See https://reactnative.dev/docs/native-modules-android
@@ -130,6 +133,7 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     /**
      * 停止向腾讯云的直播 CDN 推流
      */
+    @ReactMethod
     private void stopPublishing(Promise promise) {
       trtcCloud.stopPublishing();
       promise.resolve(null);
@@ -138,14 +142,16 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     /**
      * 开始向腾讯云的直播 CDN 推流
      */
+    @ReactMethod
     private void startPublishCDNStream(String param, Promise promise) {
-      trtcCloud.startPublishCDNStream(new Gson().fromJson(param, TRTCCloudDef.TRTCPublishCDNParam.class));
+//      trtcCloud.startPublishCDNStream(new Gson().fromJson(param, TRTCCloudDef.TRTCPublishCDNParam.class));
       promise.resolve(null);
     }
 
     /**
      * 停止向非腾讯云地址转推
      */
+    @ReactMethod
     private void stopPublishCDNStream(Promise promise) {
       trtcCloud.stopPublishCDNStream();
       promise.resolve(null);
@@ -153,13 +159,15 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     /**
      * 设置云端的混流转码参数
      */
+    @ReactMethod
     private void setMixTranscodingConfig(String config, Promise promise) {
-      trtcCloud.setMixTranscodingConfig(new Gson().fromJson(config, TRTCCloudDef.TRTCTranscodingConfig.class));
+//      trtcCloud.setMixTranscodingConfig(new Gson().fromJson(config, TRTCCloudDef.TRTCTranscodingConfig.class));
       promise.resolve(null);
     }
     /**
      * 停止本地视频采集及预览
      */
+    @ReactMethod
     private void stopLocalPreview(Promise promise) {
       trtcCloud.stopLocalPreview();
       promise.resolve(null);
@@ -168,6 +176,7 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     /**
      * 停止显示远端视频画面，同时不再拉取该远端用户的视频数据流
      */
+    @ReactMethod
     private void stopRemoteView(ReadableMap params, Promise promise) {
       String userId = params.getString("userId");
       int streamType = params.getInt("streamType");
@@ -178,6 +187,7 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     /**
      * 停止显示所有远端视频画面，同时不再拉取远端用户的视频数据流
      */
+    @ReactMethod
     private void stopAllRemoteView(Promise promise) {
       trtcCloud.stopAllRemoteView();
       promise.resolve(null);
@@ -186,6 +196,7 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     /**
      * 静音/取消静音指定的远端用户的声音
      */
+    @ReactMethod
     private void muteRemoteAudio(ReadableMap params, Promise promise) {
       String userId = params.getString("userId");
       boolean mute = params.getBoolean("mute");
@@ -196,6 +207,7 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     /**
      * 静音/取消静音所有用户的声音
      */
+    @ReactMethod
     private void muteAllRemoteAudio(ReadableMap params, Promise promise) {
         boolean mute = params.getBoolean("mute");
         trtcCloud.muteAllRemoteAudio(mute);
@@ -205,6 +217,7 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     /**
      * 设置某个远程用户的播放音量
      */
+    @ReactMethod
     private void setRemoteAudioVolume(ReadableMap params, Promise promise) {
         String userId = params.getString("userId");
         int volume = params.getInt("volume");
@@ -215,6 +228,7 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     /**
      * 设置 SDK 采集音量。
      */
+    @ReactMethod
     private void setAudioCaptureVolume(ReadableMap params, Promise promise) {
         int volume = params.getInt("volume");
         trtcCloud.setAudioCaptureVolume(volume);
@@ -224,6 +238,7 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     /**
      * 获取 SDK 采集音量。
      */
+    @ReactMethod
     private void getAudioCaptureVolume(Promise promise) {
       promise.resolve(trtcCloud.getAudioCaptureVolume());
     }
@@ -231,6 +246,7 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     /**
      * 设置 SDK 播放音量。
      */
+    @ReactMethod
     private void setAudioPlayoutVolume(ReadableMap params, Promise promise) {
       int volume = params.getInt("volume");
       trtcCloud.setAudioPlayoutVolume(volume);
@@ -240,6 +256,7 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     /**
      * 获取 SDK 播放音量。
      */
+    @ReactMethod
     private void getAudioPlayoutVolume(Promise promise) {
       promise.resolve(trtcCloud.getAudioPlayoutVolume());
     }
@@ -247,6 +264,7 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     /**
      * 开启本地音频的采集和上行
      */
+    @ReactMethod
     private void startLocalAudio(ReadableMap params, Promise promise) {
       int quality = params.getInt("quality");
       trtcCloud.startLocalAudio(quality);
@@ -256,6 +274,7 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     /**
      * 关闭本地音频的采集和上行
      */
+    @ReactMethod
     private void stopLocalAudio(Promise promise) {
         trtcCloud.stopLocalAudio();
         promise.resolve(null);
@@ -263,73 +282,102 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     /**
      * 静音/取消静音本地的音频
      */
+    @ReactMethod
     private void muteLocalAudio(ReadableMap params, Promise promise) {
       boolean mute = params.getBoolean("mute");
       trtcCloud.muteLocalAudio(mute);
       promise.resolve(null);
-  }
-  /**
+    }
+    /**
      * 设置音频路由。
      */
+    @ReactMethod
     private void setAudioRoute(ReadableMap params, Promise promise) {
       int route = params.getInt("route");
       trtcCloud.setAudioRoute(route);
       promise.resolve(null);
-  }
+    }
 
-  /**
-   * 启用音量大小提示。
-   */
-  private void enableAudioVolumeEvaluation(ReadableMap params, Promise promise) {
-      int intervalMs = params.getInt("intervalMs");
-      trtcCloud.enableAudioVolumeEvaluation(intervalMs);
+    /**
+     * 启用音量大小提示。
+     */
+    @ReactMethod
+    private void enableAudioVolumeEvaluation(ReadableMap params, Promise promise) {
+        int intervalMs = params.getInt("intervalMs");
+        trtcCloud.enableAudioVolumeEvaluation(intervalMs);
+        promise.resolve(null);
+    }
+
+    /**
+     * 开始录音。
+     */
+    @ReactMethod
+    private void startAudioRecording(ReadableMap params, Promise promise) {
+        String filePath = params.getString("filePath");
+        TRTCCloudDef.TRTCAudioRecordingParams recordParam = new TRTCCloudDef.TRTCAudioRecordingParams();
+        recordParam.filePath = filePath;
+        int value = trtcCloud.startAudioRecording(recordParam);
+        promise.resolve(value);
+    }
+
+    /**
+     * 停止录音。
+     */
+    @ReactMethod
+    private void stopAudioRecording(Promise promise) {
+        trtcCloud.stopAudioRecording();
+        promise.resolve(null);
+    }
+
+    /**
+     * 开启本地媒体录制。
+     */
+    @ReactMethod
+    private void startLocalRecording(ReadableMap params, Promise promise) {
+      // String param = params.getString("filePath");
+      //  trtcCloud.startLocalRecording(
+      //           new Gson().fromJson(param, TRTCCloudDef.TRTCLocalRecordingParams.class));
+      //   promise.resolve(null);
+    }
+
+    /**
+     * 停止录制。
+     */
+    @ReactMethod
+    private void stopLocalRecording(ReadableMap params, Promise promise) {
+        // trtcCloud.stopLocalRecording();
+        // promise.resolve(null);
+    }
+
+    /**
+     * 设置通话时使用的系统音量类型。
+     */
+    @ReactMethod
+    private void setSystemVolumeType(ReadableMap params, Promise promise) {
+        int type = params.getInt("type");
+        trtcCloud.setSystemVolumeType(type);
+        promise.resolve(null);
+    }
+
+    //获取设备管理对象
+    @ReactMethod
+    private void getDeviceManager(Promise promise) {
+      txDeviceManager = trtcCloud.getDeviceManager();
       promise.resolve(null);
-  }
+    }
 
-  /**
-   * 开始录音。
-   */
-  private void startAudioRecording(ReadableMap params, Promise promise) {
-      String filePath = params.getString("filePath");
-      TRTCCloudDef.TRTCAudioRecordingParams recordParam = new TRTCCloudDef.TRTCAudioRecordingParams();
-      recordParam.filePath = filePath;
-      int value = trtcCloud.startAudioRecording(recordParam);
-      promise.resolve(value);
-  }
-
-  /**
-   * 停止录音。
-   */
-  private void stopAudioRecording(Promise promise) {
-      trtcCloud.stopAudioRecording();
+    //获取美颜管理对象
+    @ReactMethod
+    private void getBeautyManager(Promise promise) {
+      txBeautyManager = trtcCloud.getBeautyManager();
       promise.resolve(null);
-  }
+    }
 
-  /**
-   * 开启本地媒体录制。
-   */
-  private void startLocalRecording(ReadableMap params, Promise promise) {
-    // String param = params.getString("filePath");
-    //  trtcCloud.startLocalRecording(
-    //           new Gson().fromJson(param, TRTCCloudDef.TRTCLocalRecordingParams.class));
-    //   promise.resolve(null);
-  }
-
-  /**
-   * 停止录制。
-   */
-  private void stopLocalRecording(ReadableMap params, Promise promise) {
-      // trtcCloud.stopLocalRecording();
-      // promise.resolve(null);
-  }
-
-  /**
-   * 设置通话时使用的系统音量类型。
-   */
-  private void setSystemVolumeType(ReadableMap params, Promise promise) {
-      int type = params.getInt("type");
-      trtcCloud.setSystemVolumeType(type);
+    //获取音效管理类 TXAudioEffectManager
+    @ReactMethod
+    private void getAudioEffectManager(Promise promise) {
+      txAudioEffectManager = trtcCloud.getAudioEffectManager();
       promise.resolve(null);
-  }
+    }
 
 }

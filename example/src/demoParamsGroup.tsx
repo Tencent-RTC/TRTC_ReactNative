@@ -42,8 +42,9 @@ const demoParamsGroup: Array<Config> = [
         userId,
         userSig,
         roomId: 2366,
+        role: TRTCCloudDef.TRTCRoleAudience,
       });
-      trtcCloud.enterRoom(params, 3);
+      trtcCloud.enterRoom(params, TRTCCloudDef.TRTC_APP_SCENE_LIVE);
     },
   },
   {
@@ -66,9 +67,15 @@ const demoParamsGroup: Array<Config> = [
     },
   },
   {
-    title: 'switchRole',
+    title: 'switchRole-anchor',
     handler: async () => {
       trtcCloud.switchRole(TRTCCloudDef.TRTCRoleAnchor);
+    },
+  },
+  {
+    title: 'switchRole-audience',
+    handler: async () => {
+      trtcCloud.switchRole(TRTCCloudDef.TRTCRoleAudience);
     },
   },
   {

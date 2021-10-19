@@ -40,7 +40,7 @@ export default class TRTCCloud {
    * @returns {{remove: remove}}
    */
   registerListener(listener: { (type: TRTCCloudListener, params: any): void }) {
-    TRTCEventEmitter.addListener('EventReminder', (args) => {
+    TRTCEventEmitter.addListener('onListener', (args) => {
       let params;
       try {
         // ios返回object，android返回string
@@ -63,7 +63,7 @@ export default class TRTCCloud {
   unRegisterListener(listener: {
     (type: TRTCCloudListener, params: any): void;
   }) {
-    TRTCEventEmitter.removeListener('EventReminder', listener);
+    TRTCEventEmitter.removeListener('onListener', listener);
   }
 
   /// 进入房间
