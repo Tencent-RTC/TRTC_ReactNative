@@ -1,20 +1,22 @@
 import * as React from 'react';
-
 import {
   StyleSheet,
-  View,
-  NativeEventEmitter,
-  NativeModules,
+  // View,
+  // NativeEventEmitter,
+  // NativeModules,
   Button,
-  Alert,
+  // Alert,
   SafeAreaView,
   ScrollView,
   StatusBar,
 } from 'react-native';
+import TRTCCloud, {
+  TRTCCloudListener,
+} from 'react-native-trtc-react-native-sdk';
 // @ts-ignore
-import { SDKAPPID } from './debug/config';
+// import { SDKAPPID } from './debug/config';
 // @ts-ignore
-import getLatestUserSig from './debug/index';
+// import getLatestUserSig from './debug/index';
 import { demoParamsGroup } from './demoParamsGroup';
 
 // import TRTCCloud, {
@@ -23,27 +25,17 @@ import { demoParamsGroup } from './demoParamsGroup';
 // } from 'react-native-trtc-react-native-sdk';
 
 export default function App() {
-  // const [result, setResult] = React.useState<string | undefined>();
   React.useEffect(() => {
-    const eventEmitter = new NativeEventEmitter(
-      NativeModules.TrtcReactNativeSdk
-    );
-    eventEmitter.addListener('EventReminder', (event) => {
-      console.log(event.eventProperty); // "someValue"
-      Alert.alert(event.eventProperty);
-    });
     initInfo();
   }, []);
 
   async function initInfo() {
-    // const trtcCloud = (await TRTCCloud.sharedInstance())!;
-    // trtcCloud.registerListener((type: TRTCCloudListener, params: any) => {
-    //   console.log('type', type);
-    //   console.log('params', params);
-    //   if (type === TRTCCloudListener.onEnterRoom) {
-    //     console.log('enterRoom', params);
-    //   }
-    // });
+    const trtcCloud = (await TRTCCloud.sharedInstance())!;
+    trtcCloud.registerListener((type: TRTCCloudListener, params: any) => {
+      // if (type === TRTCCloudListener.onEnterRoom) {
+      console.log(type, params);
+      // }
+    });
   }
 
   return (

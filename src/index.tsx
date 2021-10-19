@@ -47,10 +47,14 @@ export default class TRTCCloud {
    * @returns {{remove: remove}}
    */
   registerListener(listener: { (type: TRTCCloudListener, params: any): void }) {
-    TRTCEventEmitter.addListener('onListener', (args) => {
+    TRTCEventEmitter.addListener('EventReminder', (args) => {
       let params;
       try {
-        params = JSON.parse(args.params);
+        // ios返回object，android返回string
+        params =
+          typeof args.params === 'string'
+            ? JSON.parse(args.params)
+            : args.params;
       } catch (e) {
         console.log(e);
       }
@@ -66,7 +70,7 @@ export default class TRTCCloud {
   unRegisterListener(listener: {
     (type: TRTCCloudListener, params: any): void;
   }) {
-    TRTCEventEmitter.removeListener('onListener', listener);
+    TRTCEventEmitter.removeListener('EventReminder', listener);
   }
 
   static invokeMethod(method: string, scene: number) {

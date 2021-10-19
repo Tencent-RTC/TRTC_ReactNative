@@ -78,6 +78,7 @@
       "<rootDir>/lib/"
     ]
   },
+
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
