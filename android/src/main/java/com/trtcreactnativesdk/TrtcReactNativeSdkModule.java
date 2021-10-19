@@ -21,6 +21,7 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.Arguments;
+import com.google.gson.Gson;
 
 @ReactModule(name = TrtcReactNativeSdkModule.NAME)
 public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
@@ -91,7 +92,8 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
       promise.resolve(null);
     }
     @ReactMethod
-    public void connectOtherRoom(String param, Promise promise) {
+    public void connectOtherRoom(ReadableMap params, Promise promise) {
+      String param = params.getString("param");
       trtcCloud.ConnectOtherRoom(param);
       promise.resolve(null);
     }
@@ -114,13 +116,9 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
       promise.resolve(null);
     }
     @ReactMethod
-    public void switchRoom(ReadableMap params, int scene, Promise promise) {
-      TRTCCloudDef.TRTCSwitchRoomConfig trtcP = new TRTCCloudDef.TRTCSwitchRoomConfig();
-      trtcP.userSig = params.getString("userSig");
-      trtcP.roomId = params.getInt("roomId");
-      trtcP.strRoomId = params.getString("strRoomId");
-      trtcP.privateMapKey = params.getString("privateMapKey");
-      trtcCloud.switchRoom(trtcP);
+    public void switchRoom(ReadableMap params, Promise promise) {
+      String config = params.getString("config");
+      trtcCloud.switchRoom(new Gson().fromJson(config, TRTCCloudDef.TRTCSwitchRoomConfig.class));
       promise.resolve(null);
     }
     @ReactMethod
@@ -143,8 +141,9 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
      * 开始向腾讯云的直播 CDN 推流
      */
     @ReactMethod
-    private void startPublishCDNStream(String param, Promise promise) {
-//      trtcCloud.startPublishCDNStream(new Gson().fromJson(param, TRTCCloudDef.TRTCPublishCDNParam.class));
+    private void startPublishCDNStream(ReadableMap params, Promise promise) {
+      String param = params.getString("param");
+      trtcCloud.startPublishCDNStream(new Gson().fromJson(param, TRTCCloudDef.TRTCPublishCDNParam.class));
       promise.resolve(null);
     }
 

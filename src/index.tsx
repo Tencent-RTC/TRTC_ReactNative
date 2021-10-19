@@ -202,7 +202,7 @@ export default class TRTCCloud {
   /// 接口调用结果会通过onSwitchRoom(errCode, errMsg) 回调。
   switchRoom(config: TRTCSwitchRoomConfig): Promise<void> {
     return TrtcReactNativeSdk.switchRoom({
-      config: config,
+      config: JSON.stringify(config),
     });
   }
 
@@ -252,7 +252,7 @@ export default class TRTCCloud {
   /// 使用 startPublishing() 绑定腾讯云直播 CDN 不收取额外的费用，但使用 startPublishCDNStream() 绑定非腾讯云直播 CDN 需要收取转推费用。
   startPublishCDNStream(param: TRTCPublishCDNParam): Promise<void> {
     return TrtcReactNativeSdk.startPublishCDNStream({
-      param: param,
+      param: JSON.stringify(param),
     });
   }
 
@@ -499,4 +499,6 @@ export {
   TXVoiceChangerType,
   TXVoiceReverbType,
   TRTCCloudListener,
+  TRTCSwitchRoomConfig,
+  TRTCPublishCDNParam,
 };

@@ -5,7 +5,8 @@ import {
   // NativeEventEmitter,
   // NativeModules,
   Button,
-  // Alert,
+  Platform,
+  PermissionsAndroid,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -30,6 +31,12 @@ export default function App() {
   }, []);
 
   async function initInfo() {
+    if (Platform.OS === 'android') {
+      await PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO, //音频需要
+        // PermissionsAndroid.PERMISSIONS.CAMERA, // 视频需要
+      ]);
+    }
     const trtcCloud = (await TRTCCloud.sharedInstance())!;
     trtcCloud.registerListener((type: TRTCCloudListener, params: any) => {
       // if (type === TRTCCloudListener.onEnterRoom) {

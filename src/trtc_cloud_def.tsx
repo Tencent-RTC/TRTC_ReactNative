@@ -711,18 +711,18 @@ export type TRTCSwitchRoomConfig = {
   ///【字段含义】房间号码 [必填] ，在同一个房间里的用户（userId）可以彼此看到对方并进行视频通话
   ///
   /// 【推荐取值】取值范围：1 - 4294967294。
-  roomId: number; // 房间号
+  roomId?: number; // 房间号
 
   /// 【字段含义】字符串房间号码 [选填]，在同一个房间内的用户可以看到彼此并进行视频通话。
   ///
   /// 【特别说明】roomId 和 strRoomId 必须并且只能填一个。若两者都填，则优先选择 roomId。
-  strRoomId: string;
+  strRoomId?: string;
 
   /// 【字段含义】房间签名 [非必填]，当您希望某个房间只能让特定的 userId 进入时，需要使用 privateMapKey 进行权限保护。
   ///
   /// 【推荐取值】仅建议有高级别安全需求的客户使用，更多详情请参见 [进房权限保护](https://cloud.tencent.com/document/product/647/32240)。
 
-  privateMapKey: string; // 房间签名 [非必填]，当您希望某个房间只能让特定的 userId 进入时，需要使用 privateMapKey 进行权限保护。
+  privateMapKey?: string; // 房间签名 [非必填]，当您希望某个房间只能让特定的 userId 进入时，需要使用 privateMapKey 进行权限保护。
 };
 
 /// 编码参数

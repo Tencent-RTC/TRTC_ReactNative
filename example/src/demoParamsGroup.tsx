@@ -4,6 +4,8 @@ import TRTCCloud, {
   TRTCCloudDef,
   TXVoiceChangerType,
   TXVoiceReverbType,
+  TRTCSwitchRoomConfig,
+  TRTCPublishCDNParam,
 } from 'react-native-trtc-react-native-sdk';
 // @ts-ignore
 import getLatestUserSig from './debug/index';
@@ -22,6 +24,8 @@ const txDeviceManager = trtcCloud.getDeviceManager();
 // const txBeautyManager = trtcCloud.getBeautyManager();
 // 获取音效管理类 TXAudioEffectManager
 const txAudioManager = trtcCloud.getAudioEffectManager();
+const userId = '9898';
+
 // 注册事件回调
 // trtcCloud.registerListener(onRtcListener);
 const demoParamsGroup: Array<Config> = [
@@ -35,16 +39,15 @@ const demoParamsGroup: Array<Config> = [
   {
     title: 'enterRoom',
     handler: async () => {
-      const userId = 'lexuslin';
       const userSig = getLatestUserSig(userId).userSig;
       const params = new TRTCParams({
         sdkAppId: SDKAPPID,
         userId,
         userSig,
         roomId: 2366,
-        role: TRTCCloudDef.TRTCRoleAudience,
+        // role: TRTCCloudDef.TRTCRoleAudience,
       });
-      trtcCloud.enterRoom(params, TRTCCloudDef.TRTC_APP_SCENE_LIVE);
+      trtcCloud.enterRoom(params, TRTCCloudDef.TRTC_APP_SCENE_VIDEOCALL);
     },
   },
   {
@@ -57,7 +60,11 @@ const demoParamsGroup: Array<Config> = [
   {
     title: 'connectOtherRoom',
     handler: async () => {
-      // trtcCloud.connectOtherRoom();
+      const otherRoom = {
+        roomId: 2288,
+        userId: '345',
+      };
+      trtcCloud.connectOtherRoom(JSON.stringify(otherRoom));
     },
   },
   {
@@ -87,34 +94,47 @@ const demoParamsGroup: Array<Config> = [
   {
     title: 'switchRoom',
     handler: async () => {
-      // trtcCloud.switchRoom();
+      const userSig = getLatestUserSig(userId).userSig;
+      const roomConfig: TRTCSwitchRoomConfig = {
+        userSig,
+        roomId: 2288,
+      };
+      trtcCloud.switchRoom(roomConfig);
     },
   },
   {
     title: 'startPublishing',
     handler: async () => {
-      // trtcCloud.startPublishing();
+      trtcCloud.startPublishing(
+        'clavie_stream_001',
+        TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_BIG
+      );
+    },
+  },
+  {
+    title: 'stopPublishing',
+    handler: async () => {
+      trtcCloud.stopPublishing();
+    },
+  },
+  {
+    title: 'startPublishCDNStream',
+    handler: async () => {
+      const param: TRTCPublishCDNParam = {
+        appId: 112,
+        bizId: 233,
+        url: 'https://www.baidu.com',
+      };
+      trtcCloud.startPublishCDNStream(param);
+    },
+  },
+  {
+    title: 'stopPublishCDNStream',
+    handler: async () => {
+      trtcCloud.stopPublishCDNStream();
     },
   },
   /*
-  {
-    title: "stopPublishing",
-    handler: async () => {
-        trtcCloud.stopPublishing();
-    }
-  },
-  {
-    title: "startPublishCDNStream",
-    handler: async () => {
-        trtcCloud.startPublishCDNStream();
-    }
-  },
-  {
-    title: "stopPublishCDNStream",
-    handler: async () => {
-        trtcCloud.stopPublishCDNStream();
-    }
-  },
   {
     title: "setMixTranscodingConfig",
     handler: async () => {
@@ -237,15 +257,27 @@ const demoParamsGroup: Array<Config> = [
     },
   },
   {
-    title: 'muteLocalAudio',
+    title: 'muteLocalAudio-true',
     handler: async () => {
       trtcCloud.muteLocalAudio(true);
     },
   },
   {
-    title: 'muteRemoteAudio',
+    title: 'muteLocalAudio-false',
     handler: async () => {
-      trtcCloud.muteRemoteAudio('lexuslin3', true);
+      trtcCloud.muteLocalAudio(false);
+    },
+  },
+  {
+    title: 'muteRemoteAudio-true',
+    handler: async () => {
+      trtcCloud.muteRemoteAudio('345', true);
+    },
+  },
+  {
+    title: 'muteRemoteAudio-false',
+    handler: async () => {
+      trtcCloud.muteRemoteAudio('345', false);
     },
   },
   {
@@ -255,13 +287,19 @@ const demoParamsGroup: Array<Config> = [
     },
   },
   {
-    title: 'setRemoteAudioVolume',
+    title: 'setRemoteAudioVolume-80',
     handler: async () => {
-      trtcCloud.setRemoteAudioVolume('lexuslin3', 80);
+      trtcCloud.setRemoteAudioVolume('345', 80);
     },
   },
   {
-    title: 'setAudioCaptureVolume',
+    title: 'setRemoteAudioVolume-0',
+    handler: async () => {
+      trtcCloud.setRemoteAudioVolume('345', 0);
+    },
+  },
+  {
+    title: 'setAudioCaptureVolume-80',
     handler: async () => {
       trtcCloud.setAudioCaptureVolume(80);
     },
@@ -269,11 +307,12 @@ const demoParamsGroup: Array<Config> = [
   {
     title: 'getAudioCaptureVolume',
     handler: async () => {
-      trtcCloud.getAudioCaptureVolume();
+      let volume = await trtcCloud.getAudioCaptureVolume();
+      Alert.alert(volume.toString());
     },
   },
   {
-    title: 'setAudioPlayoutVolume',
+    title: 'setAudioPlayoutVolume-80',
     handler: async () => {
       trtcCloud.setAudioPlayoutVolume(80);
     },
@@ -281,13 +320,20 @@ const demoParamsGroup: Array<Config> = [
   {
     title: 'getAudioPlayoutVolume',
     handler: async () => {
-      trtcCloud.getAudioPlayoutVolume();
+      let volume = await trtcCloud.getAudioPlayoutVolume();
+      Alert.alert(volume.toString());
     },
   },
   {
-    title: 'enableAudioVolumeEvaluation',
+    title: 'enableAudioVolumeEvaluation-300',
     handler: async () => {
       trtcCloud.enableAudioVolumeEvaluation(300);
+    },
+  },
+  {
+    title: 'enableAudioVolumeEvaluation-0',
+    handler: async () => {
+      trtcCloud.enableAudioVolumeEvaluation(0);
     },
   },
   {
