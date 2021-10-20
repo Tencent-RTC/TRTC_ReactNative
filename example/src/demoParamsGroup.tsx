@@ -281,7 +281,7 @@ const demoParamsGroup: Array<Config> = [
   {
     title: 'callExperimentalAPI',
     handler: async () => {
-      // trtcCloud.callExperimentalAPI();
+      trtcCloud.callExperimentalAPI('223');
     },
   },
 

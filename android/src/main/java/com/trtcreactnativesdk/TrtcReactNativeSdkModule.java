@@ -57,7 +57,6 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void destroySharedInstance(Promise promise) {
       TRTCCloud.destroySharedInstance();
-      trtcCloud.setListener(trtcListener);
       trtcCloud = null;
       promise.resolve(null);
     }
@@ -400,4 +399,164 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
       trtcCloud.stopSpeedTest();
       promise.resolve(null);
     }
+
+    /**
+     * 设置 Log 输出级别
+     */
+    @ReactMethod
+    private void setLogLevel(ReadableMap params, Promise promise) {
+      int level = params.getInt("level");
+      trtcCloud.setLogLevel(level);
+      promise.resolve(null);
+    }
+
+    /**
+     * 启用或禁用控制台日志打印
+     */
+    @ReactMethod
+    private void setConsoleEnabled(ReadableMap params, Promise promise) {
+      boolean enabled = params.getBoolean("enabled");
+      TRTCCloud.setConsoleEnabled(enabled);
+      promise.resolve(null);
+    }
+
+    /**
+     * 修改日志保存路径
+     */
+    @ReactMethod
+    private void setLogDirPath(ReadableMap params, Promise promise) {
+      String path = params.getString("path");
+      TRTCCloud.setLogDirPath(path);
+      promise.resolve(null);
+    }
+
+    /**
+     * 启用或禁用 Log 的本地压缩。
+     */
+    @ReactMethod
+    private void setLogCompressEnabled(ReadableMap params, Promise promise) {
+      boolean enabled = params.getBoolean( "enabled");
+      TRTCCloud.setLogCompressEnabled(enabled);
+      promise.resolve(null);
+    }
+
+    /**
+     * 启用或禁用 Log 的本地压缩。
+     */
+    @ReactMethod
+    private void callExperimentalAPI(ReadableMap params, Promise promise) {
+      String jsonStr = params.getString( "jsonStr");
+      trtcCloud.callExperimentalAPI(jsonStr);
+      promise.resolve(null);
+    }
+
+    /**
+     * 开启耳返
+     */
+    private void enableVoiceEarMonitor(ReadableMap params, Promise promise) {
+      boolean enable = params.getBoolean( "enable");
+      txAudioEffectManager.enableVoiceEarMonitor(enable);
+      promise.resolve(null);
+    }
+
+  /**
+   * 设置耳返音量。
+   */
+  private void setVoiceEarMonitorVolume(ReadableMap params, Promise promise) {
+    int volume = params.getInt( "volume");
+    txAudioEffectManager.setVoiceEarMonitorVolume(volume);
+    promise.resolve(null);
+  }
+
+  /**
+   * 设置人声的混响效果（KTV、小房间、大会堂、低沉、洪亮...）
+   */
+  private void setVoiceReverbType(ReadableMap params, Promise promise) {
+    int type = params.getInt(  "type");
+    TXAudioEffectManager.TXVoiceReverbType reverbType =
+      TXAudioEffectManager.TXVoiceReverbType.TXLiveVoiceReverbType_0;
+    switch (type) {
+      case 0:
+        reverbType = TXAudioEffectManager.TXVoiceReverbType.TXLiveVoiceReverbType_0;
+        break;
+      case 1:
+        reverbType = TXAudioEffectManager.TXVoiceReverbType.TXLiveVoiceReverbType_1;
+        break;
+      case 2:
+        reverbType = TXAudioEffectManager.TXVoiceReverbType.TXLiveVoiceReverbType_2;
+        break;
+      case 3:
+        reverbType = TXAudioEffectManager.TXVoiceReverbType.TXLiveVoiceReverbType_3;
+        break;
+      case 4:
+        reverbType = TXAudioEffectManager.TXVoiceReverbType.TXLiveVoiceReverbType_4;
+        break;
+      case 5:
+        reverbType = TXAudioEffectManager.TXVoiceReverbType.TXLiveVoiceReverbType_5;
+        break;
+      case 6:
+        reverbType = TXAudioEffectManager.TXVoiceReverbType.TXLiveVoiceReverbType_6;
+        break;
+      case 7:
+        reverbType = TXAudioEffectManager.TXVoiceReverbType.TXLiveVoiceReverbType_7;
+        break;
+      default:
+        reverbType = TXAudioEffectManager.TXVoiceReverbType.TXLiveVoiceReverbType_0;
+        break;
+    }
+    txAudioEffectManager.setVoiceReverbType(reverbType);
+    promise.resolve(null);
+  }
+
+  /**
+   * 设置人声的变声特效（萝莉、大叔、重金属、外国人...）
+   */
+  private void setVoiceChangerType(ReadableMap params, Promise promise) {
+    int type = params.getInt(  "type");
+    TXAudioEffectManager.TXVoiceChangerType changerType =
+      TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_0;
+    switch (type) {
+      case 0:
+        changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_0;
+        break;
+      case 1:
+        changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_1;
+        break;
+      case 2:
+        changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_2;
+        break;
+      case 3:
+        changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_3;
+        break;
+      case 4:
+        changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_4;
+        break;
+      case 5:
+        changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_5;
+        break;
+      case 6:
+        changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_6;
+        break;
+      case 7:
+        changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_7;
+        break;
+      case 8:
+        changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_8;
+        break;
+      case 9:
+        changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_9;
+        break;
+      case 10:
+        changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_10;
+        break;
+      case 11:
+        changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_11;
+        break;
+      default:
+        changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_0;
+        break;
+    }
+    txAudioEffectManager.setVoiceChangerType(changerType);
+    promise.resolve(null);
+  }
 }
