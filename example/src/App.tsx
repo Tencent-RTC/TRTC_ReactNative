@@ -39,9 +39,9 @@ export default function App() {
     }
     const trtcCloud = (await TRTCCloud.sharedInstance())!;
     trtcCloud.registerListener((type: TRTCCloudListener, params: any) => {
-      // if (type === TRTCCloudListener.onEnterRoom) {
-      console.log(type, params);
-      // }
+      if (type !== TRTCCloudListener.onNetworkQuality && type !== TRTCCloudListener.onStatistics) {
+        console.log(type, params);
+      }
     });
   }
 

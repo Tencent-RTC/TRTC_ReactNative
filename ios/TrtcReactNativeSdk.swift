@@ -2,26 +2,20 @@ import TXLiteAVSDK_TRTC
 
 @objc(TrtcReactNativeSdk)
 class TrtcReactNativeSdk: RCTEventEmitter, TRTCCloudDelegate {
+	
 	private var hasListeners = false
 	
-	override func supportedEvents() -> [String]! {
-//		var events = [String]()
-//		RtcEngineEvents.toMap().forEach { key, value in
-//			events.append("\(RtcEngineEventHandler.PREFIX)\(value)")
-//		}
-		return ["EventReminder"]
-	}
-
-	
-
-	
-	
-	
 	private var txCloudManager: TRTCCloud = TRTCCloud.sharedInstance();
-
+	private var txAudioEffectManager: TXAudioEffectManager = TRTCCloud.sharedInstance().getAudioEffectManager();
+	private var txDeviceManager: TXDeviceManager = (TRTCCloud.sharedInstance()?.getDeviceManager())!;
+	
+	override func supportedEvents() -> [String]! {
+		return ["onListener"]
+	}
+	
+	// sdk manager begin
 	@objc(sharedInstance:withRejecter:)
 	func sharedInstance(resolve: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
-//		cloudManager = CloudManager(registrar: TencentTRTCCloud.registrar);
 		txCloudManager.delegate = self;
 		resolve(0);
 	}
@@ -33,7 +27,6 @@ class TrtcReactNativeSdk: RCTEventEmitter, TRTCCloudDelegate {
 	
 	@objc(enterRoom:withScene:withResolver:withRejecter:)
 	func enterRoom(param: NSDictionary, scene: Int, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
-		
 		if let sdkAppId = param["sdkAppId"] as? UInt32,
 		   let userId = param["userId"] as? String,
 		   let userSig = param["userSig"] as? String,
@@ -81,16 +74,1120 @@ class TrtcReactNativeSdk: RCTEventEmitter, TRTCCloudDelegate {
 		resolve(0);
 	}
 	
-	
-	@objc(isFrontCamera:withRejecter:)
-	func isFrontCamera(resolve: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
-		resolve(txCloudManager.getDeviceManager()?.isFrontCamera());
+	/**
+	* 跨房通话
+	*/
+  @objc(connectOtherRoom:withResolver:withRejecter:)
+	func connectOtherRoom(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let param = param["param"] as? String {
+			txCloudManager.connectOtherRoom(param);
+			result(nil);
+		}
 	}
 	
+	/**
+	* 退出跨房通话
+	*/
+  @objc(disconnectOtherRoom:withRejecter:)
+	func disconnectOtherRoom(result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		txCloudManager.disconnectOtherRoom();
+		result(nil);
+	}
 	
+	/**
+	* 切换房间
+	*/
+  @objc(switchRoom:withResolver:withRejecter:)
+	func switchRoom(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		let config = JsonUtil.getDictionaryFromJSONString(jsonString: (param["config"] as? String)!);
+		
+		if let userSig = config["userSig"] as? String,
+		   let roomId = config["roomId"] as? UInt32,
+		   let strRoomId = config["strRoomId"] as? String,
+		   let privateMapKey = config["privateMapKey"] as? String {
+			let params = TRTCSwitchRoomConfig();
+			params.userSig = userSig;
+			params.roomId = roomId;
+			params.strRoomId = strRoomId;
+			params.privateMapKey = privateMapKey;
+			
+			txCloudManager.switchRoom(params);
+			result(nil);
+		}
+	}
 	
+	/**
+	* 切换角色，仅适用于直播场景（TRTC_APP_SCENE_LIVE 和 TRTC_APP_SCENE_VOICE_CHATROOM）
+	*/
+  @objc(switchRole:withResolver:withRejecter:)
+	func switchRole(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let role = param["role"] as? Int {
+			txCloudManager.switch(TRTCRoleType(rawValue: role)!);
+			result(nil);
+		}
+	}
+	
+	/**
+	* 设置音视频数据接收模式，需要在进房前设置才能生效
+	*/
+  // @objc(setDefaultStreamRecvMode:withResolver:withRejecter:)
+	// func setDefaultStreamRecvMode(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+	// 	if let autoRecvAudio = param["autoRecvAudio"] as? Bool,
+	// 	   let autoRecvVideo = param["autoRecvVideo"] as? Bool {
+	// 		txCloudManager.setDefaultStreamRecvMode(autoRecvAudio, video: autoRecvVideo);
+	// 		result(nil);
+	// 	}
+	// }
+	
+	/**
+	* 静音/取消静音指定的远端用户的声音
+	*/
+  @objc(muteRemoteAudio:withResolver:withRejecter:)
+	func muteRemoteAudio(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let userId = param["userId"] as? String,
+		   let mute = param["mute"] as? Bool {
+			txCloudManager.muteRemoteAudio(userId, mute: mute);
+			result(nil);
+		}
+	}
+	
+	/**
+	* 静音/取消静音所有用户的声音
+	*/
+  @objc(muteAllRemoteAudio:withResolver:withRejecter:)
+	func muteAllRemoteAudio(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let mute = param["mute"] as? Bool {
+			txCloudManager.muteAllRemoteAudio(mute);
+			result(nil);
+		}
+	}
+	
+	/**
+	* 设置采集音量
+	*/
+  @objc(setAudioCaptureVolume:withResolver:withRejecter:)
+	func setAudioCaptureVolume(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let volume = param["volume"] as? Int {
+			txCloudManager.setAudioCaptureVolume(volume);
+			result(nil);
+		}
+	}
+	
+	/**
+	* 设置某个远程用户的播放音量
+	*/
+  @objc(setRemoteAudioVolume:withResolver:withRejecter:)
+	func setRemoteAudioVolume(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let userId = param["userId"] as? String,
+		   let volume = param["volume"] as? Int32 {
+			txCloudManager.setRemoteAudioVolume(userId, volume: volume);
+			result(nil);
+		}
+	}
+	
+	/**
+	* 设置播放音量
+	*/
+  @objc(setAudioPlayoutVolume:withResolver:withRejecter:)
+	func setAudioPlayoutVolume(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let volume = param["volume"] as? Int {
+			txCloudManager.setAudioPlayoutVolume(volume);
+			result(nil);
+		}
+	}
+	
+	/**
+	* 获取采集音量
+	*/
+  @objc(getAudioCaptureVolume:withRejecter:)
+	func getAudioCaptureVolume(result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		let volume = txCloudManager.getAudioCaptureVolume();
+		result(volume);
+	}
+	
+	/**
+	* 获取播放音量
+	*/
+  @objc(getAudioPlayoutVolume:withRejecter:)
+	func getAudioPlayoutVolume(result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		let volume = txCloudManager.getAudioPlayoutVolume();
+		result(volume);
+	}
+	
+	/**
+	* 开启本地音频的采集和上行
+	*/
+  @objc(startLocalAudio:withResolver:withRejecter:)
+	func startLocalAudio(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let quality = param["quality"] as? Int {
+			txCloudManager.startLocalAudio(TRTCAudioQuality(rawValue: quality)!);
+			result(nil);
+		}
+	}
+	
+	/**
+	* 关闭本地音频的采集和上行
+	*/
+  @objc(stopLocalAudio:withRejecter:)
+	func stopLocalAudio(result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		txCloudManager.stopLocalAudio();
+		result(nil);
+	}
+	
+	/**
+	* 本地视频渲染设置
+	*/
+  @objc(setLocalRenderParams:withResolver:withRejecter:)
+	func setLocalRenderParams(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let param = param["param"] as? String {
+			let dict = JsonUtil.getDictionaryFromJSONString(jsonString: param);
+			let data = TRTCRenderParams();
+			if dict["rotation"] != nil {
+				data.rotation = TRTCVideoRotation(rawValue: dict["rotation"] as! Int)!;
+			}
+			if dict["fillMode"] != nil {
+				data.fillMode = TRTCVideoFillMode(rawValue: dict["fillMode"] as! Int)!;
+			}
+			if dict["mirrorType"] != nil {
+				data.mirrorType = TRTCVideoMirrorType(rawValue: dict["mirrorType"] as! UInt)!;
+			}
+			txCloudManager.setLocalRenderParams(data);
+			result(nil);
+		}
+	}
+	
+	/**
+	* 远程视频渲染设置
+	*/
+  @objc(setRemoteRenderParams:withResolver:withRejecter:)
+	func setRemoteRenderParams(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let userId = param["userId"] as? String,
+		   let streamType = param["streamType"] as? Int,
+		   let param = param["param"] as? String {
+			let dict = JsonUtil.getDictionaryFromJSONString(jsonString: param);
+			let data = TRTCRenderParams();
+			if dict["rotation"] != nil {
+				data.rotation = TRTCVideoRotation(rawValue: dict["rotation"] as! Int)!;
+			}
+			if dict["fillMode"] != nil {
+				data.fillMode = TRTCVideoFillMode(rawValue: dict["fillMode"] as! Int)!;
+			}
+			if dict["mirrorType"] != nil {
+				data.mirrorType = TRTCVideoMirrorType(rawValue: dict["mirrorType"] as! UInt)!;
+			}
+			txCloudManager.setRemoteRenderParams(userId, streamType: TRTCVideoStreamType(rawValue: streamType)!,  params: data);
+			result(nil);
+		}
+	}
+	
+	/**
+	* 停止显示所有远端视频画面，同时不再拉取远端用户的视频数据流
+	*/
+  @objc(stopAllRemoteView:withResolver:withRejecter:)
+	func stopAllRemoteView(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		txCloudManager.stopAllRemoteView();
+		result(nil);
+	}
+	
+	/**
+	* 暂停/恢复接收指定的远端视频流
+	*/
+  @objc(muteRemoteVideoStream:withResolver:withRejecter:)
+	func muteRemoteVideoStream(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let userId = param["userId"] as? String,
+		   let mute = param["mute"] as? Bool {
+			txCloudManager.muteRemoteVideoStream(userId, mute: mute);
+			result(nil);
+		}
+	}
+	
+	/**
+	* 暂停/恢复接收所有远端视频流
+	*/
+  @objc(muteAllRemoteVideoStreams:withResolver:withRejecter:)
+	func muteAllRemoteVideoStreams(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let mute = param["mute"] as? Bool {
+			txCloudManager.muteAllRemoteVideoStreams(mute);
+			result(nil);
+		}
+	}
+	
+	/**
+	* 设置视频编码器相关参数
+	*/
+  @objc(setVideoEncoderParam:withResolver:withRejecter:)
+	func setVideoEncoderParam(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let param = param["param"] as? String {
+			let dict = JsonUtil.getDictionaryFromJSONString(jsonString: param);
+			let data = TRTCVideoEncParam();
+			if dict["videoBitrate"] != nil {
+				data.videoBitrate = dict["videoBitrate"] as! Int32;
+			}
+			if dict["videoResolution"] != nil {
+				data.videoResolution = TRTCVideoResolution(rawValue: dict["videoResolution"] as! Int)!;
+			}
+			if dict["videoResolutionMode"] != nil {
+				data.resMode = TRTCVideoResolutionMode(rawValue: dict["videoResolutionMode"] as! Int)!;
+			}
+			if dict["videoFps"] != nil {
+				data.videoFps = dict["videoFps"] as! Int32;
+			}
+			txCloudManager.setVideoEncoderParam(data);
+			result(nil);
+		}
+	}
+	
+	/**
+	* 开始向腾讯云的直播 CDN 推流
+	*/
+  @objc(startPublishing:withResolver:withRejecter:)
+	func startPublishing(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let streamType = param["streamType"] as? Int,
+		   let streamId = param["streamId"] as? String {
+			txCloudManager.startPublishing(streamId, type: TRTCVideoStreamType(rawValue: streamType)!);
+			result(nil);
+			
+		}
+	}
+	
+	/**
+	* 开始向腾讯云的直播 CDN 推流
+	*/
+  @objc(startPublishCDNStream:withResolver:withRejecter:)
+	func startPublishCDNStream(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+//		let param = param["param"] as? String;
+		
+		if let appId = param["appId"] as? Int32,
+		   let bizId = param["bizId"] as? Int32,
+		   let url = param["url"] as? String {
+			let params = TRTCPublishCDNParam();
+			params.appId = appId;
+			params.bizId = bizId;
+			params.url = url;
+			
+			txCloudManager.startPublishCDNStream(params);
+			result(nil);
+		}
+	}
+	
+	/**
+	* 停止向腾讯云的直播 CDN 推流
+	*/
+  @objc(stopPublishCDNStream:withRejecter:)
+	func stopPublishCDNStream(result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		txCloudManager.stopPublishCDNStream();
+		result(nil);
+	}
+	
+	/**
+	* 停止向腾讯云的直播 CDN 推流
+	*/
+  @objc(stopPublishing:withResolver:withRejecter:)
+	func stopPublishing(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		txCloudManager.stopPublishing();
+		result(nil);
+	}
+	
+	/**
+	* 设置云端的混流转码参数
+	*/
+  @objc(setMixTranscodingConfig:withResolver:withRejecter:)
+	func setMixTranscodingConfig(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let param = param["config"] as? String {
+			let dict = JsonUtil.getDictionaryFromJSONString(jsonString: param);
+			let backgroundImage = dict["backgroundImage"] as? String;
+			let streamId = dict["streamId"] as? String;
+			
+			if let appId = dict["appId"] as? Int32,
+			   let bizId = dict["bizId"] as? Int32,
+			   let videoWidth = dict["videoWidth"] as? Int32,
+			   let mode = dict["mode"] as? Int,
+			   let videoHeight = dict["videoHeight"] as? Int32,
+			   let videoFramerate = dict["videoFramerate"] as? Int32,
+			   let videoGOP = dict["videoGOP"] as? Int32,
+			   let backgroundColor = dict["backgroundColor"] as? Int32,
+			   let videoBitrate = dict["videoBitrate"] as? Int32,
+			   let audioBitrate = dict["audioBitrate"] as? Int32,
+			   let audioSampleRate = dict["audioSampleRate"] as? Int32,
+			   let audioChannels = dict["audioChannels"] as? Int32,
+			   let mixUsers = dict["mixUsers"] as? Array<AnyObject> {
+				
+				let config = TRTCTranscodingConfig();
+				var users: [TRTCMixUser] = [];
+				
+				config.appId = appId;
+				config.bizId = bizId;
+				config.videoWidth = videoWidth;
+				config.mode = TRTCTranscodingConfigMode(rawValue: mode)!;
+				config.videoHeight = videoHeight;
+				config.videoFramerate = videoFramerate;
+				config.videoGOP = videoGOP;
+				config.backgroundImage = backgroundImage;
+				config.backgroundColor = backgroundColor;
+				config.videoBitrate = videoBitrate;
+				config.audioBitrate = audioBitrate;
+				config.audioSampleRate = audioSampleRate;
+				config.audioChannels = audioChannels;
+				config.streamId = streamId;
+				
+				for item in mixUsers {
+					let user = TRTCMixUser();
+					user.userId = item["userId"] as! String;
+					user.roomID = item["roomId"] as? String;
+					user.rect = CGRect(x: item["x"] as! Int, y: item["y"] as! Int, width: item["width"] as! Int, height: item["height"] as! Int);
+					user.zOrder = item["zOrder"] as! Int32;
+					user.streamType = TRTCVideoStreamType(rawValue: item["streamType"] as! Int)!;
+					user.pureAudio = false;
+					users.append(user);
+				}
+				
+				config.mixUsers = users;
+				txCloudManager.setMix(config);
+				
+				result(nil);
+			}
+		}
+	}
+	
+	/**
+	* 设置网络流控相关参数
+	*/
+  @objc(setNetworkQosParam:withResolver:withRejecter:)
+	func setNetworkQosParam(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let param = param["param"] as? String {
+			let dict = JsonUtil.getDictionaryFromJSONString(jsonString: param);
+			let param = TRTCNetworkQosParam();
+			
+			if !(dict["preference"] is NSNull) &&  dict["preference"] != nil {
+				param.preference = TRTCVideoQosPreference(rawValue: dict["preference"] as! Int)!;
+			}
+			if !(dict["controlMode"] is NSNull) &&  dict["controlMode"] != nil {
+				param.controlMode = TRTCQosControlMode(rawValue: dict["controlMode"] as! Int)!;
+			}
+			
+			txCloudManager.setNetworkQosParam(param);
+			result(nil);
+		}
+	}
+	
+	/**
+	* 设置暂停推送本地视频时要推送的图片
+	*/
+  @objc(setVideoMuteImage:withResolver:withRejecter:)
+	func setVideoMuteImage(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		let imageUrl = param["imageUrl"] as? String;
+		if 	let fps = param["fps"] as? Int,
+			   let type = param["type"] as? String {
+			if(imageUrl == nil) {
+				txCloudManager.setVideoMuteImage(nil, fps: fps);
+			} else {
+				if type == "local" {
+//					let img = UIImage(contentsOfFile: self.getFlutterBundlePath(assetPath: imageUrl!)!)!;
+//					txCloudManager.setVideoMuteImage(img, fps: fps);
+				} else {
+					let queue = DispatchQueue(label: "setVideoMuteImage")
+					queue.async {
+						let url: NSURL = NSURL(string: imageUrl!)!
+						let data: NSData = NSData(contentsOf: url as URL)!
+						let img = UIImage(data: data as Data, scale: 1)!
+						self.txCloudManager.setVideoMuteImage(img, fps: fps);
+					}
+				}
+			}
+			result(nil);
+		}
+	}
+	
+	/**
+	* 设置视频编码输出的画面方向，即设置远端用户观看到的和服务器录制的画面方向
+	*/
+  @objc(setVideoEncoderRotation:withResolver:withRejecter:)
+	func setVideoEncoderRotation(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let rotation = param["rotation"] as? Int {
+			txCloudManager.setVideoEncoderRotation(TRTCVideoRotation(rawValue: rotation)!);
+			result(nil);
+		}
+	}
+	
+	/**
+	* 设置编码器输出的画面镜像模式
+	*/
+  @objc(setVideoEncoderMirror:withResolver:withRejecter:)
+	func setVideoEncoderMirror(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let mirror = param["mirror"] as? Bool {
+			txCloudManager.setVideoEncoderMirror(mirror);
+			result(nil);
+		}
+	}
+	
+	/**
+	* 设置重力感应的适应模式
+	*/
+  @objc(setGSensorMode:withResolver:withRejecter:)
+	func setGSensorMode(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let mode = param["mode"] as? Int {
+			txCloudManager.setGSensorMode(TRTCGSensorMode(rawValue: mode)!);
+			result(nil);
+		}
+	}
+	
+	/**
+	* 开启大小画面双路编码模式
+	*/
+  @objc(enableEncSmallVideoStream:withResolver:withRejecter:)
+	func enableEncSmallVideoStream(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let enable = param["enable"] as? Bool,
+		   let smallVideoEncParam = param["smallVideoEncParam"] as? String {
+			let dict = JsonUtil.getDictionaryFromJSONString(jsonString: smallVideoEncParam);
+			let data = TRTCVideoEncParam();
+			if !(dict["videoBitrate"] is NSNull) &&  dict["videoBitrate"] != nil {
+				data.videoBitrate = dict["videoBitrate"] as! Int32;
+			}
+			if !(dict["videoResolution"] is NSNull)  &&  dict["videoResolution"] != nil  {
+				data.videoResolution = TRTCVideoResolution(rawValue: dict["videoResolution"] as! Int)!;
+			}
+			if !(dict["videoResolutionMode"] is NSNull)  &&  dict["videoResolutionMode"] != nil  {
+				data.resMode = TRTCVideoResolutionMode(rawValue: dict["videoResolutionMode"] as! Int)!;
+			}
+			if !(dict["videoFps"] is NSNull)  &&  dict["videoFps"] != nil  {
+				data.videoFps = dict["videoFps"] as! Int32;
+			}
+			
+			let ret = txCloudManager.enableEncSmallVideoStream(enable, withQuality: data);
+			result(ret);
+		}
+	}
+	
+	/**
+	* 选定观看指定 uid 的大画面或小画面
+	*/
+  @objc(setRemoteVideoStreamType:withResolver:withRejecter:)
+	func setRemoteVideoStreamType(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let userId = param["userId"] as? String,
+		   let streamType = param["streamType"] as? Int {
+			txCloudManager.setRemoteVideoStreamType(userId, type: TRTCVideoStreamType(rawValue: streamType)!);
+			result(nil);
+		}
+	}
+	
+	/**
+	* 视频画面截图
+	*/
+  @objc(snapshotVideo:withResolver:withRejecter:)
+	func snapshotVideo(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+//		let userId = param["userId"] as? String;
+//		if let streamType = param["streamType"] as? Int,
+//		   let path = param["path"] as? String {
+//
+//			txCloudManager.snapshotVideo(userId, type: TRTCVideoStreamType(rawValue: streamType)!, completionBlock: {
+//				(image) -> Void in
+//
+//				let data: Data
+//				let url = URL(fileURLWithPath: "path")
+//
+//				if path.hasSuffix(".png") {
+//					data = (image?.pngData()!
+//				} else {
+//					data = (image?.jpegData(compressionQuality: CGFloat(1))!
+//				}
+//
+//				do {
+//					try data.write(to: url)
+//					TencentTRTCCloud.invokeListener(type: ListenerType.onSnapshotComplete, params: ["errCode": 0, "path": path]);
+//				} catch {
+//					CommonUtils.logError(call: call, errCode: -1, errMsg: "\(error)")
+//					TencentTRTCCloud.invokeListener(type: ListenerType.onSnapshotComplete, params: ["errCode": -1, "errMsg": "\(error)", "path": nil]);
+//				}
+//			});
+//			result(nil);
+//		}
+	}
+	
+	/**
+	* 静音/取消静音本地的音频
+	*/
+  @objc(muteLocalAudio:withResolver:withRejecter:)
+	func muteLocalAudio(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let mute = param["mute"] as? Bool {
+			txCloudManager.muteLocalAudio(mute);
+			result(nil);
+		}
+	}
+	
+	/**
+	* 暂停/恢复推送本地的视频数据
+	*/
+  @objc(muteLocalVideo:withResolver:withRejecter:)
+	func muteLocalVideo(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let mute = param["mute"] as? Bool {
+			txCloudManager.muteLocalVideo(mute);
+			result(nil);
+		}
+	}
+	
+	/**
+	* 启用音量大小提示
+	*/
+  @objc(enableAudioVolumeEvaluation:withResolver:withRejecter:)
+	func enableAudioVolumeEvaluation(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let intervalMs = param["intervalMs"] as? UInt {
+			txCloudManager.enableAudioVolumeEvaluation(intervalMs);
+			result(nil);
+		}
+	}
+	
+	/**
+	* 开始录音
+	*/
+  @objc(startAudioRecording:withResolver:withRejecter:)
+	func startAudioRecording(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let param = param["param"] as? String {
+			let dict = JsonUtil.getDictionaryFromJSONString(jsonString: param);
+			let data = TRTCAudioRecordingParams();
+			data.filePath = dict["filePath"] as! String;
+			result(txCloudManager.startAudioRecording(data));
+		}
+	}
+	
+	/**
+	* 停止录音
+	*/
+  @objc(stopAudioRecording:withRejecter:)
+	func stopAudioRecording(result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		txCloudManager.stopAudioRecording();
+		result(nil);
+	}
+    
+	/**
+	* 设置水印
+	*/
+  @objc(setWatermark:withResolver:withRejecter:)
+	func setWatermark(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let imageUrl = param["imageUrl"] as? String,
+		   let streamType = param["streamType"] as? Int,
+		   let x = param["x"] as? String,
+		   let y = param["y"] as? String,
+		   let width = param["width"] as? String,
+		   let type = param["type"] as? String {
+			
+			let fx = CGFloat.init(Float.init(x)!)
+			let fy = CGFloat.init(Float.init(y)!)
+			let fwidth = CGFloat.init(Float.init(width)!)
+			let rect = CGRect(x: fx, y: fy, width: fwidth, height: fwidth)
+			
+			if type == "local" {
+//				txCloudManager.setWatermark(UIImage.init(contentsOfFile: self.getFlutterBundlePath(assetPath: imageUrl)!), streamType: TRTCVideoStreamType.init(rawValue: streamType)!, rect: rect)
+			} else {
+				let queue = DispatchQueue(label: "setWatermark")
+				queue.async {
+					let url: NSURL = NSURL(string: imageUrl)!
+					let data: NSData = NSData(contentsOf: url as URL)!
+					let img = UIImage(data: data as Data, scale: 1)!
+					self.txCloudManager.setWatermark(img, streamType: TRTCVideoStreamType.init(rawValue: streamType)!, rect: rect)
+				}
+			}
+			
+			result(nil);
+		}
+	}
+	
+	/**
+	* 开始应用内的屏幕分享（该接口仅支持 iOS 13.0 及以上的 iPhone 和 iPad）
+	*/
+  @objc(startScreenCaptureInApp:withResolver:withRejecter:)
+	func startScreenCaptureInApp(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let encParams = param["encParams"] as? String {
+			let dict = JsonUtil.getDictionaryFromJSONString(jsonString: encParams);
+			let data = TRTCVideoEncParam();
+			if dict["videoResolution"] != nil {
+				data.videoResolution = TRTCVideoResolution(rawValue: dict["videoResolution"] as! Int)!;
+			}
+			if dict["videoFps"] != nil {
+				data.videoFps = dict["videoFps"] as! Int32;
+			}
+			if dict["videoBitrate"] != nil {
+				data.videoBitrate = dict["videoBitrate"] as! Int32;
+			}
+			if dict["enableAdjustRes"] != nil {
+				data.enableAdjustRes = dict["enableAdjustRes"] as! Bool;
+			}
+			if #available(iOS 13.0,*){
+				txCloudManager.startScreenCapture(inApp:data);
+			}
+		}else{
+			if #available(iOS 13.0,*){
+				txCloudManager.startScreenCapture(inApp:nil);
+			}
+		}
+		result(nil);
+	}
+	
+	/**
+	* 开始全系统的屏幕分享（该接口支持 iOS 11.0 及以上的 iPhone 和 iPad）
+	*/
+  @objc(startScreenCaptureByReplaykit:withResolver:withRejecter:)
+	func startScreenCaptureByReplaykit(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		let appGroup = param["appGroup"] as! String;
+		if let encParams = param["encParams"] as? String {
+			let dict = JsonUtil.getDictionaryFromJSONString(jsonString: encParams);
+			let data = TRTCVideoEncParam();
+			if dict["videoResolution"] != nil {
+				data.videoResolution = TRTCVideoResolution(rawValue: dict["videoResolution"] as! Int)!;
+			}
+			if dict["videoFps"] != nil {
+				data.videoFps = dict["videoFps"] as! Int32;
+			}
+			if dict["videoBitrate"] != nil {
+				data.videoBitrate = dict["videoBitrate"] as! Int32;
+			}
+			if dict["enableAdjustRes"] != nil {
+				data.enableAdjustRes = dict["enableAdjustRes"] as! Bool;
+			}
+			if #available(iOS 11.0,*){
+				txCloudManager.startScreenCapture(byReplaykit:data,appGroup:appGroup);
+			}
+		}else{
+			if #available(iOS 11.0,*){
+				txCloudManager.startScreenCapture(byReplaykit:nil,appGroup:appGroup);
+			}
+		}
+		result(nil);
+	}
+
+	/**
+	* 开始桌面端屏幕分享（该接口仅支持 Mac OS 桌面系统）.不支持
+	*/
+  @objc(startScreenCapture:withResolver:withRejecter:)
+	func startScreenCapture(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		//txCloudManager.startScreenCapture();
+		result(nil);
+	}
+
+	/**
+	* 停止屏幕采集
+	*/
+  @objc(stopScreenCapture:withResolver:withRejecter:)
+	func stopScreenCapture(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if #available(iOS 11.0,*){
+			result(txCloudManager.stopScreenCapture());
+		}else{
+			result(-1)
+		}
+	}
+
+	/**
+	* 暂停屏幕分享
+	*/
+  @objc(pauseScreenCapture:withResolver:withRejecter:)
+	func pauseScreenCapture(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if #available(iOS 11.0,*){
+			result(txCloudManager.pauseScreenCapture());
+		}else{
+			result(-1)
+		}
+	}
+
+	/**
+	* 恢复屏幕分享
+	*/
+  @objc(resumeScreenCapture:withResolver:withRejecter:)
+	func resumeScreenCapture(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if #available(iOS 11.0,*){
+			result(txCloudManager.resumeScreenCapture());
+		}else{
+			result(-1)
+		}
+	}
+
+	/**
+	* 发送自定义消息给房间内所有用户
+	*/
+  @objc(sendCustomCmdMsg:withResolver:withRejecter:)
+	func sendCustomCmdMsg(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let cmdID = param["cmdID"] as? Int,
+		   let dataStr = param["data"] as? String,
+		   let reliable = param["reliable"] as? Bool,
+		   let ordered = param["ordered"] as? Bool {
+			let nsdata = dataStr.data(using: String.Encoding.utf8);
+			result(txCloudManager.sendCustomCmdMsg(cmdID, data: nsdata, reliable: reliable, ordered: ordered));
+		}
+	}
+	
+	/**
+	* 将小数据量的自定义数据嵌入视频帧中
+	*/
+  @objc(sendSEIMsg:withResolver:withRejecter:)
+	func sendSEIMsg(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if  let dataStr = param["data"] as? String,
+			let repeatCount = param["repeatCount"] as? Int32 {
+			let nsdata = dataStr.data(using: String.Encoding.utf8);
+			result(txCloudManager.sendSEIMsg(nsdata, repeatCount: repeatCount));
+		}
+	}
+	
+	/**
+	* 开始进行网络测速（视频通话期间请勿测试，以免影响通话质量）
+	*/
+  @objc(startSpeedTest:withResolver:withRejecter:)
+	func startSpeedTest(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		if let sdkAppId = param["sdkAppId"] as? UInt32,
+		   let userId = param["userId"] as? String,
+		   let userSig = param["userSig"] as? String {
+			txCloudManager.startSpeedTest(sdkAppId, userId: userId, userSig: userSig, completion: {
+				(result, completedCount, totalCount) -> Void in
+				print(result as Any, completedCount, totalCount)
+				
+			});
+			result(nil);
+			
+		}
+	}
+	
+	/**
+	* 停止服务器测速
+	*/
+  @objc(stopSpeedTest:withRejecter:)
+	func stopSpeedTest(result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		txCloudManager.stopSpeedTest();
+		result(nil);
+	}
+    
+  /**
+  * 调用实验性 API 接口
+  */
+  @objc(callExperimentalAPI:withResolver:withRejecter:)
+  func callExperimentalAPI(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+      if let jsonStr = param["jsonStr"] as? String {
+          txCloudManager.callExperimentalAPI(jsonStr);
+          result(nil);
+      }
+  }
+	// kamar xxx
+	// sdk manager end
+	// audio begin
+	/**
+	  * 开始播放背景音乐
+	  */
+	@objc(startPlayMusic:withResolver:withRejecter:)
+	  public func startPlayMusic(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		  if let musicParam = param["musicParam"] as? String {
+			  let musicParam = JsonUtil.getDictionaryFromJSONString(jsonString: musicParam);
+			  let param = TXAudioMusicParam();
+			  
+			  param.id = musicParam["id"] as! Int32
+			  param.path = musicParam["path"] as! String
+			  param.loopCount = musicParam["loopCount"] as! Int
+			  param.publish = musicParam["publish"] as! Bool
+			  param.isShortFile = musicParam["isShortFile"] as! Bool
+			  param.startTimeMS = musicParam["startTimeMS"] as! Int
+			  param.endTimeMS = musicParam["endTimeMS"] as! Int
+			  
+			  txAudioEffectManager.startPlayMusic(param, onStart: {
+				  (errCode) -> Void in
+				  
+				self.sendEventFormat(name: "onMusicObserverStart", params: ["id": param.id, "errCode": errCode]);
+			  }, onProgress: {
+				  (progressMs, durationMs) -> Void in
+				  
+				self.sendEventFormat(name: "onMusicObserverPlayProgress", params: ["id": param.id, "curPtsMS": progressMs, "durationMS": durationMs]);
+			  }, onComplete: {
+				  (errCode) -> Void in
+				
+				self.sendEventFormat(name: "onMusicObserverComplete", params: ["id": param.id, "errCode": errCode]);
+			  });
+			  result(nil);
+		  }
+	  }
+	  
+	  /**
+	  * 开启耳返
+	  */
+	@objc(enableVoiceEarMonitor:withResolver:withRejecter:)
+	  public func enableVoiceEarMonitor(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		  if let enable = param["enable"] as? Bool {
+			  txAudioEffectManager.enableVoiceEarMonitor(enable);
+			  result(nil);
+		  }
+	  }
+	  
+	  /**
+	  * 设置耳返音量
+	  */
+	@objc(setVoiceEarMonitorVolume:withResolver:withRejecter:)
+	  public func setVoiceEarMonitorVolume(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		  if let volume = param["volume"] as? Int {
+			  txAudioEffectManager.setVoiceEarMonitorVolume(volume);
+			  result(nil);
+		  }
+	  }
+	  
+	  /**
+	  * 设置人声的混响效果（KTV、小房间、大会堂、低沉、洪亮...）
+	  */
+	@objc(setVoiceReverbType:withResolver:withRejecter:)
+	  public func setVoiceReverbType(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		  if let type = param["type"] as? Int {
+			  txAudioEffectManager.setVoiceReverbType(TXVoiceReverbType(rawValue: type)!);
+			  result(nil);
+		  }
+	  }
+	  
+	  /**
+	  * 设置人声的变声特效（萝莉、大叔、重金属、外国人...）
+	  */
+	@objc(setVoiceChangerType:withResolver:withRejecter:)
+	  public func setVoiceChangerType(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		  if let type = param["type"] as? Int {
+			  txAudioEffectManager.setVoiceChangerType(TXVoiceChangeType(rawValue: type)!);
+			  result(nil);
+		  }
+	  }
+	  
+	  /**
+	  * 设置麦克风采集人声的音量
+	  */
+	@objc(setVoiceCaptureVolume:withResolver:withRejecter:)
+	  public func setVoiceCaptureVolume(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		  if let volume = param["volume"] as? Int {
+			  txAudioEffectManager.setVoiceVolume(volume);
+			  result(nil);
+		  }
+	  }
+	  
+	  /**
+	  * 停止播放背景音乐
+	  */
+	@objc(stopPlayMusic:withResolver:withRejecter:)
+	  public func stopPlayMusic(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		  if let id = param["id"] as? Int32 {
+			  txAudioEffectManager.stopPlayMusic(id);
+			  result(nil);
+		  }
+	  }
+	  
+	  /**
+	  * 暂停播放背景音乐
+	  */
+	@objc(pausePlayMusic:withResolver:withRejecter:)
+	  public func pausePlayMusic(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		  if let id = param["id"] as? Int32 {
+			  txAudioEffectManager.pausePlayMusic(id);
+			  result(nil);
+		  }
+	  }
+	  
+	  /**
+	  * 恢复播放背景音乐
+	  */
+	@objc(resumePlayMusic:withResolver:withRejecter:)
+	  public func resumePlayMusic(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		  if let id = param["id"] as? Int32 {
+			  txAudioEffectManager.resumePlayMusic(id);
+			  result(nil);
+		  }
+	  }
+	  
+	  /**
+	  * 设置背景音乐的远端音量大小，即主播可以通过此接口设置远端观众能听到的背景音乐的音量大小。
+	  */
+	@objc(setMusicPublishVolume:withResolver:withRejecter:)
+	  public func setMusicPublishVolume(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		  if let id = param["id"] as? Int32,
+			 let volume = param["volume"] as? Int {
+			  txAudioEffectManager.setMusicPublishVolume(id, volume: volume);
+			  result(nil);
+		  }
+	  }
+	  
+	  /**
+	  * 设置背景音乐的本地音量大小，即主播可以通过此接口设置主播自己本地的背景音乐的音量大小。
+	  * volume 音量大小，100为正常音量，取值范围为0 - 100；默认值：100
+	  */
+	@objc(setMusicPlayoutVolume:withResolver:withRejecter:)
+	  public func setMusicPlayoutVolume(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		  if let id = param["id"] as? Int32,
+			 let volume = param["volume"] as? Int {
+			  txAudioEffectManager.setMusicPlayoutVolume(id, volume: volume);
+			  result(nil);
+		  }
+	  }
+	  
+	  /**
+	  * 设置全局背景音乐的本地和远端音量的大小
+	  */
+	@objc(setAllMusicVolume:withResolver:withRejecter:)
+	  public func setAllMusicVolume(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		  if let volume = param["volume"] as? Int {
+			  txAudioEffectManager.setAllMusicVolume(volume);
+			  result(nil);
+		  }
+	  }
+	  
+	  /**
+	  * 调整背景音乐的音调高低
+	  * pitch	音调，默认值是0.0f，范围是：[-1 ~ 1] 之间的浮点数
+	  */
+	@objc(setMusicPitch:withResolver:withRejecter:)
+	  public func setMusicPitch(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		  if let volume = param["volume"] as? Int32,
+			 let pitch = Double.init((param["pitch"] as? String)!) {
+			  txAudioEffectManager.setMusicPitch(volume, pitch: pitch);
+			  result(nil);
+		  }
+	  }
+	  
+	  /**
+	  * 调整背景音乐的变速效果
+	  * speedRate	速度，默认值是1.0f，范围是：[0.5 ~ 2] 之间的浮点数
+	  */
+	@objc(setMusicSpeedRate:withResolver:withRejecter:)
+	  public func setMusicSpeedRate(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		  if let id = param["id"] as? Int32,
+			 let speedRate = Double.init((param["speedRate"] as? String)!) {
+			  txAudioEffectManager.setMusicSpeedRate(id, speedRate: speedRate);
+			  result(nil);
+		  }
+	  }
+	  
+	  /**
+	  * 获取背景音乐当前的播放进度（单位：毫秒）
+	  */
+	@objc(getMusicCurrentPosInMS:withResolver:withRejecter:)
+	  public func getMusicCurrentPosInMS(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		  if let id = param["id"] as? Int32 {
+			  let ms = txAudioEffectManager.getMusicCurrentPos(inMS: id);
+			  result(ms);
+		  }
+	  }
+	  
+	  /**
+	  * 设置背景音乐的播放进度（单位：毫秒）
+	  */
+	@objc(seekMusicToPosInMS:withResolver:withRejecter:)
+	  public func seekMusicToPosInMS(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		  if let id = param["id"] as? Int32,
+			 let pts = param["pts"] as? Int {
+			  txAudioEffectManager.seekMusicToPos(inMS: id, pts: pts);
+			  result(nil);
+		  }
+	  }
+	  
+	  /**
+	  * 获取景音乐文件的总时长（单位：毫秒）
+	  */
+	@objc(getMusicDurationInMS:withResolver:withRejecter:)
+	  public func getMusicDurationInMS(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		  let path = ["path"] as? String
+		  let res = txAudioEffectManager.getMusicDuration(inMS: path != nil ? path! : "");
+		  result(res);
+	  }
+	// audio end
+//	device begin
+	/**
+		* 切换摄像头
+		*/
+	  @objc(switchCamera:withResolver:withRejecter:)
+		func switchCamera(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+			if let isFrontCamera = param["isFrontCamera"] as? Bool {
+				txDeviceManager.switchCamera(isFrontCamera);
+				result(nil);
+			}
+		}
+		
+		/**
+		* 查询是前置摄像头
+		*/
+	  @objc(isFrontCamera:withRejecter:)
+		func isFrontCamera(result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+			result(txDeviceManager.isFrontCamera());
+		}
+		
+		/**
+		* 查询摄像头最大缩放率
+		*/
+	  @objc(getCameraZoomMaxRatio:withRejecter:)
+		func getCameraZoomMaxRatio(result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+			result(Int(txDeviceManager.getCameraZoomMaxRatio()));
+		}
+		
+		/**
+		* 设置摄像头缩放率
+		*/
+	  @objc(setCameraZoomRatio:withResolver:withRejecter:)
+		func setCameraZoomRatio(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+			if let value = param["value"] as? String {
+				let ret = txDeviceManager.setCameraZoomRatio(CGFloat(Int(Float(value)!)));
+				result(ret);
+			}
+		}
+		
+		/**
+		* 设置摄像头缩放率
+		*/
+	  @objc(enableCameraAutoFocus:withResolver:withRejecter:)
+		func enableCameraAutoFocus(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+			if let enable = param["enable"] as? Bool {
+				result(txDeviceManager.enableCameraAutoFocus(enable));
+			}
+		}
+		
+		/**
+		* 设置摄像头闪光灯，开启后置摄像头才有效果
+		*/
+	  @objc(enableCameraTorch:withResolver:withRejecter:)
+		func enableCameraTorch(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+			if let enable = param["enable"] as? Bool {
+				txDeviceManager.enableCameraTorch(enable);
+				result(nil);
+			}
+		}
+		
+		/**
+		* 设置对焦位置
+		*/
+	  @objc(setCameraFocusPosition:withResolver:withRejecter:)
+		func setCameraFocusPosition(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+			if let x = param["x"] as? Int,
+			   let y = param["y"] as? Int {
+				txDeviceManager.setCameraFocusPosition(CGPoint(x: CGFloat(x), y: CGFloat(y)));
+				result(nil);
+			}
+		}
+		
+		/**
+		* 查询摄像头是否自动对焦
+		*/
+	  @objc(isAutoFocusEnabled:withRejecter:)
+		func isAutoFocusEnabled(result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+			result(txDeviceManager.isAutoFocusEnabled());
+		}
+		
+		/**
+		* 设置通话时使用的系统音量类型
+		*/
+	  @objc(setSystemVolumeType:withResolver:withRejecter:)
+		func setSystemVolumeType(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+			if let type = param["type"] as? Int {
+				txDeviceManager.setSystemVolumeType(TXSystemVolumeType(rawValue: type)!);
+				result(nil);
+			}
+		}
+		
+		/**
+		* 设置音频路由
+		*/
+	  @objc(setAudioRoute:withResolver:withRejecter:)
+		func setAudioRoute(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+			if let route = param["route"] as? Int {
+				txDeviceManager.setAudioRoute(TXAudioRoute(rawValue: route)!);
+				result(nil);
+			}
+		}
+//	device end
+	
+	// Listener begin
 	public func sendEventFormat(name: String, params: Any?) {
-		sendEvent(withName: "EventReminder", body: ["type": name, "params": params]);
+		sendEvent(withName: "onListener", body: ["type": name, "params": params]);
 	}
   /**
 	* 错误回调，表示 SDK 不可恢复的错误，一定要监听并分情况给用户适当的界面提示。
@@ -110,14 +1207,14 @@ class TrtcReactNativeSdk: RCTEventEmitter, TRTCCloudDelegate {
 	* 已加入房间的回调
 	*/
 	public func onEnterRoom(_ result: Int) {
-		sendEventFormat(name: "onEnterRoom", params: result);
+		sendEventFormat(name: "onEnterRoom", params: ["result": result]);
 	}
 	
 	/**
 	* 离开房间的事件回调
 	*/
 	public func onExitRoom(_ reason: Int) {
-		sendEventFormat(name: "onExitRoom", params: reason);
+		sendEventFormat(name: "onExitRoom", params: ["reason": reason]);
 	}
 	
 	/**
@@ -152,7 +1249,7 @@ class TrtcReactNativeSdk: RCTEventEmitter, TRTCCloudDelegate {
 	* 有用户加入当前房间
 	*/
 	public func onRemoteUserEnterRoom(_ userId: String) {
-		sendEventFormat(name: "onRemoteUserEnterRoom", params: userId);
+		sendEventFormat(name: "onRemoteUserEnterRoom", params: ["userId": userId]);
 	}
 	
 	/**
@@ -194,14 +1291,14 @@ class TrtcReactNativeSdk: RCTEventEmitter, TRTCCloudDelegate {
 	* 开始播放远程用户的首帧音频（本地声音暂不通知）
 	*/
 	public func onFirstAudioFrame(_ userId: String) {
-		sendEventFormat(name: "onFirstAudioFrame", params: userId);
+		sendEventFormat(name: "onFirstAudioFrame", params: ["userId": userId]);
 	}
 	
 	/**
 	* 首帧本地视频数据已经被送出
 	*/
 	public func onSendFirstLocalVideoFrame(_ streamType: TRTCVideoStreamType) {
-		sendEventFormat(name: "onSendFirstLocalVideoFrame", params: streamType.rawValue);
+		sendEventFormat(name: "onSendFirstLocalVideoFrame", params: ["streamType": streamType.rawValue]);
 	}
 	
 	/**
@@ -459,4 +1556,5 @@ class TrtcReactNativeSdk: RCTEventEmitter, TRTCCloudDelegate {
 	public func onScreenCaptureStoped(_ reason:Int32) {
 		sendEventFormat(name: "onScreenCaptureStoped", params:reason);
 	}
+	// Listener end
 }

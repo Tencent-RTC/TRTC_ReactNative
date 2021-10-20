@@ -24,7 +24,7 @@ const txDeviceManager = trtcCloud.getDeviceManager();
 // const txBeautyManager = trtcCloud.getBeautyManager();
 // 获取音效管理类 TXAudioEffectManager
 const txAudioManager = trtcCloud.getAudioEffectManager();
-const userId = '9898';
+const userId = 'lexuslin';
 
 // 注册事件回调
 // trtcCloud.registerListener(onRtcListener);
@@ -247,7 +247,7 @@ const demoParamsGroup: Array<Config> = [
   {
     title: 'startLocalAudio',
     handler: async () => {
-      trtcCloud.startLocalAudio(100);
+      trtcCloud.startLocalAudio(TRTCCloudDef.TRTC_AUDIO_QUALITY_SPEECH);
     },
   },
   {
