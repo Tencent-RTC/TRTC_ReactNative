@@ -8,6 +8,7 @@ import TRTCCloud, {
   TRTCPublishCDNParam,
   TRTCAudioRecordingParams,
   AudioMusicParam,
+  TXSystemVolumeType
 } from 'react-native-trtc-react-native-sdk';
 // @ts-ignore
 import getLatestUserSig from './debug/index';
@@ -413,7 +414,7 @@ const demoParamsGroup: Array<Config> = [
     title: 'setSystemVolumeType',
     handler: async () => {
       txDeviceManager.setSystemVolumeType(
-        TRTCCloudDef.TRTCSystemVolumeTypeAuto
+        TXSystemVolumeType.TXSystemVolumeTypeAuto
       );
     },
   },

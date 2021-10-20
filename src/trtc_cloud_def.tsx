@@ -1003,6 +1003,17 @@ export enum TXVoiceReverbType {
   TXLiveVoiceReverbType_7 = 7,
 }
 
+export enum TXSystemVolumeType {
+  // “麦上通话，麦下媒体”，即主播上麦时使用通话音量，观众不上麦则使用媒体音量，适合在线直播场景。如果您在 enterRoom 时选择的场景为 TRTCAppSceneLIVE 或 TRTCAppSceneVoiceChatRoom，SDK 会自动选择该模式。
+  TXSystemVolumeTypeAuto = 0,
+
+  // 通话全程使用媒体音量，不常用，适合个别有特殊需求（如主播外接声卡）的应用场景。
+  TXSystemVolumeTypeMedia = 1,
+
+  // 全程使用通话音量，适合多人会议场景。如果您在 enterRoom 时选择的场景为 TRTCAppSceneVideoCall 或 TRTCAppSceneAudioCall 会自动选择该模式。
+  TXSystemVolumeTypeVOIP = 2,
+}
+
 /// 音乐和人声设置接口参数
 export type AudioMusicParam = {
   /// 【字段含义】音乐 ID
@@ -1050,37 +1061,4 @@ export type TRTCPublishCDNParam = {
 
   /// 旁路转推的 URL
   url: string;
-};
-
-/// 本地外接纹理渲染本地视频参数
-export type CustomLocalRender = {
-  /// 用户标识
-  userId: string;
-
-  /// 是否是前置摄像头
-  isFront: boolean;
-
-  /// 仅支持 TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_BIG 和 TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_SUB。
-  streamType: number;
-
-  /// 视频显示的宽度
-  width: number;
-
-  /// 视频显示的高度
-  height: number;
-};
-
-/// 外接纹理渲染远端视频参数
-export type CustomRemoteRender = {
-  /// 用户标识
-  userId: string;
-
-  /// 仅支持 TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_BIG 和 TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_SUB。
-  streamType: number;
-
-  /// 视频显示的宽度
-  width: number;
-
-  /// 视频显示的高度
-  height: number;
 };

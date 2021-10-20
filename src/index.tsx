@@ -11,6 +11,7 @@ import {
   TRTCCloudDef,
   TXVoiceChangerType,
   TXVoiceReverbType,
+  TXSystemVolumeType,
 } from './trtc_cloud_def';
 const { TrtcReactNativeSdk } = NativeModules;
 const TRTCEventEmitter = new NativeEventEmitter(TrtcReactNativeSdk);
@@ -521,4 +522,5 @@ export {
   TRTCPublishCDNParam,
   TRTCAudioRecordingParams,
   AudioMusicParam,
+  TXSystemVolumeType,
 };

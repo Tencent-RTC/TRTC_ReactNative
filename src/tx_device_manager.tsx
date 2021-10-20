@@ -131,7 +131,7 @@ export default class TXDeviceManager {
 
   /// 设置音频路由。
   ///
-  /// setSystemVolumeType
+  /// setAudioRoute
   ///
   /// 微信和手机 QQ 视频通话功能的免提模式就是基于音频路由实现的。 一般手机都有两个扬声器，一个是位于顶部的听筒扬声器，声音偏小；一个是位于底部的立体声扬声器，声音偏大。 设置音频路由的作用就是决定声音使用哪个扬声器播放。
   ///
@@ -139,7 +139,7 @@ export default class TXDeviceManager {
   ///
   /// route	音频路由，即声音由哪里输出（扬声器、听筒），请参考 TRTCCloudDef.TRTC_AUDIO_ROUTE_SPEAKER，默认值：TRTCCloudDef.TRTC_AUDIO_ROUTE_SPEAKER
   setAudioRoute(route: number): Promise<void> {
-    return TrtcReactNativeSdk.setSystemVolumeType({
+    return TrtcReactNativeSdk.setAudioRoute({
       route: route,
     });
   }
