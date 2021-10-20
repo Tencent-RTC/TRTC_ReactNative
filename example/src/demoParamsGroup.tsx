@@ -6,6 +6,7 @@ import TRTCCloud, {
   TXVoiceReverbType,
   TRTCSwitchRoomConfig,
   TRTCPublishCDNParam,
+  TRTCAudioRecordingParams,
 } from 'react-native-trtc-react-native-sdk';
 // @ts-ignore
 import getLatestUserSig from './debug/index';
@@ -25,6 +26,7 @@ const txDeviceManager = trtcCloud.getDeviceManager();
 // 获取音效管理类 TXAudioEffectManager
 const txAudioManager = trtcCloud.getAudioEffectManager();
 const userId = '4545';
+const userSig = getLatestUserSig(userId).userSig;
 
 // 注册事件回调
 // trtcCloud.registerListener(onRtcListener);
@@ -39,7 +41,6 @@ const demoParamsGroup: Array<Config> = [
   {
     title: 'enterRoom',
     handler: async () => {
-      const userSig = getLatestUserSig(userId).userSig;
       const params = new TRTCParams({
         sdkAppId: SDKAPPID,
         userId,
@@ -94,7 +95,6 @@ const demoParamsGroup: Array<Config> = [
   {
     title: 'switchRoom',
     handler: async () => {
-      const userSig = getLatestUserSig(userId).userSig;
       const roomConfig: TRTCSwitchRoomConfig = {
         userSig,
         roomId: 2288,
@@ -134,116 +134,6 @@ const demoParamsGroup: Array<Config> = [
       trtcCloud.stopPublishCDNStream();
     },
   },
-  /*
-  {
-    title: "setMixTranscodingConfig",
-    handler: async () => {
-        trtcCloud.setMixTranscodingConfig();
-    }
-  },
-  {
-    title: "muteLocalVideo",
-    handler: async () => {
-        trtcCloud.muteLocalVideo();
-    }
-  },
-  {
-    title: "setVideoMuteImage",
-    handler: async () => {
-        trtcCloud.setVideoMuteImage();
-    }
-  },
-  {
-    title: "startRemoteView",
-    handler: async () => {
-        trtcCloud.startRemoteView();
-    }
-  },
-  {
-    title: "stopRemoteView",
-    handler: async () => {
-        trtcCloud.stopRemoteView();
-    }
-  },
-  {
-    title: "stopAllRemoteView",
-    handler: async () => {
-        trtcCloud.stopAllRemoteView();
-    }
-  },
-  {
-    title: "muteRemoteVideoStream",
-    handler: async () => {
-        trtcCloud.muteRemoteVideoStream();
-    }
-  },
-  {
-    title: "muteAllRemoteVideoStreams",
-    handler: async () => {
-        trtcCloud.muteAllRemoteVideoStreams();
-    }
-  },
-  {
-    title: "setVideoEncoderParam",
-    handler: async () => {
-        trtcCloud.setVideoEncoderParam();
-    }
-  },
-  {
-    title: "setNetworkQosParam",
-    handler: async () => {
-        trtcCloud.setNetworkQosParam();
-    }
-  },
-  {
-    title: "setLocalRenderParams",
-    handler: async () => {
-        trtcCloud.setLocalRenderParams();
-    }
-  },
-  {
-    title: "setRemoteRenderParams",
-    handler: async () => {
-        trtcCloud.setRemoteRenderParams();
-    }
-  },
-  {
-    title: "setVideoEncoderRotation",
-    handler: async () => {
-        trtcCloud.setVideoEncoderRotation();
-    }
-  },
-  {
-    title: "setVideoEncoderMirror",
-    handler: async () => {
-        trtcCloud.setVideoEncoderMirror();
-    }
-  },
-  {
-    title: "setGSensorMode",
-    handler: async () => {
-        trtcCloud.setGSensorMode();
-    }
-  },
-  {
-    title: "enableEncSmallVideoStream",
-    handler: async () => {
-        trtcCloud.enableEncSmallVideoStream();
-    }
-  },
-  {
-    title: "setRemoteVideoStreamType",
-    handler: async () => {
-        trtcCloud.setRemoteVideoStreamType();
-    }
-  },
-  {
-    title: "snapshotVideo",
-    handler: async () => {
-        trtcCloud.snapshotVideo();
-    }
-  },
-  */
   {
     title: 'startLocalAudio',
     handler: async () => {
@@ -339,7 +229,11 @@ const demoParamsGroup: Array<Config> = [
   {
     title: 'startAudioRecording',
     handler: async () => {
-      // trtcCloud.startAudioRecording();
+      const param: TRTCAudioRecordingParams = {
+        filePath: 'https://www.baidu.com',
+      };
+      let number = await trtcCloud.startAudioRecording(param);
+      Alert.alert(number.toString());
     },
   },
   {
@@ -348,48 +242,10 @@ const demoParamsGroup: Array<Config> = [
       trtcCloud.stopAudioRecording();
     },
   },
-  /*
-  {
-    title: "setWatermarkstartScreenCapture",
-    handler: async () => {
-        trtcCloud.setWatermarkstartScreenCapture();
-    }
-  },
-  {
-    title: "stopScreenCapture",
-    handler: async () => {
-        trtcCloud.stopScreenCapture();
-    }
-  },
-  {
-    title: "pauseScreenCapture",
-    handler: async () => {
-        trtcCloud.pauseScreenCapture();
-    }
-  },
-  {
-    title: "resumeScreenCapture",
-    handler: async () => {
-        trtcCloud.resumeScreenCapture();
-    }
-  },
-  */
-  {
-    title: 'sendCustomCmdMsg',
-    handler: async () => {
-      // trtcCloud.sendCustomCmdMsg();
-    },
-  },
-  {
-    title: 'sendSEIMsg',
-    handler: async () => {
-      // trtcCloud.sendSEIMsg();
-    },
-  },
   {
     title: 'startSpeedTest',
     handler: async () => {
-      // trtcCloud.startSpeedTest();
+      trtcCloud.startSpeedTest(SDKAPPID, userId, userSig);
     },
   },
   {

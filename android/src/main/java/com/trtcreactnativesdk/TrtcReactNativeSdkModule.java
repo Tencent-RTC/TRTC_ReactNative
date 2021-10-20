@@ -380,4 +380,24 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
       promise.resolve(null);
     }
 
+    /**
+     * 开始进行网络测速（视频通话期间请勿测试，以免影响通话质量）
+     */
+    @ReactMethod
+    private void startSpeedTest(ReadableMap params, Promise promise) {
+      int sdkAppId = params.getInt("sdkAppId");
+      String userId = params.getString("userId");
+      String userSig = params.getString("userSig");
+      trtcCloud.startSpeedTest(sdkAppId, userId, userSig);
+      promise.resolve(null);
+    }
+
+    /**
+     * 停止服务器测速
+     */
+    @ReactMethod
+    private void stopSpeedTest(Promise promise) {
+      trtcCloud.stopSpeedTest();
+      promise.resolve(null);
+    }
 }

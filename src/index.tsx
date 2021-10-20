@@ -519,4 +519,5 @@ export {
   TRTCCloudListener,
   TRTCSwitchRoomConfig,
   TRTCPublishCDNParam,
+  TRTCAudioRecordingParams,
 };
