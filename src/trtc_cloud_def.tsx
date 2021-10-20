@@ -1007,28 +1007,28 @@ export enum TXVoiceReverbType {
 export type AudioMusicParam = {
   /// 【字段含义】音乐 ID
   /// 【特殊说明】SDK 允许播放多路音乐，因此需要音乐 ID 进行标记，用于控制音乐的开始、停止、音量等
-  id?: number;
+  id: number;
 
   /// 【字段含义】音乐文件的绝对路径
-  path?: string;
+  path: string;
 
   /// 【字段含义】音乐循环播放的次数
   /// 【推荐取值】取值范围为0 - 任意正整数，默认值：0。0表示播放音乐一次；1表示播放音乐两次；以此类推
-  loopCount: number;
+  loopCount?: number;
 
   /// 【字段含义】是否将音乐传到远端
   /// 【推荐取值】YES：音乐在本地播放的同时，会上行至云端，因此远端用户也能听到该音乐；NO：音乐不会上行至云端，因此只能在本地听到该音乐。默认值：NO
-  publish: boolean;
+  publish?: boolean;
 
   /// 【字段含义】播放的是否为短音乐文件
   /// 【推荐取值】YES：需要重复播放的短音乐文件；NO：正常的音乐文件。默认值：NO
-  isShortFile: boolean;
+  isShortFile?: boolean;
 
   /// 【字段含义】音乐开始播放时间点，单位毫秒
-  startTimeMS: number;
+  startTimeMS?: number;
 
   /// 【字段含义】音乐结束播放时间点，单位毫秒，0或者-1表示播放至文件结尾。
-  endTimeMS: number;
+  endTimeMS?: number;
 };
 
 /// 录音参数

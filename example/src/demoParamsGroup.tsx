@@ -7,6 +7,7 @@ import TRTCCloud, {
   TRTCSwitchRoomConfig,
   TRTCPublishCDNParam,
   TRTCAudioRecordingParams,
+  AudioMusicParam,
 } from 'react-native-trtc-react-native-sdk';
 // @ts-ignore
 import getLatestUserSig from './debug/index';
@@ -316,15 +317,26 @@ const demoParamsGroup: Array<Config> = [
     },
   },
   {
-    title: 'setVoiceCaptureVolume',
+    title: 'setVoiceCaptureVolume-100',
     handler: async () => {
-      txAudioManager.setVoiceCaptureVolume(80);
+      txAudioManager.setVoiceCaptureVolume(100);
+    },
+  },
+  {
+    title: 'setVoiceCaptureVolume-0',
+    handler: async () => {
+      txAudioManager.setVoiceCaptureVolume(0);
     },
   },
   {
     title: 'startPlayMusic',
     handler: async () => {
-      // txAudioManager.startPlayMusic();
+      let audioParam: AudioMusicParam = {
+        id: 1001,
+        publish: true,
+        path: 'https://imgcache.qq.com/operation/dianshi/other/daoxiang.72c46ee085f15dc72603b0ba154409879cbeb15e.mp3',
+      };
+      txAudioManager.startPlayMusic(audioParam);
     },
   },
   {
@@ -378,7 +390,8 @@ const demoParamsGroup: Array<Config> = [
   {
     title: 'getMusicCurrentPosInMS',
     handler: async () => {
-      txAudioManager.getMusicCurrentPosInMS(1001);
+      let time = await txAudioManager.getMusicCurrentPosInMS(1001);
+      Alert.alert(time.toString());
     },
   },
   {
@@ -390,59 +403,10 @@ const demoParamsGroup: Array<Config> = [
   {
     title: 'getMusicDurationInMS',
     handler: async () => {
-      txAudioManager.getMusicDurationInMS('');
-    },
-  },
-
-  // andio menager end
-  // device manager begin
-  {
-    title: 'isFrontCamera',
-    handler: async () => {
-      const res = await txDeviceManager.isFrontCamera();
-      Alert.alert(res.toString());
-    },
-  },
-  {
-    title: 'switchCamera',
-    handler: async () => {
-      txDeviceManager.switchCamera(true);
-    },
-  },
-  {
-    title: 'getCameraZoomMaxRatio',
-    handler: async () => {
-      txDeviceManager.getCameraZoomMaxRatio();
-    },
-  },
-  {
-    title: 'setCameraZoomRatio',
-    handler: async () => {
-      txDeviceManager.setCameraZoomRatio(2);
-    },
-  },
-  {
-    title: 'enableCameraAutoFocus',
-    handler: async () => {
-      txDeviceManager.enableCameraAutoFocus(true);
-    },
-  },
-  {
-    title: 'isAutoFocusEnabled',
-    handler: async () => {
-      txDeviceManager.isAutoFocusEnabled();
-    },
-  },
-  {
-    title: 'setCameraFocusPosition',
-    handler: async () => {
-      txDeviceManager.setCameraFocusPosition(100, 100);
-    },
-  },
-  {
-    title: 'enableCameraTorch',
-    handler: async () => {
-      txDeviceManager.enableCameraTorch(true);
+      let time = await txAudioManager.getMusicDurationInMS(
+        'https://imgcache.qq.com/operation/dianshi/other/daoxiang.72c46ee085f15dc72603b0ba154409879cbeb15e.mp3'
+      );
+      Alert.alert(time.toString());
     },
   },
   {

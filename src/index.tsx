@@ -5,7 +5,7 @@ import { TRTCCloudListener } from './trtc_cloud_listener';
 import {
   TRTCParams,
   TRTCSwitchRoomConfig,
-  // AudioMusicParam,
+  AudioMusicParam,
   TRTCAudioRecordingParams,
   TRTCPublishCDNParam,
   TRTCCloudDef,
@@ -520,4 +520,5 @@ export {
   TRTCSwitchRoomConfig,
   TRTCPublishCDNParam,
   TRTCAudioRecordingParams,
+  AudioMusicParam,
 };
