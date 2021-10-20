@@ -1,4 +1,4 @@
-import { NativeModules, NativeEventEmitter } from 'react-native';
+import { NativeModules, NativeEventEmitter, Platform } from 'react-native';
 import TXAudioEffectManager from './tx_audio_effect_manager';
 import TXDeviceManager from './tx_device_manager';
 import { TRTCCloudListener } from './trtc_cloud_listener';
@@ -42,14 +42,14 @@ export default class TRTCCloud {
   registerListener(listener: { (type: TRTCCloudListener, params: any): void }) {
     TRTCEventEmitter.addListener('onListener', (args) => {
       let params;
-      try {
-        // ios返回object，android返回string
-        params =
-          typeof args.params === 'string'
-            ? JSON.parse(args.params)
-            : args.params;
-      } catch (e) {
-        console.log(e);
+      if (Platform.OS === 'android') {
+        try {
+          params = JSON.parse(args.params);
+        } catch (e) {
+          console.log(e);
+        }
+      } else {
+        params = args.params;
       }
       listener(args.type, params);
     });
@@ -86,6 +86,24 @@ export default class TRTCCloud {
   ///
   /// 2.不管进房是否成功，enterRoom 都必须与 exitRoom 配对使用，在调用 exitRoom 前再次调用 enterRoom 函数会导致不可预期的错误问题。
   enterRoom(params: TRTCParams, scene: number): Promise<void> {
+    if (Platform.OS === 'android') {
+      return TrtcReactNativeSdk.enterRoom(
+        {
+          sdkAppId: params.sdkAppId,
+          userId: params.userId,
+          userSig: params.userSig,
+          roomId: params.roomId!.toString(),
+          strRoomId: params.strRoomId,
+          role: params.role,
+          streamId: params.streamId,
+          userDefineRecordId: params.userDefineRecordId,
+          privateMapKey: params.privateMapKey,
+          businessInfo: params.businessInfo,
+          scene: scene,
+        },
+        scene
+      );
+    }
     return TrtcReactNativeSdk.enterRoom(params, scene);
   }
 

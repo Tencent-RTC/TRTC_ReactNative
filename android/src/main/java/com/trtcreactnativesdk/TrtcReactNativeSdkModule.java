@@ -75,7 +75,8 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
       trtcP.sdkAppId = params.getInt("sdkAppId");
       trtcP.userId = params.getString("userId");
       trtcP.userSig = params.getString("userSig");
-      trtcP.roomId = params.getInt("roomId");
+      String roomId = params.getString("roomId");
+      trtcP.roomId = (int) (Long.parseLong(roomId) & 0xFFFFFFFF);
       trtcP.strRoomId = params.getString("strRoomId");
       trtcP.role = params.getInt("role");
       trtcP.streamId = params.getString("streamId");

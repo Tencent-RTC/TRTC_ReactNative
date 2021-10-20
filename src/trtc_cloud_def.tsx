@@ -90,7 +90,6 @@ export class TRTCParams {
       : '';
     this.privateMapKey = params.privateMapKey ? params.privateMapKey : '';
     this.businessInfo = params.businessInfo ? params.businessInfo : '';
-    console.log('this', this);
   }
 }
 

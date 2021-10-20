@@ -118,7 +118,7 @@ public class CustomTRTCCloudListener extends TRTCCloudListener {
         super.onEnterRoom(l);
         Map<String, Object> params = new HashMap<>(1, 1);
         params.put("result", l);
-        this.invokeListener(CallBackNoticeEnum.onEnterRoom, l);
+        this.invokeListener(CallBackNoticeEnum.onEnterRoom, params);
     }
 
     /**
@@ -127,7 +127,9 @@ public class CustomTRTCCloudListener extends TRTCCloudListener {
     @Override
     public void onExitRoom(int i) {
         super.onExitRoom(i);
-        this.invokeListener(CallBackNoticeEnum.onExitRoom, i);
+        Map<String, Object> params = new HashMap<>(1, 1);
+        params.put("reason", i);
+        this.invokeListener(CallBackNoticeEnum.onExitRoom, params);
     }
 
     /**
@@ -233,7 +235,9 @@ public class CustomTRTCCloudListener extends TRTCCloudListener {
     @Override
     public void onRemoteUserEnterRoom(String s) {
         super.onRemoteUserEnterRoom(s);
-        this.invokeListener(CallBackNoticeEnum.onRemoteUserEnterRoom, s);
+        Map<String, Object> params = new HashMap<>(1, 1);
+        params.put("userId", s);
+        this.invokeListener(CallBackNoticeEnum.onRemoteUserEnterRoom, params);
     }
 
     /**
@@ -304,7 +308,9 @@ public class CustomTRTCCloudListener extends TRTCCloudListener {
     @Override
     public void onFirstAudioFrame(String s) {
         super.onFirstAudioFrame(s);
-        this.invokeListener(CallBackNoticeEnum.onFirstAudioFrame, s);
+        Map<String, Object> params = new HashMap<>(1, 1);
+        params.put("userId", s);
+        this.invokeListener(CallBackNoticeEnum.onFirstAudioFrame, params);
     }
 
     /**
@@ -313,7 +319,9 @@ public class CustomTRTCCloudListener extends TRTCCloudListener {
     @Override
     public void onSendFirstLocalVideoFrame(int i) {
         super.onSendFirstLocalVideoFrame(i);
-        this.invokeListener(CallBackNoticeEnum.onSendFirstLocalVideoFrame, i);
+        Map<String, Object> params = new HashMap<>(1, 1);
+        params.put("streamType",i);
+        this.invokeListener(CallBackNoticeEnum.onSendFirstLocalVideoFrame, params);
     }
 
     /**
@@ -513,6 +521,8 @@ public class CustomTRTCCloudListener extends TRTCCloudListener {
     @Override
     public void onScreenCaptureStopped(int reason) {
         super.onScreenCaptureStopped(reason);
-        this.invokeListener(CallBackNoticeEnum.onScreenCaptureStoped, reason);
+        Map<String, Object> params = new HashMap<>(1, 1);
+        params.put("reason",reason);
+        this.invokeListener(CallBackNoticeEnum.onScreenCaptureStoped, params);
     }
 }

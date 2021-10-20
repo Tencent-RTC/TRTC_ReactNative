@@ -24,7 +24,7 @@ const txDeviceManager = trtcCloud.getDeviceManager();
 // const txBeautyManager = trtcCloud.getBeautyManager();
 // 获取音效管理类 TXAudioEffectManager
 const txAudioManager = trtcCloud.getAudioEffectManager();
-const userId = '9898';
+const userId = '4545';
 
 // 注册事件回调
 // trtcCloud.registerListener(onRtcListener);
