@@ -90,7 +90,6 @@ export class TRTCParams {
       : '';
     this.privateMapKey = params.privateMapKey ? params.privateMapKey : '';
     this.businessInfo = params.businessInfo ? params.businessInfo : '';
-    console.log('this', this);
   }
 }
 
@@ -1004,32 +1003,43 @@ export enum TXVoiceReverbType {
   TXLiveVoiceReverbType_7 = 7,
 }
 
+export enum TXSystemVolumeType {
+  // “麦上通话，麦下媒体”，即主播上麦时使用通话音量，观众不上麦则使用媒体音量，适合在线直播场景。如果您在 enterRoom 时选择的场景为 TRTCAppSceneLIVE 或 TRTCAppSceneVoiceChatRoom，SDK 会自动选择该模式。
+  TXSystemVolumeTypeAuto = 0,
+
+  // 通话全程使用媒体音量，不常用，适合个别有特殊需求（如主播外接声卡）的应用场景。
+  TXSystemVolumeTypeMedia = 1,
+
+  // 全程使用通话音量，适合多人会议场景。如果您在 enterRoom 时选择的场景为 TRTCAppSceneVideoCall 或 TRTCAppSceneAudioCall 会自动选择该模式。
+  TXSystemVolumeTypeVOIP = 2,
+}
+
 /// 音乐和人声设置接口参数
 export type AudioMusicParam = {
   /// 【字段含义】音乐 ID
   /// 【特殊说明】SDK 允许播放多路音乐，因此需要音乐 ID 进行标记，用于控制音乐的开始、停止、音量等
-  id?: number;
+  id: number;
 
   /// 【字段含义】音乐文件的绝对路径
-  path?: string;
+  path: string;
 
   /// 【字段含义】音乐循环播放的次数
   /// 【推荐取值】取值范围为0 - 任意正整数，默认值：0。0表示播放音乐一次；1表示播放音乐两次；以此类推
-  loopCount: number;
+  loopCount?: number;
 
   /// 【字段含义】是否将音乐传到远端
   /// 【推荐取值】YES：音乐在本地播放的同时，会上行至云端，因此远端用户也能听到该音乐；NO：音乐不会上行至云端，因此只能在本地听到该音乐。默认值：NO
-  publish: boolean;
+  publish?: boolean;
 
   /// 【字段含义】播放的是否为短音乐文件
   /// 【推荐取值】YES：需要重复播放的短音乐文件；NO：正常的音乐文件。默认值：NO
-  isShortFile: boolean;
+  isShortFile?: boolean;
 
   /// 【字段含义】音乐开始播放时间点，单位毫秒
-  startTimeMS: number;
+  startTimeMS?: number;
 
   /// 【字段含义】音乐结束播放时间点，单位毫秒，0或者-1表示播放至文件结尾。
-  endTimeMS: number;
+  endTimeMS?: number;
 };
 
 /// 录音参数
@@ -1051,37 +1061,4 @@ export type TRTCPublishCDNParam = {
 
   /// 旁路转推的 URL
   url: string;
-};
-
-/// 本地外接纹理渲染本地视频参数
-export type CustomLocalRender = {
-  /// 用户标识
-  userId: string;
-
-  /// 是否是前置摄像头
-  isFront: boolean;
-
-  /// 仅支持 TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_BIG 和 TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_SUB。
-  streamType: number;
-
-  /// 视频显示的宽度
-  width: number;
-
-  /// 视频显示的高度
-  height: number;
-};
-
-/// 外接纹理渲染远端视频参数
-export type CustomRemoteRender = {
-  /// 用户标识
-  userId: string;
-
-  /// 仅支持 TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_BIG 和 TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_SUB。
-  streamType: number;
-
-  /// 视频显示的宽度
-  width: number;
-
-  /// 视频显示的高度
-  height: number;
 };

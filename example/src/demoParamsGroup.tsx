@@ -6,6 +6,9 @@ import TRTCCloud, {
   TXVoiceReverbType,
   TRTCSwitchRoomConfig,
   TRTCPublishCDNParam,
+  TRTCAudioRecordingParams,
+  AudioMusicParam,
+  TXSystemVolumeType
 } from 'react-native-trtc-react-native-sdk';
 // @ts-ignore
 import getLatestUserSig from './debug/index';
@@ -24,7 +27,8 @@ const txDeviceManager = trtcCloud.getDeviceManager();
 // const txBeautyManager = trtcCloud.getBeautyManager();
 // 获取音效管理类 TXAudioEffectManager
 const txAudioManager = trtcCloud.getAudioEffectManager();
-const userId = 'lexuslin';
+const userId = '4545';
+const userSig = getLatestUserSig(userId).userSig;
 
 // 注册事件回调
 // trtcCloud.registerListener(onRtcListener);
@@ -39,7 +43,6 @@ const demoParamsGroup: Array<Config> = [
   {
     title: 'enterRoom',
     handler: async () => {
-      const userSig = getLatestUserSig(userId).userSig;
       const params = new TRTCParams({
         sdkAppId: SDKAPPID,
         userId,
@@ -94,7 +97,6 @@ const demoParamsGroup: Array<Config> = [
   {
     title: 'switchRoom',
     handler: async () => {
-      const userSig = getLatestUserSig(userId).userSig;
       const roomConfig: TRTCSwitchRoomConfig = {
         userSig,
         roomId: 2288,
@@ -134,116 +136,6 @@ const demoParamsGroup: Array<Config> = [
       trtcCloud.stopPublishCDNStream();
     },
   },
-  /*
-  {
-    title: "setMixTranscodingConfig",
-    handler: async () => {
-        trtcCloud.setMixTranscodingConfig();
-    }
-  },
-  {
-    title: "muteLocalVideo",
-    handler: async () => {
-        trtcCloud.muteLocalVideo();
-    }
-  },
-  {
-    title: "setVideoMuteImage",
-    handler: async () => {
-        trtcCloud.setVideoMuteImage();
-    }
-  },
-  {
-    title: "startRemoteView",
-    handler: async () => {
-        trtcCloud.startRemoteView();
-    }
-  },
-  {
-    title: "stopRemoteView",
-    handler: async () => {
-        trtcCloud.stopRemoteView();
-    }
-  },
-  {
-    title: "stopAllRemoteView",
-    handler: async () => {
-        trtcCloud.stopAllRemoteView();
-    }
-  },
-  {
-    title: "muteRemoteVideoStream",
-    handler: async () => {
-        trtcCloud.muteRemoteVideoStream();
-    }
-  },
-  {
-    title: "muteAllRemoteVideoStreams",
-    handler: async () => {
-        trtcCloud.muteAllRemoteVideoStreams();
-    }
-  },
-  {
-    title: "setVideoEncoderParam",
-    handler: async () => {
-        trtcCloud.setVideoEncoderParam();
-    }
-  },
-  {
-    title: "setNetworkQosParam",
-    handler: async () => {
-        trtcCloud.setNetworkQosParam();
-    }
-  },
-  {
-    title: "setLocalRenderParams",
-    handler: async () => {
-        trtcCloud.setLocalRenderParams();
-    }
-  },
-  {
-    title: "setRemoteRenderParams",
-    handler: async () => {
-        trtcCloud.setRemoteRenderParams();
-    }
-  },
-  {
-    title: "setVideoEncoderRotation",
-    handler: async () => {
-        trtcCloud.setVideoEncoderRotation();
-    }
-  },
-  {
-    title: "setVideoEncoderMirror",
-    handler: async () => {
-        trtcCloud.setVideoEncoderMirror();
-    }
-  },
-  {
-    title: "setGSensorMode",
-    handler: async () => {
-        trtcCloud.setGSensorMode();
-    }
-  },
-  {
-    title: "enableEncSmallVideoStream",
-    handler: async () => {
-        trtcCloud.enableEncSmallVideoStream();
-    }
-  },
-  {
-    title: "setRemoteVideoStreamType",
-    handler: async () => {
-        trtcCloud.setRemoteVideoStreamType();
-    }
-  },
-  {
-    title: "snapshotVideo",
-    handler: async () => {
-        trtcCloud.snapshotVideo();
-    }
-  },
-  */
   {
     title: 'startLocalAudio',
     handler: async () => {
@@ -339,7 +231,11 @@ const demoParamsGroup: Array<Config> = [
   {
     title: 'startAudioRecording',
     handler: async () => {
-      // trtcCloud.startAudioRecording();
+      const param: TRTCAudioRecordingParams = {
+        filePath: 'https://www.baidu.com',
+      };
+      let number = await trtcCloud.startAudioRecording(param);
+      Alert.alert(number.toString());
     },
   },
   {
@@ -348,48 +244,10 @@ const demoParamsGroup: Array<Config> = [
       trtcCloud.stopAudioRecording();
     },
   },
-  /*
-  {
-    title: "setWatermarkstartScreenCapture",
-    handler: async () => {
-        trtcCloud.setWatermarkstartScreenCapture();
-    }
-  },
-  {
-    title: "stopScreenCapture",
-    handler: async () => {
-        trtcCloud.stopScreenCapture();
-    }
-  },
-  {
-    title: "pauseScreenCapture",
-    handler: async () => {
-        trtcCloud.pauseScreenCapture();
-    }
-  },
-  {
-    title: "resumeScreenCapture",
-    handler: async () => {
-        trtcCloud.resumeScreenCapture();
-    }
-  },
-  */
-  {
-    title: 'sendCustomCmdMsg',
-    handler: async () => {
-      // trtcCloud.sendCustomCmdMsg();
-    },
-  },
-  {
-    title: 'sendSEIMsg',
-    handler: async () => {
-      // trtcCloud.sendSEIMsg();
-    },
-  },
   {
     title: 'startSpeedTest',
     handler: async () => {
-      // trtcCloud.startSpeedTest();
+      trtcCloud.startSpeedTest(SDKAPPID, userId, userSig);
     },
   },
   {
@@ -425,7 +283,7 @@ const demoParamsGroup: Array<Config> = [
   {
     title: 'callExperimentalAPI',
     handler: async () => {
-      // trtcCloud.callExperimentalAPI();
+      trtcCloud.callExperimentalAPI('223');
     },
   },
 
@@ -460,15 +318,26 @@ const demoParamsGroup: Array<Config> = [
     },
   },
   {
-    title: 'setVoiceCaptureVolume',
+    title: 'setVoiceCaptureVolume-100',
     handler: async () => {
-      txAudioManager.setVoiceCaptureVolume(80);
+      txAudioManager.setVoiceCaptureVolume(100);
+    },
+  },
+  {
+    title: 'setVoiceCaptureVolume-0',
+    handler: async () => {
+      txAudioManager.setVoiceCaptureVolume(0);
     },
   },
   {
     title: 'startPlayMusic',
     handler: async () => {
-      // txAudioManager.startPlayMusic();
+      let audioParam: AudioMusicParam = {
+        id: 1001,
+        publish: true,
+        path: 'https://imgcache.qq.com/operation/dianshi/other/daoxiang.72c46ee085f15dc72603b0ba154409879cbeb15e.mp3',
+      };
+      txAudioManager.startPlayMusic(audioParam);
     },
   },
   {
@@ -522,7 +391,8 @@ const demoParamsGroup: Array<Config> = [
   {
     title: 'getMusicCurrentPosInMS',
     handler: async () => {
-      txAudioManager.getMusicCurrentPosInMS(1001);
+      let time = await txAudioManager.getMusicCurrentPosInMS(1001);
+      Alert.alert(time.toString());
     },
   },
   {
@@ -534,66 +404,17 @@ const demoParamsGroup: Array<Config> = [
   {
     title: 'getMusicDurationInMS',
     handler: async () => {
-      txAudioManager.getMusicDurationInMS('');
-    },
-  },
-
-  // andio menager end
-  // device manager begin
-  {
-    title: 'isFrontCamera',
-    handler: async () => {
-      const res = await txDeviceManager.isFrontCamera();
-      Alert.alert(res.toString());
-    },
-  },
-  {
-    title: 'switchCamera',
-    handler: async () => {
-      txDeviceManager.switchCamera(true);
-    },
-  },
-  {
-    title: 'getCameraZoomMaxRatio',
-    handler: async () => {
-      txDeviceManager.getCameraZoomMaxRatio();
-    },
-  },
-  {
-    title: 'setCameraZoomRatio',
-    handler: async () => {
-      txDeviceManager.setCameraZoomRatio(2);
-    },
-  },
-  {
-    title: 'enableCameraAutoFocus',
-    handler: async () => {
-      txDeviceManager.enableCameraAutoFocus(true);
-    },
-  },
-  {
-    title: 'isAutoFocusEnabled',
-    handler: async () => {
-      txDeviceManager.isAutoFocusEnabled();
-    },
-  },
-  {
-    title: 'setCameraFocusPosition',
-    handler: async () => {
-      txDeviceManager.setCameraFocusPosition(100, 100);
-    },
-  },
-  {
-    title: 'enableCameraTorch',
-    handler: async () => {
-      txDeviceManager.enableCameraTorch(true);
+      let time = await txAudioManager.getMusicDurationInMS(
+        'https://imgcache.qq.com/operation/dianshi/other/daoxiang.72c46ee085f15dc72603b0ba154409879cbeb15e.mp3'
+      );
+      Alert.alert(time.toString());
     },
   },
   {
     title: 'setSystemVolumeType',
     handler: async () => {
       txDeviceManager.setSystemVolumeType(
-        TRTCCloudDef.TRTCSystemVolumeTypeAuto
+        TXSystemVolumeType.TXSystemVolumeTypeAuto
       );
     },
   },

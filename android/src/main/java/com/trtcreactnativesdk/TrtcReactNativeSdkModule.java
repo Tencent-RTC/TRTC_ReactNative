@@ -57,7 +57,6 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void destroySharedInstance(Promise promise) {
       TRTCCloud.destroySharedInstance();
-      trtcCloud.setListener(trtcListener);
       trtcCloud = null;
       promise.resolve(null);
     }
@@ -75,7 +74,8 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
       trtcP.sdkAppId = params.getInt("sdkAppId");
       trtcP.userId = params.getString("userId");
       trtcP.userSig = params.getString("userSig");
-      trtcP.roomId = params.getInt("roomId");
+      String roomId = params.getString("roomId");
+      trtcP.roomId = (int) (Long.parseLong(roomId) & 0xFFFFFFFF);
       trtcP.strRoomId = params.getString("strRoomId");
       trtcP.role = params.getInt("role");
       trtcP.streamId = params.getString("streamId");
@@ -379,4 +379,368 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
       promise.resolve(null);
     }
 
+    /**
+     * 开始进行网络测速（视频通话期间请勿测试，以免影响通话质量）
+     */
+    @ReactMethod
+    private void startSpeedTest(ReadableMap params, Promise promise) {
+      int sdkAppId = params.getInt("sdkAppId");
+      String userId = params.getString("userId");
+      String userSig = params.getString("userSig");
+      trtcCloud.startSpeedTest(sdkAppId, userId, userSig);
+      promise.resolve(null);
+    }
+
+    /**
+     * 停止服务器测速
+     */
+    @ReactMethod
+    private void stopSpeedTest(Promise promise) {
+      trtcCloud.stopSpeedTest();
+      promise.resolve(null);
+    }
+
+    /**
+     * 设置 Log 输出级别
+     */
+    @ReactMethod
+    private void setLogLevel(ReadableMap params, Promise promise) {
+      int level = params.getInt("level");
+      trtcCloud.setLogLevel(level);
+      promise.resolve(null);
+    }
+
+    /**
+     * 启用或禁用控制台日志打印
+     */
+    @ReactMethod
+    private void setConsoleEnabled(ReadableMap params, Promise promise) {
+      boolean enabled = params.getBoolean("enabled");
+      TRTCCloud.setConsoleEnabled(enabled);
+      promise.resolve(null);
+    }
+
+    /**
+     * 修改日志保存路径
+     */
+    @ReactMethod
+    private void setLogDirPath(ReadableMap params, Promise promise) {
+      String path = params.getString("path");
+      TRTCCloud.setLogDirPath(path);
+      promise.resolve(null);
+    }
+
+    /**
+     * 启用或禁用 Log 的本地压缩。
+     */
+    @ReactMethod
+    private void setLogCompressEnabled(ReadableMap params, Promise promise) {
+      boolean enabled = params.getBoolean("enabled");
+      TRTCCloud.setLogCompressEnabled(enabled);
+      promise.resolve(null);
+    }
+
+    /**
+     * 启用或禁用 Log 的本地压缩。
+     */
+    @ReactMethod
+    private void callExperimentalAPI(ReadableMap params, Promise promise) {
+      String jsonStr = params.getString("jsonStr");
+      trtcCloud.callExperimentalAPI(jsonStr);
+      promise.resolve(null);
+    }
+
+    /**
+     * 开启耳返
+     */
+    @ReactMethod
+    private void enableVoiceEarMonitor(ReadableMap params, Promise promise) {
+      boolean enable = params.getBoolean("enable");
+      txAudioEffectManager.enableVoiceEarMonitor(enable);
+      promise.resolve(null);
+    }
+
+  /**
+   * 设置耳返音量。
+   */
+  @ReactMethod
+  private void setVoiceEarMonitorVolume(ReadableMap params, Promise promise) {
+    int volume = params.getInt("volume");
+    txAudioEffectManager.setVoiceEarMonitorVolume(volume);
+    promise.resolve(null);
+  }
+
+  /**
+   * 设置人声的混响效果（KTV、小房间、大会堂、低沉、洪亮...）
+   */
+  @ReactMethod
+  private void setVoiceReverbType(ReadableMap params, Promise promise) {
+    int type = params.getInt("type");
+    TXAudioEffectManager.TXVoiceReverbType reverbType =
+      TXAudioEffectManager.TXVoiceReverbType.TXLiveVoiceReverbType_0;
+    switch (type) {
+      case 0:
+        reverbType = TXAudioEffectManager.TXVoiceReverbType.TXLiveVoiceReverbType_0;
+        break;
+      case 1:
+        reverbType = TXAudioEffectManager.TXVoiceReverbType.TXLiveVoiceReverbType_1;
+        break;
+      case 2:
+        reverbType = TXAudioEffectManager.TXVoiceReverbType.TXLiveVoiceReverbType_2;
+        break;
+      case 3:
+        reverbType = TXAudioEffectManager.TXVoiceReverbType.TXLiveVoiceReverbType_3;
+        break;
+      case 4:
+        reverbType = TXAudioEffectManager.TXVoiceReverbType.TXLiveVoiceReverbType_4;
+        break;
+      case 5:
+        reverbType = TXAudioEffectManager.TXVoiceReverbType.TXLiveVoiceReverbType_5;
+        break;
+      case 6:
+        reverbType = TXAudioEffectManager.TXVoiceReverbType.TXLiveVoiceReverbType_6;
+        break;
+      case 7:
+        reverbType = TXAudioEffectManager.TXVoiceReverbType.TXLiveVoiceReverbType_7;
+        break;
+      default:
+        reverbType = TXAudioEffectManager.TXVoiceReverbType.TXLiveVoiceReverbType_0;
+        break;
+    }
+    txAudioEffectManager.setVoiceReverbType(reverbType);
+    promise.resolve(null);
+  }
+
+  /**
+   * 设置人声的变声特效（萝莉、大叔、重金属、外国人...）
+   */
+  @ReactMethod
+  private void setVoiceChangerType(ReadableMap params, Promise promise) {
+    int type = params.getInt("type");
+    TXAudioEffectManager.TXVoiceChangerType changerType =
+      TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_0;
+    switch (type) {
+      case 0:
+        changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_0;
+        break;
+      case 1:
+        changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_1;
+        break;
+      case 2:
+        changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_2;
+        break;
+      case 3:
+        changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_3;
+        break;
+      case 4:
+        changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_4;
+        break;
+      case 5:
+        changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_5;
+        break;
+      case 6:
+        changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_6;
+        break;
+      case 7:
+        changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_7;
+        break;
+      case 8:
+        changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_8;
+        break;
+      case 9:
+        changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_9;
+        break;
+      case 10:
+        changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_10;
+        break;
+      case 11:
+        changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_11;
+        break;
+      default:
+        changerType = TXAudioEffectManager.TXVoiceChangerType.TXLiveVoiceChangerType_0;
+        break;
+    }
+    txAudioEffectManager.setVoiceChangerType(changerType);
+    promise.resolve(null);
+  }
+  /**
+   * 设置麦克风采集人声的音量
+   */
+  @ReactMethod
+  private void setVoiceCaptureVolume(ReadableMap params, Promise promise) {
+    int volume = params.getInt("volume");
+    txAudioEffectManager.setVoiceCaptureVolume(volume);
+    promise.resolve(null);
+  }
+
+  /**
+   * 设置背景音乐的播放进度回调接口
+   */
+  @ReactMethod
+  private void setMusicObserver(ReadableMap params, Promise promise) {
+    int id = params.getInt("id");
+    txAudioEffectManager.setMusicObserver(id, new TXAudioEffectManager.TXMusicPlayObserver() {
+      @Override
+      public void onStart(int i, int i1) {
+        trtcListener.onMusicObserverStart(i, i1);
+      }
+
+      @Override
+      public void onPlayProgress(int i, long l, long l1) {
+        trtcListener.onMusicObserverPlayProgress(i, l,l1);
+      }
+
+      @Override
+      public void onComplete(int i, int i1) {
+        trtcListener.onMusicObserverComplete(i, i1);
+      }
+    });
+    promise.resolve(null);
+  }
+
+
+  /**
+   * 开始播放背景音乐
+   */
+  @ReactMethod
+  private void startPlayMusic(ReadableMap params, Promise promise) {
+    String musicParam = params.getString(  "musicParam");
+    TXAudioEffectManager.AudioMusicParam audioMusicParam =
+      new Gson().fromJson(musicParam, TXAudioEffectManager.AudioMusicParam.class);
+    boolean isSuccess = txAudioEffectManager.startPlayMusic(audioMusicParam);
+    promise.resolve(isSuccess);
+    txAudioEffectManager.setMusicObserver(audioMusicParam.id, new TXAudioEffectManager.TXMusicPlayObserver() {
+      @Override
+      public void onStart(int i, int i1) {
+        trtcListener.onMusicObserverStart(i, i1);
+      }
+
+      @Override
+      public void onPlayProgress(int i, long l, long l1) {
+        trtcListener.onMusicObserverPlayProgress(i, l,l1);
+      }
+
+      @Override
+      public void onComplete(int i, int i1) {
+        trtcListener.onMusicObserverComplete(i, i1);
+      }
+    });
+  }
+
+  /**
+   * 停止播放背景音乐
+   */
+  @ReactMethod
+  private void stopPlayMusic(ReadableMap params, Promise promise) {
+    int id = params.getInt("id");
+    txAudioEffectManager.stopPlayMusic(id);
+    promise.resolve(null);
+  }
+
+  /**
+   * 暂停播放背景音乐
+   */
+  @ReactMethod
+  private void pausePlayMusic(ReadableMap params, Promise promise) {
+    int id = params.getInt("id");
+    txAudioEffectManager.pausePlayMusic(id);
+    promise.resolve(null);
+  }
+
+  /**
+   * 恢复播放背景音乐
+   */
+  @ReactMethod
+  private void resumePlayMusic(ReadableMap params, Promise promise) {
+    int id = params.getInt("id");
+    txAudioEffectManager.resumePlayMusic(id);
+    promise.resolve(null);
+  }
+
+  /**
+   * 设置背景音乐的远端音量大小，即主播可以通过此接口设置远端观众能听到的背景音乐的音量大小。
+   */
+  @ReactMethod
+  private void setMusicPublishVolume(ReadableMap params, Promise promise) {
+    int id = params.getInt("id");
+    int volume = params.getInt("volume");
+    txAudioEffectManager.setMusicPublishVolume(id, volume);
+    promise.resolve(null);
+  }
+
+  /**
+   * 设置背景音乐的本地音量大小，即主播可以通过此接口设置主播自己本地的背景音乐的音量大小。
+   */
+  @ReactMethod
+  private void setMusicPlayoutVolume(ReadableMap params, Promise promise) {
+    int id = params.getInt("id");
+    int volume = params.getInt("volume");
+    txAudioEffectManager.setMusicPlayoutVolume(id, volume);
+    promise.resolve(null);
+  }
+
+  /**
+   * 设置全局背景音乐的本地和远端音量的大小
+   */
+  @ReactMethod
+  private void setAllMusicVolume(ReadableMap params, Promise promise) {
+    int volume = params.getInt("volume");
+    txAudioEffectManager.setAllMusicVolume(volume);
+    promise.resolve(null);
+  }
+
+  /**
+   * 调整背景音乐的音调高低
+   */
+  @ReactMethod
+  private void setMusicPitch(ReadableMap params, Promise promise) {
+    int id = params.getInt("id");
+    String pitchParam = params.getString("pitch");
+    float pitch = Float.parseFloat(pitchParam);
+    txAudioEffectManager.setMusicPitch(id, pitch);
+    promise.resolve(null);
+  }
+
+  /**
+   * 调整背景音乐的变速效果
+   */
+  @ReactMethod
+  private void setMusicSpeedRate(ReadableMap params, Promise promise) {
+    int id = params.getInt("id");
+    String speedRateParam = params.getString("speedRate");
+    float speedRate = Float.parseFloat(speedRateParam);
+    txAudioEffectManager.setMusicSpeedRate(id, speedRate);
+    promise.resolve(null);
+  }
+
+  /**
+   * 获取背景音乐当前的播放进度（单位：毫秒）
+   */
+  @ReactMethod
+  private void getMusicCurrentPosInMS(ReadableMap params, Promise promise) {
+    int id = params.getInt("id");
+    long time = txAudioEffectManager.getMusicCurrentPosInMS(id);
+    promise.resolve(String.valueOf(time));
+  }
+
+  /**
+   * 设置背景音乐的播放进度（单位：毫秒）
+   */
+  @ReactMethod
+  private void seekMusicToPosInMS(ReadableMap params, Promise promise) {
+    int id = params.getInt("id");
+    int pts = params.getInt("pts");
+    txAudioEffectManager.seekMusicToPosInMS(id, pts);
+    promise.resolve(null);
+  }
+
+  /**
+   * 获取景音乐文件的总时长（单位：毫秒）
+   */
+  @ReactMethod
+  private void getMusicDurationInMS(ReadableMap params, Promise promise) {
+    String path = params.getString("path");
+    long time = txAudioEffectManager.getMusicDurationInMS(path);
+    promise.resolve(String.valueOf(time));
+  }
 }

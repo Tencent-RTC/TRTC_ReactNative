@@ -29,7 +29,7 @@ export default class TXAudioEffectManager {
   ///
   /// volume	音量大小，取值0 - 100，默认值为100
   setVoiceEarMonitorVolume(volume: number): Promise<void> {
-    return TrtcReactNativeSdk.enableVoiceEarMonitor({ volume });
+    return TrtcReactNativeSdk.setVoiceEarMonitorVolume({ volume });
   }
 
   /// 设置人声的混响效果（KTV、小房间、大会堂、低沉、洪亮...）
@@ -56,7 +56,7 @@ export default class TXAudioEffectManager {
   ///
   /// volume	音量大小，1为正常音量，范围是：[0 ~ 100] 之间的浮点数
   setVoiceCaptureVolume(volume: number): Promise<void> {
-    return TrtcReactNativeSdk.setVoiceCaptureVolume(volume);
+    return TrtcReactNativeSdk.setVoiceCaptureVolume({ volume });
   }
 
   /// 开始播放背景音乐
@@ -72,7 +72,9 @@ export default class TXAudioEffectManager {
   ///
   /// true: 成功; false: 失败
   startPlayMusic(musicParam: AudioMusicParam): Promise<boolean> {
-    return TrtcReactNativeSdk.startPlayMusic(musicParam);
+    return TrtcReactNativeSdk.startPlayMusic({
+      musicParam: JSON.stringify(musicParam),
+    });
   }
 
   /// 停止播放背景音乐
@@ -182,7 +184,7 @@ export default class TXAudioEffectManager {
   ///
   /// pts	单位: 毫秒
   seekMusicToPosInMS(id: number, pts: number): Promise<void> {
-    return TrtcReactNativeSdk.getMusicCurrentPosInMS({ id: id, pts: pts });
+    return TrtcReactNativeSdk.seekMusicToPosInMS({ id: id, pts: pts });
   }
 
   /// 获取景音乐文件的总时长（单位：毫秒）
@@ -193,6 +195,6 @@ export default class TXAudioEffectManager {
   ///
   /// 返回：成功返回时长，失败返回-1
   getMusicDurationInMS(path: string): Promise<number> {
-    return TrtcReactNativeSdk.getMusicCurrentPosInMS({ path: path });
+    return TrtcReactNativeSdk.getMusicDurationInMS({ path: path });
   }
 }
