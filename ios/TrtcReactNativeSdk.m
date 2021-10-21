@@ -68,7 +68,9 @@ RCT_EXTERN_METHOD(getAudioPlayoutVolume: (RCTPromiseResolveBlock)resolve withRej
 RCT_EXTERN_METHOD(enableAudioVolumeEvaluation:(NSDictionary)params
   withResolver:(RCTPromiseResolveBlock)resolve
 	withRejecter:(RCTPromiseRejectBlock)reject)
-RCT_EXTERN_METHOD(startAudioRecording: (RCTPromiseResolveBlock)resolve withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(startAudioRecording:(NSDictionary)params
+  withResolver:(RCTPromiseResolveBlock)resolve
+	withRejecter:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(stopAudioRecording: (RCTPromiseResolveBlock)resolve withRejecter:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(stopSpeedTest: (RCTPromiseResolveBlock)resolve withRejecter:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(setLogLevel:(NSDictionary)params

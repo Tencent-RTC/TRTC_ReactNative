@@ -355,11 +355,12 @@ class TrtcReactNativeSdk: RCTEventEmitter, TRTCCloudDelegate {
 	*/
   @objc(startPublishCDNStream:withResolver:withRejecter:)
 	func startPublishCDNStream(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
-//		let param = param["param"] as? String;
+		let param = param["param"] as! String;
+		let dict = JsonUtil.getDictionaryFromJSONString(jsonString: param);
 		
-		if let appId = param["appId"] as? Int32,
-		   let bizId = param["bizId"] as? Int32,
-		   let url = param["url"] as? String {
+		if let appId = dict["appId"] as? Int32,
+		   let bizId = dict["bizId"] as? Int32,
+		   let url = dict["url"] as? String {
 			let params = TRTCPublishCDNParam();
 			params.appId = appId;
 			params.bizId = bizId;
@@ -876,11 +877,11 @@ class TrtcReactNativeSdk: RCTEventEmitter, TRTCCloudDelegate {
 			  
 			  param.id = musicParam["id"] as! Int32
 			  param.path = musicParam["path"] as! String
-			  param.loopCount = musicParam["loopCount"] as! Int
-			  param.publish = musicParam["publish"] as! Bool
-			  param.isShortFile = musicParam["isShortFile"] as! Bool
-			  param.startTimeMS = musicParam["startTimeMS"] as! Int
-			  param.endTimeMS = musicParam["endTimeMS"] as! Int
+			  param.loopCount = musicParam["loopCount"] as? Int ?? 0
+			  param.publish = musicParam["publish"] as? Bool ?? false
+			  param.isShortFile = musicParam["isShortFile"] as? Bool ?? false
+			  param.startTimeMS = musicParam["startTimeMS"] as? Int ?? 0
+			  param.endTimeMS = musicParam["endTimeMS"] as? Int ?? 0
 			  
 			  txAudioEffectManager.startPlayMusic(param, onStart: {
 				  (errCode) -> Void in

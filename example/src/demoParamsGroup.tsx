@@ -8,7 +8,7 @@ import TRTCCloud, {
   TRTCPublishCDNParam,
   TRTCAudioRecordingParams,
   AudioMusicParam,
-  TXSystemVolumeType
+  TXSystemVolumeType,
 } from 'react-native-trtc-react-native-sdk';
 // @ts-ignore
 import getLatestUserSig from './debug/index';
@@ -232,7 +232,7 @@ const demoParamsGroup: Array<Config> = [
     title: 'startAudioRecording',
     handler: async () => {
       const param: TRTCAudioRecordingParams = {
-        filePath: 'https://www.baidu.com',
+        filePath: '/Users/linzhi/Downloads/xxx/a',
       };
       let number = await trtcCloud.startAudioRecording(param);
       Alert.alert(number.toString());
