@@ -63,13 +63,12 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void getSDKVersion(Promise promise) {
-      trtcCloud = TRTCCloud.sharedInstance(getReactApplicationContext());
       String version = trtcCloud.getSDKVersion();
       promise.resolve(version);
     }
     @ReactMethod
     public void enterRoom(ReadableMap params, int scene, Promise promise) {
-      trtcCloud = TRTCCloud.sharedInstance(getReactApplicationContext());
+      trtcCloud.callExperimentalAPI("{\"api\": \"setFramework\", \"params\": {\"framework\": 22}}");
       TRTCCloudDef.TRTCParams trtcP = new TRTCCloudDef.TRTCParams();
       trtcP.sdkAppId = params.getInt("sdkAppId");
       trtcP.userId = params.getString("userId");
