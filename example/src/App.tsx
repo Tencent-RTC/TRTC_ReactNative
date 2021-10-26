@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import TRTCCloud, {
   TRTCCloudListener,
-} from 'react-native-trtc-react-native-sdk';
+} from 'src/trtc_cloud';
 // @ts-ignore
 // import { SDKAPPID } from './debug/config';
 // @ts-ignore

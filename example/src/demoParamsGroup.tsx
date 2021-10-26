@@ -9,7 +9,7 @@ import TRTCCloud, {
   TRTCAudioRecordingParams,
   AudioMusicParam,
   TXSystemVolumeType,
-} from 'react-native-trtc-react-native-sdk';
+} from 'src/trtc_cloud';
 // @ts-ignore
 import getLatestUserSig from './debug/index';
 // @ts-ignore
