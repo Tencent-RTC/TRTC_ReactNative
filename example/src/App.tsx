@@ -38,11 +38,16 @@ export default function App() {
       ]);
     }
     const trtcCloud = (await TRTCCloud.sharedInstance())!;
-    trtcCloud.registerListener((type: TRTCCloudListener, params: any) => {
-      if (type !== TRTCCloudListener.onNetworkQuality && type !== TRTCCloudListener.onStatistics) {
-        console.log(type, params);
-      }
-    });
+    trtcCloud.registerListener(onRtcListener);
+  }
+
+  function onRtcListener(type: TRTCCloudListener, params: any) {
+    if (
+      type !== TRTCCloudListener.onNetworkQuality &&
+      type !== TRTCCloudListener.onStatistics
+    ) {
+      console.log(type, params);
+    }
   }
 
   return (
