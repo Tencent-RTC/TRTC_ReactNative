@@ -1,7 +1,7 @@
 # trtc-react-native
 该React Native sdk是基于 腾讯云 iOS/Android平台的 SDK进行封装。目前仅支持音频通话，后续会支持视频。
 
-#### sdk类文件说明
+### sdk类文件说明
 
 * index-腾讯云视频通话功能的主要接口类
 * tx_audio_effect_manager-腾讯云音视频通话功能音乐和人声设置接口
@@ -9,7 +9,7 @@
 * trtc_cloud_def-腾讯云音视频通话功能的关键类型定义
 * trtc_cloud_listener-腾讯云音视频通话功能的事件回调监听接口
 
-#### 调用示例
+### 调用示例
 
 1.初始化
 ```
@@ -59,4 +59,47 @@ function onRtcListener(type: TRTCCloudListener, params: any) {
 }
 //移除事件监听
 trtcCloud.unRegisterListener(onRtcListener);
+```
+
+### Android接入环境说明
+根据官网文档指引搭建安卓开发环境。[文档指引](https://reactnative.dev/docs/environment-setup)
+注意：Android仅支持真机调试
+#### 配置 App 权限
+在 AndroidManifest.xml 中配置 App 的权限，TRTC SDK 需要以下权限：
+
+```
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.RECORD_AUDIO" />
+<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+<uses-permission android:name="android.permission.BLUETOOTH" />
+<uses-permission android:name="android.permission.CAMERA" />
+<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+<uses-feature android:name="android.hardware.camera" />
+<uses-feature android:name="android.hardware.camera.autofocus" />
+```
+
+>! 请勿设置 `android:hardwareAccelerated="false"`，关闭硬件加速之后，会导致对方的视频流无法渲染。
+
+```
+// 安卓音视频权限需要手动申请
+if (Platform.OS === 'android') {
+  await PermissionsAndroid.requestMultiple([
+    PermissionsAndroid.PERMISSIONS.RECORD_AUDIO, //音频需要
+    // PermissionsAndroid.PERMISSIONS.CAMERA, // 视频需要
+  ]);
+}
+```
+
+#### 开发调试
+1.To start Metro, run npx react-native start inside your React Native project folder
+```
+npx react-native start
+```
+2.Let Metro Bundler run in its own terminal. Open a new terminal inside your React Native project folder. Run the following
+```
+npx react-native run-android
 ```
