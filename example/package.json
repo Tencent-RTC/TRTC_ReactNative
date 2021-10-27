@@ -1,6 +1,6 @@
 {
-  "name": "react-native-trtc-react-native-sdk-example",
-  "description": "Example app for react-native-trtc-react-native-sdk",
+  "name": "trtc-react-native-example",
+  "description": "Example app for trtc-react-native",
   "version": "0.0.1",
   "private": true,
   "scripts": {

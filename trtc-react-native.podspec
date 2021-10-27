@@ -3,7 +3,7 @@ require "json"
 package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 
 Pod::Spec.new do |s|
-  s.name         = "react-native-trtc-react-native-sdk"
+  s.name         = "trtc-react-native"
   s.version      = package["version"]
   s.summary      = package["description"]
   s.homepage     = package["homepage"]

@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  react-native-trtc-react-native-sdk
+//  trtc-react-native
 //
 //  Created by 林智 on 2021/10/14.
 //

@@ -23,7 +23,7 @@ import { demoParamsGroup } from './demoParamsGroup';
 // import TRTCCloud, {
 //   TRTCParams,
 //   TRTCCloudListener,
-// } from 'react-native-trtc-react-native-sdk';
+// } from 'trtc-react-native';
 
 export default function App() {
   React.useEffect(() => {

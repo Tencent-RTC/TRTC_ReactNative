@@ -1,5 +1,5 @@
 {
-  "name": "react-native-trtc-react-native-sdk",
+  "name": "trtc-react-native",
   "version": "0.1.0",
   "description": "trtc",
   "main": "lib/commonjs/index",
@@ -13,7 +13,7 @@
     "android",
     "ios",
     "cpp",
-    "react-native-trtc-react-native-sdk.podspec",
+    "trtc-react-native.podspec",
     "!lib/typescript/example",
     "!android/build",
     "!ios/build",

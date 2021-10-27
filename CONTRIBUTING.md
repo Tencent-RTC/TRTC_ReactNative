@@ -51,7 +51,7 @@ Remember to add tests for your change if possible. Run the unit tests by:
 yarn test
 ```
 
-To edit the Objective-C files, open `example/ios/TrtcReactNativeSdkExample.xcworkspace` in XCode and find the source files at `Pods > Development Pods > react-native-trtc-react-native-sdk`.
+To edit the Objective-C files, open `example/ios/TrtcReactNativeSdkExample.xcworkspace` in XCode and find the source files at `Pods > Development Pods > trtc-react-native`.
 
 To edit the Kotlin files, open `example/android` in Android studio and find the source files at `reactnativetrtcreactnativesdk` under `Android`.
 
