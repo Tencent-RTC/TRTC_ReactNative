@@ -9,7 +9,7 @@ import TRTCCloud, {
   TRTCAudioRecordingParams,
   AudioMusicParam,
   TXSystemVolumeType,
-} from 'src/trtc_cloud';
+} from '../../src/trtc_cloud';
 // @ts-ignore
 import getLatestUserSig from './debug/index';
 // @ts-ignore

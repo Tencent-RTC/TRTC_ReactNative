@@ -50,6 +50,7 @@ class TrtcReactNativeSdk: RCTEventEmitter, TRTCCloudDelegate {
 			params.role = TRTCRoleType(rawValue: role)!;
 			
 			txCloudManager.enterRoom(params, appScene: TRTCAppScene(rawValue: role)!);
+			txCloudManager.callExperimentalAPI("{\"api\": \"setFramework\", \"params\": {\"framework\": 22}}");
 			result(0);
 		} else {
 			result(-1);
