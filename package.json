@@ -1,6 +1,6 @@
 {
   "name": "trtc-react-native",
-  "version": "1.0.2",
+  "version": "1.1.1",
   "description": "trtc-react-native",
   "main": "lib/commonjs/trtc_cloud",
   "module": "lib/module/trtc_cloud",
@@ -40,9 +40,9 @@
   "author": "gavinwjwang <gavinwjwang@tencent.com> ()",
   "license": "MIT",
   "bugs": {
-    "url": "http://baidu.com"
+    "url": "https://cloud.tencent.com/product/trtc"
   },
-  "homepage": "http://baidu.com",
+  "homepage": "https://cloud.tencent.com/product/trtc",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
