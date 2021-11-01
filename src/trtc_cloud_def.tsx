@@ -19,7 +19,7 @@ export class TRTCParams {
   -
   - 推荐取值】限制长度为32字节，只允许包含大小写英文字母（a-zA-Z）、数字（0-9）及下划线和连词符。
   */
-  userId: string; 
+  userId: string;
   /**
   - 【字段含义】用户签名 [必填]，当前 userId 对应的验证签名，相当于使用云服务的登录密码。
   -
@@ -129,7 +129,7 @@ export class TRTCCloudDef {
   */
   static TRTC_VIDEO_RESOLUTION_480_480: number = 7;
 
-  /** 
+  /**
   - 建议码率 VideoCall:100kbps  LIVE:150kbps
   */
   static TRTC_VIDEO_RESOLUTION_160_120: number = 50;
@@ -663,30 +663,30 @@ export class TRTCCloudDef {
    *
    * 不同的日志等级定义了不同的详实程度和日志数量，推荐一般情况下将日志等级设置为：TRTC_LOG_LEVEL_INFO。
    */
-  
+
   /**
    * - 输出所有级别的 Log
-  */
+   */
   static TRTC_LOG_LEVEL_VERBOSE: number = 0;
   /**
    * - 输出 DEBUG，INFO，WARNING，ERROR 和 FATAL 级别的 Log
-  */
+   */
   static TRTC_LOG_LEVEL_DEBUG: number = 1;
   /**
    * - 输出 INFO，WARNING，ERROR 和 FATAL 级别的 Log
-  */
+   */
   static TRTC_LOG_LEVEL_INFO: number = 2;
   /**
    * - 输出 WARNING，ERROR 和 FATAL 级别的 Log
-  */
+   */
   static TRTC_LOG_LEVEL_WARN: number = 3;
   /**
    * - 只输出 ERROR 和 FATAL 级别的 Log
-  */
+   */
   static TRTC_LOG_LEVEL_ERROR: number = 4;
   /**
    * - 只输出 FATAL 级别的 Log
-  */
+   */
   static TRTC_LOG_LEVEL_FATAL: number = 5;
   /**
   - 不输出任何 SDK Log
@@ -771,7 +771,7 @@ export class TRTCCloudDef {
   static TRTC_VideoView_SurfaceView: number = 2;
 }
 
-/** 
+/**
  - 切换房间参数
 */
 export type TRTCSwitchRoomConfig = {
@@ -938,7 +938,7 @@ export type TRTCRenderParams = {
 - TRTCMixUser 用于指定每一路（即每一个 userId）视频画面的具体摆放位置
 */
 export type TRTCMixUser = {
-  /** 
+  /**
   - 参与混流的 userId
   */
   userId: string;
@@ -1212,7 +1212,7 @@ export type TRTCAudioRecordingParams = {
 - CDN 转推参数
 */
 export type TRTCPublishCDNParam = {
-  /**  
+  /**
   - 腾讯云 AppID，请在 实时音视频控制台[https://console.cloud.tencent.com/trtc] 选择已经创建的应用，单击【应用信息】，在“旁路直播信息”中获取
   */
   appId: number;
