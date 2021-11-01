@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import * as React from 'react';
 import {
   StyleSheet,
@@ -10,8 +11,12 @@ import {
   SafeAreaView,
   ScrollView,
   StatusBar,
+  View,
 } from 'react-native';
-import TRTCCloud, { TRTCCloudListener } from '../../src/trtc_cloud';
+import TRTCCloud, {
+  TRTCCloudListener,
+  TXLocalView,
+} from '../../src/trtc_cloud';
 // @ts-ignore
 // import { SDKAPPID } from './debug/config';
 // @ts-ignore
@@ -32,7 +37,7 @@ export default function App() {
     if (Platform.OS === 'android') {
       await PermissionsAndroid.requestMultiple([
         PermissionsAndroid.PERMISSIONS.RECORD_AUDIO, //音频需要
-        // PermissionsAndroid.PERMISSIONS.CAMERA, // 视频需要
+        PermissionsAndroid.PERMISSIONS.CAMERA, // 视频需要
       ]);
     }
     const trtcCloud = (await TRTCCloud.sharedInstance())!;
@@ -50,7 +55,10 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView}>
+      <View style={styles.video}>
+        <TXLocalView />
+      </View>
+      {/* <ScrollView style={styles.scrollView}>
         {demoParamsGroup.map((value) => {
           return (
             <Button
@@ -62,7 +70,7 @@ export default function App() {
             />
           );
         })}
-      </ScrollView>
+      </ScrollView> */}
     </SafeAreaView>
   );
 }
@@ -78,5 +86,9 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 42,
+  },
+  video: {
+    flexDirection: 'row',
+    flexWrap:'wrap'
   },
 });
