@@ -58,7 +58,7 @@ export default class TXAudioEffectManager {
       musicParam: JSON.stringify(musicParam),
     });
   }
-  /** 
+  /**
   - 停止播放背景音乐
   @param id 音乐 ID
   */
@@ -87,7 +87,7 @@ export default class TXAudioEffectManager {
   setMusicPublishVolume(id: number, volume: number): Promise<void> {
     return TrtcReactNativeSdk.setMusicPublishVolume({ id: id, volume: volume });
   }
-  
+
   /**
   - 设置背景音乐的本地音量大小，即主播可以通过此接口设置主播自己本地的背景音乐的音量大小。
   @param id	音乐 ID

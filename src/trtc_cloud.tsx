@@ -125,7 +125,7 @@ export default class TRTCCloud {
     TrtcReactNativeSdk.getDeviceManager();
     return new TXDeviceManager();
   }
-  
+
   getSDKVersion(): Promise<string> {
     return TrtcReactNativeSdk.getSDKVersion();
   }
@@ -170,7 +170,7 @@ export default class TRTCCloud {
   /**
   - 设置音视频数据接收模式（需要在进房前设置才能生效）。
   - 为实现进房秒开的绝佳体验，SDK 默认进房后自动接收音视频。即在您进房成功的同时，您将立刻收到远端所有用户的音视频数据。 若您没有调用 startRemoteView，视频数据将自动超时取消。 若您主要用于语音聊天等没有自动接收视频数据需求的场景，您可以根据实际需求选择接收模式。
-  @param autoRecvAudio	true：自动接收音频数据；false：需要调用 muteRemoteAudio 进行请求或取消。默认值：true。autoRecvVideo	true：自动接收视频数据；false：需要调用 startRemoteView/stopRemoteView 进行请求或取消。默认值：true。注意：需要在进房前设置才能生效。 
+  @param autoRecvAudio	true：自动接收音频数据；false：需要调用 muteRemoteAudio 进行请求或取消。默认值：true。autoRecvVideo	true：自动接收视频数据；false：需要调用 startRemoteView/stopRemoteView 进行请求或取消。默认值：true。注意：需要在进房前设置才能生效。
   */
   setDefaultStreamRecvMode(
     autoRecvAudio: boolean,

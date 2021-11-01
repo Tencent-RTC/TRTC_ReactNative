@@ -47,7 +47,7 @@ const demoParamsGroup: Array<Config> = [
         sdkAppId: SDKAPPID,
         userId,
         userSig,
-        roomId: 2366,
+        roomId: 3366,
         // role: TRTCCloudDef.TRTCRoleAudience,
       });
       trtcCloud.enterRoom(params, TRTCCloudDef.TRTC_APP_SCENE_VIDEOCALL);
