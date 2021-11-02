@@ -36,6 +36,5 @@ export class RtcVideoView extends Component<ViewProps & TXVideoViewProps, {}> {
 /**
  * @ignore
  */
-const TXTextureView = requireNativeComponent<TXRenderViewProps>(
-  'TXVideoViewTextureView'
-);
+const TXTextureView =
+  requireNativeComponent<TXRenderViewProps>('TXVideoTextureView');

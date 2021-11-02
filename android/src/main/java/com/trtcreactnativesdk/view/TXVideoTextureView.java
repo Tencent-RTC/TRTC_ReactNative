@@ -14,17 +14,16 @@ import com.facebook.react.bridge.ReactApplicationContext;
 /**
  * @Description TextureView
  */
-public class TXVideoView extends FrameLayout {
+public class TXVideoTextureView extends FrameLayout {
 
     private boolean mLayoutEnqueued = false;
     private TXCloudVideoView surface;
     private Context trtcContext;
-    public TXVideoView(Context context) {
+    public TXVideoTextureView(Context context) {
         super(context);
         trtcContext = context;
-        SurfaceView mSurfaceView = new SurfaceView(context);
-        surface = new TXCloudVideoView(mSurfaceView);
-        addView(mSurfaceView);
+        surface = new TXCloudVideoView(context);
+        addView(surface);
     }
     private final ChoreographerCompat.FrameCallback mLayoutCallback = new ChoreographerCompat.FrameCallback() {
         @Override

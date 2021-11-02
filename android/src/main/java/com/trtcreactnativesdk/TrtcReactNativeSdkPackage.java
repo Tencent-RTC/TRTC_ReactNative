@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.trtcreactnativesdk.view.TXVideoViewManager;
+import com.trtcreactnativesdk.view.TXVideoTextureViewManager;
 
 public class TrtcReactNativeSdkPackage implements ReactPackage {
     @NonNull
@@ -27,7 +28,8 @@ public class TrtcReactNativeSdkPackage implements ReactPackage {
     @Override
     public List<ViewManager> createViewManagers(@NonNull ReactApplicationContext reactContext) {
         return Arrays.<ViewManager>asList(
-          new TXVideoViewManager()
+          new TXVideoViewManager(),
+          new TXVideoTextureViewManager()
         );
     }
 }
