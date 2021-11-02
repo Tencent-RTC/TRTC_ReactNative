@@ -25,6 +25,7 @@ public class TXVideoViewManager extends SimpleViewManager<TXVideoView> {
     }
     @Override
     public void onDropViewInstance(TXVideoView trtcVideoView) {
+        System.out.println("stopview===");
         super.onDropViewInstance(trtcVideoView);
         trtcVideoView.stopPlayView();
     }
@@ -36,8 +37,8 @@ public class TXVideoViewManager extends SimpleViewManager<TXVideoView> {
     public void setMirrorMode(final TXVideoView trtcVideoView, int mirrorMode) {
         trtcVideoView.setMirrorMode(mirrorMode);
     }
-    @ReactProp(name = "uid")
-    public void setUid(final TXVideoView trtcVideoView, final String uid) {
-        trtcVideoView.setUid(uid);
+    @ReactProp(name = "userId")
+    public void setUid(final TXVideoView trtcVideoView, final String userId) {
+        trtcVideoView.setUid(userId);
     }
 }

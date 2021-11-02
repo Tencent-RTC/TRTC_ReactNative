@@ -1,6 +1,7 @@
 package com.trtcreactnativesdk.view;
 
 import android.content.Context;
+import android.view.SurfaceView;
 import android.widget.FrameLayout;
 
 import com.facebook.react.modules.core.ChoreographerCompat;
@@ -11,9 +12,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 
 /**
- * @Description TODO
- * @Author martin
- * @Date 2020-09-18 17:02
+ * @Description TextureView
  */
 public class TXVideoView extends FrameLayout {
 
@@ -23,6 +22,8 @@ public class TXVideoView extends FrameLayout {
     public TXVideoView(Context context) {
         super(context);
         trtcContext = context;
+//        SurfaceView mSurfaceView = new SurfaceView(context);
+//        surface = new TXCloudVideoView(mSurfaceView);
         surface = new TXCloudVideoView(context);
         addView(surface);
     }

@@ -13,7 +13,7 @@ import {
   TXVoiceReverbType,
   TXSystemVolumeType,
 } from './trtc_cloud_def';
-import TXLocalView from './tx_video_view';
+import TXVideoView from './tx_video_view';
 const { TrtcReactNativeSdk } = NativeModules;
 const TRTCEventEmitter = new NativeEventEmitter(TrtcReactNativeSdk);
 
@@ -425,7 +425,7 @@ export default class TRTCCloud {
   }
 }
 export {
-  TXLocalView,
+  TXVideoView,
   TRTCParams,
   TRTCCloudDef,
   TXVoiceChangerType,

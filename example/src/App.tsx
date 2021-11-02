@@ -1,5 +1,4 @@
-/*eslint-disable*/
-import * as React from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   // View,
@@ -10,17 +9,13 @@ import {
   PermissionsAndroid,
   SafeAreaView,
   ScrollView,
-  StatusBar,
-  View,
 } from 'react-native';
+
 import TRTCCloud, {
+  TRTCCloudDef,
   TRTCCloudListener,
-  TXLocalView,
+  TXVideoView,
 } from '../../src/trtc_cloud';
-// @ts-ignore
-// import { SDKAPPID } from './debug/config';
-// @ts-ignore
-// import getLatestUserSig from './debug/index';
 import { demoParamsGroup } from './demoParamsGroup';
 
 // import TRTCCloud, {
@@ -29,6 +24,7 @@ import { demoParamsGroup } from './demoParamsGroup';
 // } from 'trtc-react-native';
 
 export default function App() {
+  const [isEnter, setIsEnter] = useState(false);
   React.useEffect(() => {
     initInfo();
   }, []);
@@ -45,6 +41,15 @@ export default function App() {
   }
 
   function onRtcListener(type: TRTCCloudListener, params: any) {
+    if (type === TRTCCloudListener.onEnterRoom) {
+      console.log('===onEnterRoom');
+      if (params.result > 0) {
+        setIsEnter(true);
+      }
+    }
+    if (type === TRTCCloudListener.onExitRoom) {
+      setIsEnter(false);
+    }
     if (
       type !== TRTCCloudListener.onNetworkQuality &&
       type !== TRTCCloudListener.onStatistics
@@ -55,10 +60,13 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.video}>
-        <TXLocalView />
-      </View>
-      {/* <ScrollView style={styles.scrollView}>
+      {isEnter && (
+        <TXVideoView.LocalView
+          type={TRTCCloudDef.TRTC_VideoView_SurfaceView}
+          style={styles.video}
+        />
+      )}
+      <ScrollView style={styles.scrollView}>
         {demoParamsGroup.map((value) => {
           return (
             <Button
@@ -70,7 +78,7 @@ export default function App() {
             />
           );
         })}
-      </ScrollView> */}
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -78,7 +86,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: StatusBar.currentHeight,
+    // paddingTop: StatusBar.currentHeight,
   },
   scrollView: {
     backgroundColor: 'white',
@@ -88,7 +96,10 @@ const styles = StyleSheet.create({
     fontSize: 42,
   },
   video: {
-    flexDirection: 'row',
-    flexWrap:'wrap'
+    // flexDirection: 'row',
+    // flexWrap:'wrap'
+    width: 240,
+    height: 240,
+    // backgroundColor: 'red'
   },
 });

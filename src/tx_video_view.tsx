@@ -1,12 +1,36 @@
-import { requireNativeComponent } from 'react-native';
-import React, { memo } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import type { ViewProps } from 'react-native';
 
-const TXVideoView = requireNativeComponent('TXVideoView');
-// export default TXVideoView;
+import { RtcVideoView } from './common/tx_video_view_native';
 
-const TXLocalView = memo((props) => {
-  return <TXVideoView {...props} />;
-});
+export interface TXRemoteViewProps {
+  userId: string;
+  type?: number;
+}
 
-export default TXLocalView;
+export interface TXLocalViewProps {
+  type?: number;
+}
+
+/**
+ * 本地视频渲染器，不需要传用户id
+ */
+class LocalView extends Component<ViewProps & TXLocalViewProps, {}> {
+  render() {
+    return <RtcVideoView {...this.props} userId="" />;
+  }
+}
+
+/**
+ * 远端视频渲染器，需要传用户id
+ */
+class RemoteView extends Component<ViewProps & TXRemoteViewProps, {}> {
+  render() {
+    return <RtcVideoView {...this.props} />;
+  }
+}
+
+export default {
+  LocalView,
+  RemoteView,
+};
