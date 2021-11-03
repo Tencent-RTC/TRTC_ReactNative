@@ -16,12 +16,21 @@ import com.tencent.rtmp.ui.TXCloudVideoView;
 import com.tencent.trtc.TRTCCloud;
 import com.tencent.trtc.TRTCCloudDef;
 import com.tencent.trtc.TRTCCloudListener;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.widget.Toast;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.Arguments;
 import com.google.gson.Gson;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 @ReactModule(name = TrtcReactNativeSdkModule.NAME)
 public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
@@ -286,6 +295,91 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
       trtcCloud.muteLocalAudio(mute);
       promise.resolve(null);
     }
+    /**
+     * 暂停/恢复推送本地的视频数据
+     */
+    @ReactMethod
+    private void muteLocalVideo(ReadableMap params, Promise promise) {
+      boolean mute = params.getBoolean( "mute");
+      trtcCloud.muteLocalVideo(mute);
+      promise.resolve(null);
+    }
+
+  /**
+   * 设置暂停推送本地视频时要推送的图片
+   */
+  @ReactMethod
+  private void setVideoMuteImage(ReadableMap params, Promise promise) {
+    String type = params.getString( "type");
+    final String imageUrl = params.getString( "imageUrl");
+    final int fps = params.getInt( "fps");
+    if (imageUrl == null) {
+      trtcCloud.setVideoMuteImage(null, fps);
+    } else {
+      if (type.equals("network")) {
+        new Thread() {
+          @Override
+          public void run() {
+            try {
+              URL url = new URL(imageUrl);
+              HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+              connection.setDoInput(true);
+              connection.connect();
+              InputStream input = connection.getInputStream();
+              Bitmap myBitmap = BitmapFactory.decodeStream(input);
+              trtcCloud.setVideoMuteImage(myBitmap, fps);
+            } catch (IOException e) {
+              TXLog.e(TAG, "|method=setVideoMuteImage|error=" + e);
+            }
+          }
+        }.start();
+      } else {
+        try {
+//          String path = flutterAssets.getAssetFilePathByName(imageUrl);
+//          AssetManager mAssetManger = trtcContext.getAssets();
+//          InputStream mystream = mAssetManger.open(path);
+//          Bitmap myBitmap = BitmapFactory.decodeStream(mystream);
+//          trtcCloud.setVideoMuteImage(myBitmap, fps);
+        } catch (Exception e) {
+          TXLog.e(TAG, "|method=setVideoMuteImage|error=" + e);
+        }
+      }
+    }
+    promise.resolve(null);
+  }
+
+    /**
+     * 暂停/恢复接收指定的远端视频流
+     */
+    @ReactMethod
+    private void muteRemoteVideoStream(ReadableMap params, Promise promise) {
+      String userId = params.getString("userId");
+      boolean mute = params.getBoolean("mute");
+      trtcCloud.muteRemoteVideoStream(userId, mute);
+      promise.resolve(null);
+    }
+
+    /**
+     * 暂停/恢复接收所有远端视频流
+     */
+    @ReactMethod
+    private void muteAllRemoteVideoStreams(ReadableMap params, Promise promise) {
+      boolean mute = params.getBoolean("mute");
+      trtcCloud.muteAllRemoteVideoStreams(mute);
+      promise.resolve(null);
+    }
+
+    /**
+     * 设置视频编码器相关参数
+     * 该设置决定了远端用户看到的画面质量（同时也是云端录制出的视频文件的画面质量）
+     */
+    @ReactMethod
+    private void setVideoEncoderParam(ReadableMap params, Promise promise) {
+      String param = params.getString("param");
+      trtcCloud.setVideoEncoderParam(new Gson().fromJson(param, TRTCCloudDef.TRTCVideoEncParam.class));
+      promise.resolve(null);
+    }
+
     /**
      * 设置音频路由。
      */

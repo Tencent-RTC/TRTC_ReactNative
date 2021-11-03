@@ -9,6 +9,7 @@ import TRTCCloud, {
   TRTCAudioRecordingParams,
   AudioMusicParam,
   TXSystemVolumeType,
+  TRTCVideoEncParam,
 } from '../../src/trtc_cloud';
 // @ts-ignore
 import getLatestUserSig from './debug/index';
@@ -57,6 +58,56 @@ const demoParamsGroup: Array<Config> = [
     title: 'exitRoom',
     handler: async () => {
       trtcCloud.exitRoom();
+    },
+  },
+  {
+    title: 'setVideoEncoderParam',
+    handler: async () => {
+      const roomConfig: TRTCVideoEncParam = {
+        videoFps: 15,
+        videoBitrate: 1600,
+        minVideoBitrate: 0,
+        enableAdjustRes: true,
+        videoResolutionMode: TRTCCloudDef.TRTC_VIDEO_RESOLUTION_MODE_LANDSCAPE,
+        videoResolution: TRTCCloudDef.TRTC_VIDEO_RESOLUTION_640_360,
+      };
+      trtcCloud.setVideoEncoderParam(roomConfig);
+    },
+  },
+  {
+    title: 'muteLocalVideo-true',
+    handler: async () => {
+      trtcCloud.muteLocalVideo(true);
+    },
+  },
+  {
+    title: 'muteLocalVideo-false',
+    handler: async () => {
+      trtcCloud.muteLocalVideo(false);
+    },
+  },
+  {
+    title: 'muteRemoteVideoStream-true',
+    handler: async () => {
+      trtcCloud.muteRemoteVideoStream('345', true);
+    },
+  },
+  {
+    title: 'muteRemoteVideoStream-false',
+    handler: async () => {
+      trtcCloud.muteRemoteVideoStream('345', false);
+    },
+  },
+  {
+    title: 'muteAllRemoteVideoStreams-true',
+    handler: async () => {
+      trtcCloud.muteAllRemoteVideoStreams(true);
+    },
+  },
+  {
+    title: 'muteAllRemoteVideoStreams-false',
+    handler: async () => {
+      trtcCloud.muteAllRemoteVideoStreams(false);
     },
   },
   // cloud manager begin

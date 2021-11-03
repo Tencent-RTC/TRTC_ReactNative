@@ -26,6 +26,8 @@ import { demoParamsGroup } from './demoParamsGroup';
 export default function App() {
   const [isEnter, setIsEnter] = useState(false);
   const [remoteUserId, setRemoteUserId] = useState(null);
+  const [remoteVideo, setRemoteVideo] = useState(false);
+  const [remoteSub, setRemoteSub] = useState(false);
   React.useEffect(() => {
     initInfo();
   }, []);
@@ -50,12 +52,19 @@ export default function App() {
     }
     if (type === TRTCCloudListener.onExitRoom) {
       setIsEnter(false);
+      setRemoteUserId(null);
     }
     if (type === TRTCCloudListener.onRemoteUserEnterRoom) {
       setRemoteUserId(params.userId);
     }
     if (type === TRTCCloudListener.onRemoteUserLeaveRoom) {
       setRemoteUserId(null);
+    }
+    if (type === TRTCCloudListener.onUserVideoAvailable) {
+      setRemoteVideo(params.available);
+    }
+    if (type === TRTCCloudListener.onUserSubStreamAvailable) {
+      setRemoteSub(params.available);
     }
     if (
       type !== TRTCCloudListener.onNetworkQuality &&
@@ -75,15 +84,22 @@ export default function App() {
           }}
         />
       )}
-      {remoteUserId && (
+      {remoteUserId && remoteVideo && (
         <TXVideoView.RemoteView
           userId={remoteUserId}
           viewType={TRTCCloudDef.TRTC_VideoView_SurfaceView}
           streamType={TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_BIG}
           renderParams={{
             rotation: TRTCCloudDef.TRTC_VIDEO_ROTATION_90,
-            // mirrorType: TRTCCloudDef.TRTC_VIDEO_MIRROR_TYPE_ENABLE
           }}
+          style={styles.video}
+        />
+      )}
+      {remoteUserId && remoteSub && (
+        <TXVideoView.RemoteView
+          userId={remoteUserId}
+          viewType={TRTCCloudDef.TRTC_VideoView_SurfaceView}
+          streamType={TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_SUB}
           style={styles.video}
         />
       )}

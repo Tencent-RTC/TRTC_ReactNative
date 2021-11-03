@@ -21,6 +21,7 @@ public class TXVideoView extends FrameLayout {
     private boolean mLayoutEnqueued = false;
     private TXCloudVideoView txView;
     private Context trtcContext;
+    private int txStreamType;
     public TXVideoView(Context context) {
         super(context);
         trtcContext = context;
@@ -58,7 +59,7 @@ public class TXVideoView extends FrameLayout {
         System.out.println("userId====" + userId.toString());
         txView.setUserId(userId);
         if(!"".equals(userId)) {
-            System.out.println("===paramsname4");
+            txStreamType = streamType;
             getEngine().startRemoteView(userId, streamType, txView);
         } else {
             getEngine().startLocalPreview(true, txView);
@@ -90,10 +91,10 @@ public class TXVideoView extends FrameLayout {
 
     public void stopPlayView(){
         String userId = txView.getUserId();
-        if("".equals(userId)){
+        if("".equals(userId)) {
             getEngine().stopLocalPreview();
-        }else{
-            getEngine().stopRemoteView(userId);
+        } else {
+            getEngine().stopRemoteView(userId, txStreamType);
         }
     }
 }

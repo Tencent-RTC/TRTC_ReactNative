@@ -4,6 +4,7 @@ import TXDeviceManager from './tx_device_manager';
 import { TRTCCloudListener } from './trtc_cloud_listener';
 import {
   TRTCParams,
+  TRTCVideoEncParam,
   TRTCSwitchRoomConfig,
   AudioMusicParam,
   TRTCAudioRecordingParams,
@@ -234,6 +235,48 @@ export default class TRTCCloud {
   stopPublishCDNStream(): Promise<void> {
     return TrtcReactNativeSdk.stopPublishCDNStream();
   }
+
+  /**
+  - 暂停/恢复推送本地的视频数据。
+  - 当暂停推送本地视频后，房间里的其它成员将会收到 onUserVideoAvailable(userId, false) 回调通知 当恢复推送本地视频后，房间里的其它成员将会收到 onUserVideoAvailable(userId, true) 回调通知。
+  */
+  muteLocalVideo(mute: boolean): Promise<void> {
+    return TrtcReactNativeSdk.muteLocalVideo({ mute: mute });
+  }
+
+  /**
+  - 暂停/恢复接收指定的远端视频流。
+  - 该接口仅暂停/恢复接收指定的远端用户的视频流，但并不释放显示资源，视频画面会冻屏在 mute 前的最后一帧。
+  - 您在 enterRoom 之前或之后调用此 API 均能生效，在您调用 exitRoom 之后会被重置为 False。
+  */
+  muteRemoteVideoStream(userId: string, mute: boolean): Promise<void> {
+    return TrtcReactNativeSdk.muteRemoteVideoStream({
+      userId,
+      mute,
+    });
+  }
+
+  /**
+  - 设置视频编码器相关参数
+  - 该设置决定了远端用户看到的画面质量（同时也是云端录制出的视频文件的画面质量）
+  */
+  setVideoEncoderParam(param: TRTCVideoEncParam): Promise<void> {
+    return TrtcReactNativeSdk.setVideoEncoderParam({
+      param: JSON.stringify(param),
+    });
+  }
+
+  /**
+  - 暂停/恢复接收所有远端视频流。
+  - 该接口仅暂停/恢复接收所有远端用户的视频流，但并不释放显示资源，视频画面会冻屏在 mute 前的最后一帧。
+  - 您在 enterRoom 之前或之后调用此 API 均能生效，在您调用 exitRoom 之后会被重置为 False。
+  */
+  muteAllRemoteVideoStreams(mute: boolean): Promise<void> {
+    return TrtcReactNativeSdk.muteAllRemoteVideoStreams({
+      mute,
+    });
+  }
+
   /**
   - 开启本地音频的采集和上行,并设置音频质量。
   - 该函数会启动麦克风采集，并将音频数据传输给房间里的其他用户。 SDK 不会默认开启本地音频采集和上行，您需要调用该函数开启，否则房间里的其他用户将无法听到您的声音。
@@ -436,4 +479,5 @@ export {
   TRTCAudioRecordingParams,
   AudioMusicParam,
   TXSystemVolumeType,
+  TRTCVideoEncParam,
 };
