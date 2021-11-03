@@ -25,6 +25,7 @@ import { demoParamsGroup } from './demoParamsGroup';
 
 export default function App() {
   const [isEnter, setIsEnter] = useState(false);
+  const [remoteUserId, setRemoteUserId] = useState(null);
   React.useEffect(() => {
     initInfo();
   }, []);
@@ -50,6 +51,14 @@ export default function App() {
     if (type === TRTCCloudListener.onExitRoom) {
       setIsEnter(false);
     }
+    if (type === TRTCCloudListener.onRemoteUserEnterRoom) {
+      console.log('===onRemoteUserEnterRoom' + params.toString());
+      setRemoteUserId(params.userId);
+    }
+    if (type === TRTCCloudListener.onRemoteUserLeaveRoom) {
+      console.log('===onRemoteUserLeaveRoom' + params.toString());
+      setRemoteUserId(null);
+    }
     if (
       type !== TRTCCloudListener.onNetworkQuality &&
       type !== TRTCCloudListener.onStatistics
@@ -60,9 +69,12 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {isEnter && (
-        <TXVideoView.LocalView
+      {isEnter && <TXVideoView.LocalView style={styles.video} />}
+      {remoteUserId && (
+        <TXVideoView.RemoteView
+          userId={remoteUserId}
           viewType={TRTCCloudDef.TRTC_VideoView_SurfaceView}
+          streamType={TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_BIG}
           style={styles.video}
         />
       )}
@@ -86,7 +98,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // paddingTop: StatusBar.currentHeight,
   },
   scrollView: {
     backgroundColor: 'white',
@@ -96,10 +107,7 @@ const styles = StyleSheet.create({
     fontSize: 42,
   },
   video: {
-    // flexDirection: 'row',
-    // flexWrap:'wrap'
     width: 240,
     height: 240,
-    // backgroundColor: 'red'
   },
 });
