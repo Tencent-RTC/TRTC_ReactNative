@@ -6,30 +6,73 @@ export interface TXVideoViewProps {
   userId: string;
   viewType?: number;
   streamType: number;
+  mirror?: boolean;
 }
 
 interface TXRenderViewProps {
   data: { userId: string; streamType: number };
 }
 
-/**
- * @ignore
- */
-const TXSurfaceView = requireNativeComponent<TXRenderViewProps>('TXVideoView');
+interface TRTCRenderParams {
+  renderParams?: {
+    rotation: number;
+    fillMode: number;
+    mirrorType: number;
+    streamType: number;
+    userId: string;
+  };
+}
 
 /**
  * @ignore
  */
-export class RtcVideoView extends Component<ViewProps & TXVideoViewProps, {}> {
+const TXSurfaceView = requireNativeComponent<
+  TXRenderViewProps & TRTCRenderParams
+>('TXVideoView');
+
+/**
+ * @ignore
+ */
+export class RtcVideoView extends Component<
+  ViewProps & TXVideoViewProps & TRTCRenderParams,
+  {}
+> {
   render() {
-    const { viewType, userId, streamType, ...otherProps } = this.props;
+    const { viewType, userId, streamType, renderParams, ...otherProps } =
+      this.props;
+    console.log('renderp', renderParams);
+    if (renderParams) {
+      if (!renderParams.fillMode) {
+        renderParams.fillMode = TRTCCloudDef.TRTC_VIDEO_RENDER_MODE_FILL;
+      }
+      if (!renderParams.rotation) {
+        renderParams.rotation = TRTCCloudDef.TRTC_VIDEO_ROTATION_0;
+      }
+      if (!renderParams.mirrorType) {
+        renderParams.mirrorType = TRTCCloudDef.TRTC_VIDEO_MIRROR_TYPE_AUTO;
+      }
+      renderParams.streamType = streamType;
+      renderParams.userId = userId;
+    }
     if (
       Platform.OS === 'android' &&
       viewType === TRTCCloudDef.TRTC_VideoView_TextureView
     ) {
-      return <TXTextureView data={{ userId, streamType }} {...otherProps} />;
+      return (
+        <TXTextureView
+          data={{ userId, streamType }}
+          renderParams={renderParams}
+          {...otherProps}
+        />
+      );
     } else {
-      return <TXSurfaceView data={{ userId, streamType }} {...otherProps} />;
+      return (
+        <TXSurfaceView
+          data={{ userId, streamType }}
+          renderParams={renderParams}
+          {...otherProps}
+        />
+      );
     }
   }
 }
@@ -37,5 +80,6 @@ export class RtcVideoView extends Component<ViewProps & TXVideoViewProps, {}> {
 /**
  * @ignore
  */
-const TXTextureView =
-  requireNativeComponent<TXRenderViewProps>('TXVideoTextureView');
+const TXTextureView = requireNativeComponent<
+  TXRenderViewProps & TRTCRenderParams
+>('TXVideoTextureView');

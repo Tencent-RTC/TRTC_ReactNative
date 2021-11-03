@@ -32,9 +32,9 @@ public class TXVideoViewManager extends SimpleViewManager<TXVideoView> {
     public void setRenderMode(final TXVideoView trtcVideoView, int renderMode) {
         trtcVideoView.setRenderMode(renderMode);
     }
-    @ReactProp(name = "mirrorMode")
-    public void setMirrorMode(final TXVideoView trtcVideoView, int mirrorMode) {
-        trtcVideoView.setMirrorMode(mirrorMode);
+    @ReactProp(name = "renderParams")
+    public void setRenderParams(final TXVideoView trtcVideoView, ReadableMap renderParams) {
+        trtcVideoView.setRenderParams(renderParams);
     }
     @ReactProp(name = "data")
     public void startView(final TXVideoView trtcVideoView, ReadableMap data) {

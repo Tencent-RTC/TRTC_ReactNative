@@ -52,11 +52,9 @@ export default function App() {
       setIsEnter(false);
     }
     if (type === TRTCCloudListener.onRemoteUserEnterRoom) {
-      console.log('===onRemoteUserEnterRoom' + params.toString());
       setRemoteUserId(params.userId);
     }
     if (type === TRTCCloudListener.onRemoteUserLeaveRoom) {
-      console.log('===onRemoteUserLeaveRoom' + params.toString());
       setRemoteUserId(null);
     }
     if (
@@ -69,12 +67,23 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {isEnter && <TXVideoView.LocalView style={styles.video} />}
+      {isEnter && (
+        <TXVideoView.LocalView
+          style={styles.video}
+          renderParams={{
+            rotation: TRTCCloudDef.TRTC_VIDEO_ROTATION_0,
+          }}
+        />
+      )}
       {remoteUserId && (
         <TXVideoView.RemoteView
           userId={remoteUserId}
           viewType={TRTCCloudDef.TRTC_VideoView_SurfaceView}
           streamType={TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_BIG}
+          renderParams={{
+            rotation: TRTCCloudDef.TRTC_VIDEO_ROTATION_90,
+            // mirrorType: TRTCCloudDef.TRTC_VIDEO_MIRROR_TYPE_ENABLE
+          }}
           style={styles.video}
         />
       )}

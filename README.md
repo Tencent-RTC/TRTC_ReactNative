@@ -3,7 +3,7 @@
 
 ### sdk类文件说明
 
-* index-腾讯云视频通话功能的主要接口类
+* trtc_cloud-腾讯云视频通话功能的主要接口类
 * tx_audio_effect_manager-腾讯云音视频通话功能音乐和人声设置接口
 * tx_device_manager-设备管理类
 * trtc_cloud_def-腾讯云音视频通话功能的关键类型定义

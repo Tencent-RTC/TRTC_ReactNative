@@ -11,6 +11,7 @@ import com.tencent.rtmp.ui.TXCloudVideoView;
 import com.tencent.trtc.TRTCCloud;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.tencent.trtc.TRTCCloudDef;
 
 /**
  * @Description TextureView
@@ -57,6 +58,7 @@ public class TXVideoView extends FrameLayout {
         System.out.println("userId====" + userId.toString());
         txView.setUserId(userId);
         if(!"".equals(userId)) {
+            System.out.println("===paramsname4");
             getEngine().startRemoteView(userId, streamType, txView);
         } else {
             getEngine().startLocalPreview(true, txView);
@@ -71,8 +73,19 @@ public class TXVideoView extends FrameLayout {
         }
     }
 
-    public void setMirrorMode(int mirrorMode){
-        getEngine().setLocalViewMirror(mirrorMode);
+    public void setRenderParams(ReadableMap params) {
+        String userId = params.getString("userId");
+        System.out.println(userId);
+        TRTCCloudDef.TRTCRenderParams renderParams = new TRTCCloudDef.TRTCRenderParams();
+        renderParams.rotation = params.getInt("rotation");
+        renderParams.fillMode = params.getInt("fillMode");
+        renderParams.mirrorType = params.getInt("mirrorType");
+        int streamType = params.getInt("streamType");
+        if("".equals(userId)) {
+            getEngine().setLocalRenderParams(renderParams);
+        } else {
+            getEngine().setRemoteRenderParams(userId, streamType, renderParams);
+        }
     }
 
     public void stopPlayView(){

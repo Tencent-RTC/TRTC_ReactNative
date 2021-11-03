@@ -7,10 +7,22 @@ export interface TXRemoteViewProps {
   userId: string;
   viewType?: number;
   streamType: number;
+  mirror?: boolean;
+  renderParams?: {
+    rotation?: number;
+    fillMode?: number;
+    mirrorType?: number;
+  };
 }
 
 export interface TXLocalViewProps {
   viewType?: number;
+  mirror?: boolean;
+  renderParams?: {
+    rotation?: number;
+    fillMode?: number;
+    mirrorType?: number;
+  };
 }
 
 /**
