@@ -1,5 +1,6 @@
 package com.trtcreactnativesdk.view;
 
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.annotations.ReactProp;
@@ -35,8 +36,8 @@ public class TXVideoViewManager extends SimpleViewManager<TXVideoView> {
     public void setMirrorMode(final TXVideoView trtcVideoView, int mirrorMode) {
         trtcVideoView.setMirrorMode(mirrorMode);
     }
-    @ReactProp(name = "userId")
-    public void setUid(final TXVideoView trtcVideoView, final String userId) {
-        trtcVideoView.setUid(userId);
+    @ReactProp(name = "data")
+    public void startView(final TXVideoView trtcVideoView, ReadableMap data) {
+        trtcVideoView.startView(data);
     }
 }

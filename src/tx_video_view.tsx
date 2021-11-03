@@ -5,11 +5,12 @@ import { RtcVideoView } from './common/tx_video_view_native';
 
 export interface TXRemoteViewProps {
   userId: string;
-  type?: number;
+  viewType?: number;
+  streamType: number;
 }
 
 export interface TXLocalViewProps {
-  type?: number;
+  viewType?: number;
 }
 
 /**
@@ -17,7 +18,7 @@ export interface TXLocalViewProps {
  */
 class LocalView extends Component<ViewProps & TXLocalViewProps, {}> {
   render() {
-    return <RtcVideoView {...this.props} userId="" />;
+    return <RtcVideoView {...this.props} userId="" streamType={0} />;
   }
 }
 

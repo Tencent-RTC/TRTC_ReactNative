@@ -62,7 +62,7 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       {isEnter && (
         <TXVideoView.LocalView
-          type={TRTCCloudDef.TRTC_VideoView_SurfaceView}
+          viewType={TRTCCloudDef.TRTC_VideoView_SurfaceView}
           style={styles.video}
         />
       )}

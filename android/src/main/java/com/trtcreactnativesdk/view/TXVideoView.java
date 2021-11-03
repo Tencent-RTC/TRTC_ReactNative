@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.SurfaceView;
 import android.widget.FrameLayout;
 
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.modules.core.ChoreographerCompat;
 import com.facebook.react.modules.core.ReactChoreographer;
 import com.tencent.rtmp.ui.TXCloudVideoView;
@@ -17,13 +18,13 @@ import com.facebook.react.bridge.ReactApplicationContext;
 public class TXVideoView extends FrameLayout {
 
     private boolean mLayoutEnqueued = false;
-    private TXCloudVideoView surface;
+    private TXCloudVideoView txView;
     private Context trtcContext;
     public TXVideoView(Context context) {
         super(context);
         trtcContext = context;
         SurfaceView mSurfaceView = new SurfaceView(context);
-        surface = new TXCloudVideoView(mSurfaceView);
+        txView = new TXCloudVideoView(mSurfaceView);
         addView(mSurfaceView);
     }
     private final ChoreographerCompat.FrameCallback mLayoutCallback = new ChoreographerCompat.FrameCallback() {
@@ -42,8 +43,6 @@ public class TXVideoView extends FrameLayout {
 
         if (!mLayoutEnqueued && mLayoutCallback != null) {
             mLayoutEnqueued = true;
-            // we use NATIVE_ANIMATED_MODULE choreographer queue because it allows us to catch the current
-            // looper loop instead of enqueueing the update in the next loop causing a one frame delay.
             ReactChoreographer.getInstance().postFrameCallback(
                     ReactChoreographer.CallbackType.NATIVE_ANIMATED_MODULE,
                     mLayoutCallback);
@@ -52,17 +51,19 @@ public class TXVideoView extends FrameLayout {
     private TRTCCloud getEngine(){
         return TRTCCloud.sharedInstance(trtcContext);
     }
-    public void setUid(String userId){
+    public void startView(ReadableMap params) {
+        String userId = params.getString("userId");
+        int streamType = params.getInt("streamType");
         System.out.println("userId====" + userId.toString());
-        surface.setUserId(userId);
-        if(!"".equals(userId)){
-            getEngine().startRemoteView(userId, surface);
-        }else{
-            getEngine().startLocalPreview(true, surface);
+        txView.setUserId(userId);
+        if(!"".equals(userId)) {
+            getEngine().startRemoteView(userId, streamType, txView);
+        } else {
+            getEngine().startLocalPreview(true, txView);
         }
     }
     public void setRenderMode(int renderMode){
-        String userId = surface.getUserId();
+        String userId = txView.getUserId();
         if("".equals(userId)){
             getEngine().setLocalViewFillMode(renderMode);
         }else{
@@ -75,7 +76,7 @@ public class TXVideoView extends FrameLayout {
     }
 
     public void stopPlayView(){
-        String userId = surface.getUserId();
+        String userId = txView.getUserId();
         if("".equals(userId)){
             getEngine().stopLocalPreview();
         }else{

@@ -17,13 +17,13 @@ import com.facebook.react.bridge.ReactApplicationContext;
 public class TXVideoTextureView extends FrameLayout {
 
     private boolean mLayoutEnqueued = false;
-    private TXCloudVideoView surface;
+    private TXCloudVideoView txView;
     private Context trtcContext;
     public TXVideoTextureView(Context context) {
         super(context);
         trtcContext = context;
-        surface = new TXCloudVideoView(context);
-        addView(surface);
+        txView = new TXCloudVideoView(context);
+        addView(txView);
     }
     private final ChoreographerCompat.FrameCallback mLayoutCallback = new ChoreographerCompat.FrameCallback() {
         @Override
@@ -38,11 +38,8 @@ public class TXVideoTextureView extends FrameLayout {
     @Override
     public void requestLayout() {
         super.requestLayout();
-
         if (!mLayoutEnqueued && mLayoutCallback != null) {
             mLayoutEnqueued = true;
-            // we use NATIVE_ANIMATED_MODULE choreographer queue because it allows us to catch the current
-            // looper loop instead of enqueueing the update in the next loop causing a one frame delay.
             ReactChoreographer.getInstance().postFrameCallback(
                     ReactChoreographer.CallbackType.NATIVE_ANIMATED_MODULE,
                     mLayoutCallback);
@@ -53,15 +50,15 @@ public class TXVideoTextureView extends FrameLayout {
     }
     public void setUid(String userId){
         System.out.println("userId====" + userId.toString());
-        surface.setUserId(userId);
+        txView.setUserId(userId);
         if(!"".equals(userId)){
-            getEngine().startRemoteView(userId, surface);
+            getEngine().startRemoteView(userId, txView);
         }else{
-            getEngine().startLocalPreview(true, surface);
+            getEngine().startLocalPreview(true, txView);
         }
     }
     public void setRenderMode(int renderMode){
-        String userId = surface.getUserId();
+        String userId = txView.getUserId();
         if("".equals(userId)){
             getEngine().setLocalViewFillMode(renderMode);
         }else{
@@ -74,7 +71,7 @@ public class TXVideoTextureView extends FrameLayout {
     }
 
     public void stopPlayView(){
-        String userId = surface.getUserId();
+        String userId = txView.getUserId();
         if("".equals(userId)){
             getEngine().stopLocalPreview();
         }else{

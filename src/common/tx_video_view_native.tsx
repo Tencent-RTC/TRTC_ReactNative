@@ -4,11 +4,12 @@ import { TRTCCloudDef } from '../trtc_cloud_def';
 
 export interface TXVideoViewProps {
   userId: string;
-  type?: number;
+  viewType?: number;
+  streamType: number;
 }
 
 interface TXRenderViewProps {
-  userId: string;
+  data: { userId: string; streamType: number };
 }
 
 /**
@@ -21,14 +22,14 @@ const TXSurfaceView = requireNativeComponent<TXRenderViewProps>('TXVideoView');
  */
 export class RtcVideoView extends Component<ViewProps & TXVideoViewProps, {}> {
   render() {
-    const { type, userId, ...otherProps } = this.props;
+    const { viewType, userId, streamType, ...otherProps } = this.props;
     if (
       Platform.OS === 'android' &&
-      type === TRTCCloudDef.TRTC_VideoView_TextureView
+      viewType === TRTCCloudDef.TRTC_VideoView_TextureView
     ) {
-      return <TXTextureView userId={userId} {...otherProps} />;
+      return <TXTextureView data={{ userId, streamType }} {...otherProps} />;
     } else {
-      return <TXSurfaceView userId={userId} {...otherProps} />;
+      return <TXSurfaceView data={{ userId, streamType }} {...otherProps} />;
     }
   }
 }
