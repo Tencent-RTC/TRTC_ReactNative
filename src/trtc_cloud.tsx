@@ -195,6 +195,50 @@ export default class TRTCCloud {
       config: JSON.stringify(config),
     });
   }
+
+  /**
+  - 设置暂停推送本地视频时要推送的图片
+  - 当暂停推送本地视频后，会继续推送该接口设置的图片
+  - 暂时只支持传递网络图片
+  - @param image 设置要推送的图片。 "" 表示不推送
+  - @param fps	设置推送图片帧率，最小值为5，最大值为20，默认10
+  */
+  setVideoMuteImage(image: string, fps: number): Promise<void> {
+    return TrtcReactNativeSdk.setVideoMuteImage({
+      imageUrl: image,
+      fps,
+    });
+  }
+
+  /**
+  - 添加水印
+  - 水印的位置是通过 rect 参数来指定的，rect 是一个四元组参数，其格式为 (x，y，width，height)
+  - x：水印的坐标，取值范围为0 - 1的浮点数。
+  - y：水印的坐标，取值范围为0 - 1的浮点数。
+  - width：水印的宽度，取值范围为0 - 1的浮点数。
+  - height：是不用设置的，SDK 内部会根据水印图片的宽高比自动计算一个合适的高度。
+  - 参数设置举例： 如果当前视频的编码分辨率是 540 × 960，且 rect 参数被您设置为（0.1，0.1，0.2，0.0）， 那么水印的左上坐标点就是（540 × 0.1，960 × 0.1）即（54，96），水印的宽度是 540 × 0.2 = 108px，水印的高度会根据水印图片的宽高比由 SDK 自动算出。
+  - @param image 水印图片，**必须使用透明底色的 png 格式**
+  - @param streamType	指定给哪一路画面设置水印
+  - @param rect 水印相对于编码分辨率的归一化坐标，x，y，width，height 取值范围0 - 1。
+  - 注意：如果您要给主画面（一般为摄像头）和辅路画面（一般用作屏幕分享）同时设置水印，需要调用该接口两次，并设定不同的 streamType。
+  */
+  setWatermark(
+    image: string,
+    streamType: number,
+    x: number,
+    y: number,
+    width: number
+  ): Promise<void> {
+    return TrtcReactNativeSdk.setWatermark({
+      imageUrl: image,
+      streamType,
+      x: x.toString(),
+      y: y.toString(),
+      width: width.toString(),
+    });
+  }
+
   /**
   - 开始向腾讯云的直播 CDN 推流
   - 该接口会指定当前用户的音视频流在腾讯云 CDN 所对应的 StreamId，进而可以指定当前用户的 CDN 播放地址。

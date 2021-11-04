@@ -312,13 +312,11 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
    */
   @ReactMethod
   private void setVideoMuteImage(ReadableMap params, Promise promise) {
-    String type = params.getString( "type");
-    final String imageUrl = params.getString( "imageUrl");
+    final String imageUrl = params.getString("imageUrl");
     final int fps = params.getInt( "fps");
-    if (imageUrl == null) {
+    if (imageUrl.equals("")) {
       trtcCloud.setVideoMuteImage(null, fps);
     } else {
-      if (type.equals("network")) {
         new Thread() {
           @Override
           public void run() {
@@ -335,18 +333,39 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
             }
           }
         }.start();
-      } else {
+    }
+    promise.resolve(null);
+  }
+
+  /**
+   * 添加水印
+   */
+  @ReactMethod
+  private void setWatermark(ReadableMap params, Promise promise) {
+    final String imageUrl = params.getString("imageUrl");
+    final int streamType = params.getInt("streamType");
+    String xStr = params.getString("x");
+    final float x = Float.parseFloat(xStr);
+    String yStr = params.getString("y");
+    final float y = Float.parseFloat(yStr);
+    String widthStr = params.getString("width");
+    final float width = Float.parseFloat(widthStr);
+    new Thread() {
+      @Override
+      public void run() {
         try {
-//          String path = flutterAssets.getAssetFilePathByName(imageUrl);
-//          AssetManager mAssetManger = trtcContext.getAssets();
-//          InputStream mystream = mAssetManger.open(path);
-//          Bitmap myBitmap = BitmapFactory.decodeStream(mystream);
-//          trtcCloud.setVideoMuteImage(myBitmap, fps);
-        } catch (Exception e) {
-          TXLog.e(TAG, "|method=setVideoMuteImage|error=" + e);
+          URL url = new URL(imageUrl);
+          HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+          connection.setDoInput(true);
+          connection.connect();
+          InputStream input = connection.getInputStream();
+          Bitmap myBitmap = BitmapFactory.decodeStream(input);
+          trtcCloud.setWatermark(myBitmap, streamType, x, y, width);
+        } catch (IOException e) {
+          TXLog.e(TAG,"|method=setWatermark|error=" + e);
         }
       }
-    }
+    }.start();
     promise.resolve(null);
   }
 

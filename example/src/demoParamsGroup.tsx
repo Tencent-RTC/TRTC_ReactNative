@@ -63,6 +63,33 @@ const demoParamsGroup: Array<Config> = [
     },
   },
   {
+    title: 'setWatermark',
+    handler: async () => {
+      trtcCloud.setWatermark(
+        'https://main.qcloudimg.com/raw/3f9146cacab4a019b0cc44b8b22b6a38.png',
+        TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_BIG,
+        0.1,
+        0.3,
+        0.2
+      );
+    },
+  },
+  {
+    title: 'setVideoMuteImage',
+    handler: async () => {
+      trtcCloud.setVideoMuteImage(
+        'https://main.qcloudimg.com/raw/3f9146cacab4a019b0cc44b8b22b6a38.png',
+        15
+      );
+    },
+  },
+  {
+    title: 'setVideoMuteImage-不推送',
+    handler: async () => {
+      trtcCloud.setVideoMuteImage('', 15);
+    },
+  },
+  {
     title: 'setMixTranscodingConfig',
     handler: async () => {
       const roomConfig: TRTCTranscodingConfig = {
