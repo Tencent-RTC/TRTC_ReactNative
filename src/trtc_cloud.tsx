@@ -1,6 +1,8 @@
 import { NativeModules, NativeEventEmitter, Platform } from 'react-native';
 import TXAudioEffectManager from './tx_audio_effect_manager';
 import TXDeviceManager from './tx_device_manager';
+import TXBeautyManager from './tx_beauty_manager';
+
 import { TRTCCloudListener } from './trtc_cloud_listener';
 import {
   TRTCParams,
@@ -121,6 +123,16 @@ export default class TRTCCloud {
     TrtcReactNativeSdk.getAudioEffectManager();
     return new TXAudioEffectManager();
   }
+
+  /**
+  - 获取美颜管理类 TXBeautyManager
+  @return TXBeautyManager
+  */
+  getBeautyManager(): TXBeautyManager {
+    TrtcReactNativeSdk.getBeautyManager();
+    return new TXBeautyManager();
+  }
+
   /**
   - 获取设备管理模块。
   @return TXDeviceManager

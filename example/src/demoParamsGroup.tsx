@@ -30,6 +30,9 @@ const txDeviceManager = trtcCloud.getDeviceManager();
 // const txBeautyManager = trtcCloud.getBeautyManager();
 // 获取音效管理类 TXAudioEffectManager
 const txAudioManager = trtcCloud.getAudioEffectManager();
+// 获取美颜类
+const txBeautyManager = trtcCloud.getBeautyManager();
+
 const userId = '4545';
 const userSig = getLatestUserSig(userId).userSig;
 
@@ -60,6 +63,68 @@ const demoParamsGroup: Array<Config> = [
     title: 'exitRoom',
     handler: async () => {
       trtcCloud.exitRoom();
+    },
+  },
+  {
+    title: 'setBeautyStyle',
+    handler: async () => {
+      txBeautyManager.setBeautyStyle(TRTCCloudDef.TRTC_BEAUTY_STYLE_NATURE);
+    },
+  },
+  {
+    title: 'setFilter',
+    handler: async () => {
+      txBeautyManager.setFilter(
+        'https://main.qcloudimg.com/raw/3f9146cacab4a019b0cc44b8b22b6a38.png'
+      );
+    },
+  },
+  {
+    title: 'setFilterStrength',
+    handler: async () => {
+      txBeautyManager.setFilterStrength(1);
+    },
+  },
+  {
+    title: 'setBeautyLevel-9',
+    handler: async () => {
+      txBeautyManager.setBeautyLevel(9);
+    },
+  },
+  {
+    title: 'setBeautyLevel-0',
+    handler: async () => {
+      txBeautyManager.setBeautyLevel(0);
+    },
+  },
+  {
+    title: 'setWhitenessLevel-9',
+    handler: async () => {
+      txBeautyManager.setWhitenessLevel(9);
+    },
+  },
+  {
+    title: 'setWhitenessLevel-0',
+    handler: async () => {
+      txBeautyManager.setWhitenessLevel(0);
+    },
+  },
+  {
+    title: 'setRuddyLevel-9',
+    handler: async () => {
+      txBeautyManager.setRuddyLevel(9);
+    },
+  },
+  {
+    title: 'setRuddyLevel-0',
+    handler: async () => {
+      txBeautyManager.setRuddyLevel(0);
+    },
+  },
+  {
+    title: 'enableSharpnessEnhancement',
+    handler: async () => {
+      txBeautyManager.enableSharpnessEnhancement(false);
     },
   },
   {

@@ -898,4 +898,89 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     long time = txAudioEffectManager.getMusicDurationInMS(path);
     promise.resolve(String.valueOf(time));
   }
+
+  /**
+   * 设置美颜类型
+   */
+  @ReactMethod
+  private void setBeautyStyle(ReadableMap params, Promise promise) {
+    int beautyStyle = params.getInt("beautyStyle");
+    txBeautyManager.setBeautyStyle(beautyStyle);
+    promise.resolve(null);
+  }
+  /**
+   * 设置指定素材滤镜特效
+   */
+  @ReactMethod
+  private void setFilter(ReadableMap params, Promise promise) {
+    final String imageUrl = params.getString("imageUrl");
+      new Thread() {
+        @Override
+        public void run() {
+          try {
+            URL url = new URL(imageUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            txBeautyManager.setFilter(myBitmap);
+          } catch (IOException e) {
+            TXLog.e(TAG,"|method=setFilter|error=" + e);
+          }
+        }
+      }.start();
+    promise.resolve(null);
+  }
+
+  /**
+   * 设置滤镜浓度
+   */
+  @ReactMethod
+  private void setFilterStrength(ReadableMap params, Promise promise) {
+    String strength = params.getString("strength");
+    float strengthFloat = Float.parseFloat(strength);
+    txBeautyManager.setFilterStrength(strengthFloat);
+    promise.resolve(null);
+  }
+
+  /**
+   * 设置美颜级别
+   */
+  @ReactMethod
+  private void setBeautyLevel(ReadableMap params, Promise promise) {
+    int beautyLevel = params.getInt("beautyLevel");
+    txBeautyManager.setBeautyLevel(beautyLevel);
+    promise.resolve(null);
+  }
+
+  /**
+   * 设置美白级别
+   */
+  @ReactMethod
+  private void setWhitenessLevel(ReadableMap params, Promise promise) {
+    int whitenessLevel = params.getInt("whitenessLevel");
+    txBeautyManager.setWhitenessLevel(whitenessLevel);
+    promise.resolve(null);
+  }
+
+  /**
+   * 开启清晰度增强
+   */
+  @ReactMethod
+  private void enableSharpnessEnhancement(ReadableMap params, Promise promise) {
+    boolean enable = params.getBoolean("enable");
+    txBeautyManager.enableSharpnessEnhancement(enable);
+    promise.resolve(null);
+  }
+
+  /**
+   * 设置红润级别
+   */
+  @ReactMethod
+  private void setRuddyLevel(ReadableMap params, Promise promise) {
+    int ruddyLevel = params.getInt("ruddyLevel");
+    txBeautyManager.setRuddyLevel(ruddyLevel);
+    promise.resolve(null);
+  }
 }
