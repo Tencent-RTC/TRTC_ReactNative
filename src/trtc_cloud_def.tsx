@@ -945,7 +945,7 @@ export type TRTCMixUser = {
   /**
   - 参与混流的 userId 所在roomId，null表示当前房间
   */
-  roomId: string;
+  roomId?: string;
   /**
   - 图层位置 x 坐标（绝对像素值）
   */
@@ -969,7 +969,7 @@ export type TRTCMixUser = {
   /**
   - 参与混合的是主路画面（TRTC_VIDEO_STREAM_TYPE_BIG，默认）或屏幕分享（TRTC_VIDEO_STREAM_TYPE_SUB）画面
   */
-  streamType: number;
+  streamType?: number;
 };
 /**
 - 云端混流（转码）配置
@@ -1020,7 +1020,7 @@ export type TRTCTranscodingConfig = {
   -【字段含义】混合后画面的底色颜色，默认为黑色，格式为十六进制数字，比如：“0x61B9F1” 代表 RGB 分别为(97,158,241)。
   -【推荐取值】默认值：0x000000，黑色
   */
-  backgroundColor: number;
+  backgroundColor?: number;
   /**
   -【字段含义】混合后画面的背景图。
   -【推荐取值】默认值：null，即不设置背景图

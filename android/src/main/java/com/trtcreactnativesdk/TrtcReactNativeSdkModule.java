@@ -110,6 +110,16 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
       trtcCloud.DisconnectOtherRoom();
       promise.resolve(null);
     }
+    /**
+     * 设置云端的混流转码参数
+     */
+    @ReactMethod
+    private void setMixTranscodingConfig(ReadableMap params, Promise promise) {
+      String config = params.getString("config");
+      System.out.println(config);
+      trtcCloud.setMixTranscodingConfig(new Gson().fromJson(config, TRTCCloudDef.TRTCTranscodingConfig.class));
+      promise.resolve(null);
+    }
     @ReactMethod
     public void switchRole(ReadableMap params, Promise promise) {
       int role = params.getInt("role");
@@ -161,14 +171,6 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     @ReactMethod
     private void stopPublishCDNStream(Promise promise) {
       trtcCloud.stopPublishCDNStream();
-      promise.resolve(null);
-    }
-    /**
-     * 设置云端的混流转码参数
-     */
-    @ReactMethod
-    private void setMixTranscodingConfig(String config, Promise promise) {
-//      trtcCloud.setMixTranscodingConfig(new Gson().fromJson(config, TRTCCloudDef.TRTCTranscodingConfig.class));
       promise.resolve(null);
     }
     /**
@@ -408,6 +410,16 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     private void setVideoEncoderMirror(ReadableMap params, Promise promise) {
       boolean mirror = params.getBoolean("mirror");
       trtcCloud.setVideoEncoderMirror(mirror);
+      promise.resolve(null);
+    }
+
+    /**
+     * 设置重力感应的适应模式。
+     */
+    @ReactMethod
+    private void setGSensorMode(ReadableMap params, Promise promise) {
+      int mode = params.getInt("mode");
+      trtcCloud.setGSensorMode(mode);
       promise.resolve(null);
     }
 

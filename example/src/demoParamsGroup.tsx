@@ -11,6 +11,7 @@ import TRTCCloud, {
   TXSystemVolumeType,
   TRTCVideoEncParam,
   TRTCNetworkQosParam,
+  TRTCTranscodingConfig,
 } from '../../src/trtc_cloud';
 // @ts-ignore
 import getLatestUserSig from './debug/index';
@@ -59,6 +60,49 @@ const demoParamsGroup: Array<Config> = [
     title: 'exitRoom',
     handler: async () => {
       trtcCloud.exitRoom();
+    },
+  },
+  {
+    title: 'setMixTranscodingConfig',
+    handler: async () => {
+      const roomConfig: TRTCTranscodingConfig = {
+        mode: TRTCCloudDef.TRTC_TranscodingConfigMode_Template_PresetLayout,
+        videoWidth: 720,
+        videoHeight: 1280,
+        videoBitrate: 1500,
+        videoFramerate: 20,
+        videoGOP: 2,
+        streamId: '22333',
+        audioSampleRate: 48000,
+        audioBitrate: 64,
+        audioChannels: 2,
+        // 预设一路本地摄像头、两路远端流的排版位置
+        mixUsers: [
+          {
+            width: 720,
+            height: 1280,
+            x: 0,
+            y: 0,
+            userId: 'jack', // 本地摄像头占位，传入推摄像头的 client userId
+            zOrder: 1,
+          },
+          {
+            width: 180,
+            height: 240,
+            x: 400,
+            y: 800,
+            userId: '$PLACE_HOLDER_REMOTE$', // 远端流占位
+            zOrder: 2,
+          },
+        ],
+      };
+      trtcCloud.setMixTranscodingConfig(roomConfig);
+    },
+  },
+  {
+    title: 'setGSensorMode',
+    handler: async () => {
+      trtcCloud.setGSensorMode(TRTCCloudDef.TRTC_GSENSOR_MODE_UIFIXLAYOUT);
     },
   },
   {

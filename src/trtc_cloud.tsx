@@ -14,6 +14,7 @@ import {
   TXVoiceReverbType,
   TXSystemVolumeType,
   TRTCNetworkQosParam,
+  TRTCTranscodingConfig,
 } from './trtc_cloud_def';
 import TXVideoView from './tx_video_view';
 const { TrtcReactNativeSdk } = NativeModules;
@@ -238,6 +239,22 @@ export default class TRTCCloud {
   }
 
   /**
+  - 设置云端的混流转码参数
+  - 如果您在实时音视频 控制台 中的功能配置页开启了“启用旁路推流”功能， 房间里的每一路画面都会有一个默认的直播 CDN 地址。
+  - 一个直播间中可能有不止一位主播，而且每个主播都有自己的画面和声音，但对于 CDN 观众来说，他们只需要一路直播流， 所以您需要将多路音视频流混成一路标准的直播流，这就需要混流转码。
+  - 当您调用 setMixTranscodingConfig() 接口时，SDK 会向腾讯云的转码服务器发送一条指令，目的是将房间里的多路音视频流混合为一路, 您可以通过 mixUsers 参数来调整每一路画面的位置，以及是否只混合声音，也可以通过 videoWidth、videoHeight、videoBitrate 等参数控制混合音视频流的编码参数。
+  - 参考文档：[云端混流转码](https://cloud.tencent.com/document/product/647/16827)。
+  - @param	config 转推参数，请参考 TRTCPublishCDNParam
+  - 注意：
+  - 使用 startPublishing() 请参考 TRTCCloudDef.tsx 中关于 TRTCTranscodingConfig 的介绍。如果传入 null 则取消云端混流转码。
+  */
+  setMixTranscodingConfig(config: TRTCTranscodingConfig): Promise<void> {
+    return TrtcReactNativeSdk.setMixTranscodingConfig({
+      config: JSON.stringify(config),
+    });
+  }
+
+  /**
   - 暂停/恢复推送本地的视频数据。
   - 当暂停推送本地视频后，房间里的其它成员将会收到 onUserVideoAvailable(userId, false) 回调通知 当恢复推送本地视频后，房间里的其它成员将会收到 onUserVideoAvailable(userId, true) 回调通知。
   */
@@ -287,7 +304,7 @@ export default class TRTCCloud {
   */
   setVideoEncoderRotation(rotation: number): Promise<void> {
     return TrtcReactNativeSdk.setVideoEncoderRotation({
-      rotation: rotation,
+      rotation,
     });
   }
 
@@ -298,7 +315,20 @@ export default class TRTCCloud {
   */
   setVideoEncoderMirror(mirror: boolean): Promise<void> {
     return TrtcReactNativeSdk.setVideoEncoderMirror({
-      mirror: mirror,
+      mirror,
+    });
+  }
+
+  /**
+  - 设置重力感应的适应模式
+  - 参数 mode	重力感应模式：
+  - TRTCCloudDef.TRTC_GSENSOR_MODE_DISABLE ：关闭重力感应
+  - TRTCCloudDef.TRTC_GSENSOR_MODE_UIFIXLAYOUT ：开启重力感应，SDK 会自动调整远端用户和本地 View 的画面旋转方向。
+  - TRTCCloudDef.TRTC_GSENSOR_MODE_UIAUTOLAYOUT：关闭重力感应，SDK 会自动调整远端用户看到的画面方向，但不会调整本地 View 的画面旋转方向。 如果您的 App 界面开启了重力感应适配选项，推荐选择该模式，否则 SDK 的方向调整逻辑会跟系统的发生冲突。
+  */
+  setGSensorMode(mode: number): Promise<void> {
+    return TrtcReactNativeSdk.setGSensorMode({
+      mode,
     });
   }
 
@@ -517,4 +547,5 @@ export {
   TXSystemVolumeType,
   TRTCVideoEncParam,
   TRTCNetworkQosParam,
+  TRTCTranscodingConfig,
 };
