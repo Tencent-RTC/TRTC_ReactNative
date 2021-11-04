@@ -10,6 +10,7 @@ import TRTCCloud, {
   AudioMusicParam,
   TXSystemVolumeType,
   TRTCVideoEncParam,
+  TRTCNetworkQosParam,
 } from '../../src/trtc_cloud';
 // @ts-ignore
 import getLatestUserSig from './debug/index';
@@ -72,6 +73,28 @@ const demoParamsGroup: Array<Config> = [
         videoResolution: TRTCCloudDef.TRTC_VIDEO_RESOLUTION_640_360,
       };
       trtcCloud.setVideoEncoderParam(roomConfig);
+    },
+  },
+  {
+    title: 'setNetworkQosParam',
+    handler: async () => {
+      const roomConfig: TRTCNetworkQosParam = {
+        preference: TRTCCloudDef.TRTC_VIDEO_QOS_PREFERENCE_SMOOTH,
+        controlMode: TRTCCloudDef.VIDEO_QOS_CONTROL_CLIENT,
+      };
+      trtcCloud.setNetworkQosParam(roomConfig);
+    },
+  },
+  {
+    title: 'setVideoEncoderRotation',
+    handler: async () => {
+      trtcCloud.setVideoEncoderRotation(TRTCCloudDef.TRTC_VIDEO_ROTATION_180);
+    },
+  },
+  {
+    title: 'setVideoEncoderMirror',
+    handler: async () => {
+      trtcCloud.setVideoEncoderMirror(true);
     },
   },
   {

@@ -381,6 +381,37 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     }
 
     /**
+     * 设置网络流控相关参数。
+     * 该设置决定 SDK 在各种网络环境下的调控策略（例如弱网下选择“保清晰”或“保流畅”）
+     */
+    @ReactMethod
+    private void setNetworkQosParam(ReadableMap params, Promise promise) {
+      String param = params.getString("param");
+      trtcCloud.setNetworkQosParam(new Gson().fromJson(param, TRTCCloudDef.TRTCNetworkQosParam.class));
+      promise.resolve(null);
+    }
+
+    /**
+     * 设置视频编码输出的画面方向，即设置远端用户观看到的和服务器录制的画面方向
+     */
+    @ReactMethod
+    private void setVideoEncoderRotation(ReadableMap params, Promise promise) {
+      int rotation = params.getInt("rotation");
+      trtcCloud.setVideoEncoderRotation(rotation);
+      promise.resolve(null);
+    }
+
+    /**
+     * 设置编码器输出的画面镜像模式。
+     */
+    @ReactMethod
+    private void setVideoEncoderMirror(ReadableMap params, Promise promise) {
+      boolean mirror = params.getBoolean("mirror");
+      trtcCloud.setVideoEncoderMirror(mirror);
+      promise.resolve(null);
+    }
+
+    /**
      * 设置音频路由。
      */
     @ReactMethod

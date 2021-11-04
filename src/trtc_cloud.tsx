@@ -13,6 +13,7 @@ import {
   TXVoiceChangerType,
   TXVoiceReverbType,
   TXSystemVolumeType,
+  TRTCNetworkQosParam,
 } from './trtc_cloud_def';
 import TXVideoView from './tx_video_view';
 const { TrtcReactNativeSdk } = NativeModules;
@@ -267,6 +268,41 @@ export default class TRTCCloud {
   }
 
   /**
+  - 设置网络流控相关参数
+  - 该设置决定 SDK 在各种网络环境下的调控策略（例如弱网下选择“保清晰”或“保流畅”）
+  - 参数：param	网络流控参数，详情请参考 TRTCCloudDef.tsx 中的 TRTCNetworkQosParam 定义
+  */
+  setNetworkQosParam(param: TRTCNetworkQosParam): Promise<void> {
+    return TrtcReactNativeSdk.setNetworkQosParam({
+      param: JSON.stringify(param),
+    });
+  }
+
+  /**
+  - 设置视频编码输出的画面方向，即设置远端用户观看到的和服务器录制的画面方向
+  - 当用户的手机或者 Android Pad 做了一个180度旋转时，由于摄像头的采集方向没有变，所以另一边的用户看到的画面是上下颠倒的， 在这种情况下，您可以通过该接口将 SDK 输出到对方的画面旋转180度，这样可以可以确保对方看到的画面依然正常。
+  - 参数：rotation	顺时针旋转角度，目前仅支持0度和180度两个角度：
+  - TRTCCloudDef.TRTC_VIDEO_ROTATION_0，不旋转（默认值）
+  - TRTCCloudDef.TRTC_VIDEO_ROTATION_180，顺时针旋转180度
+  */
+  setVideoEncoderRotation(rotation: number): Promise<void> {
+    return TrtcReactNativeSdk.setVideoEncoderRotation({
+      rotation: rotation,
+    });
+  }
+
+  /**
+  - 设置编码器输出的画面镜像模式
+  - 该接口不改变本地摄像头的预览画面，但会改变另一端用户看到的（以及服务器录制下来的）画面效果。
+  - 参数：mirror	true：镜像；false：不镜像；默认值：false
+  */
+  setVideoEncoderMirror(mirror: boolean): Promise<void> {
+    return TrtcReactNativeSdk.setVideoEncoderMirror({
+      mirror: mirror,
+    });
+  }
+
+  /**
   - 暂停/恢复接收所有远端视频流。
   - 该接口仅暂停/恢复接收所有远端用户的视频流，但并不释放显示资源，视频画面会冻屏在 mute 前的最后一帧。
   - 您在 enterRoom 之前或之后调用此 API 均能生效，在您调用 exitRoom 之后会被重置为 False。
@@ -480,4 +516,5 @@ export {
   AudioMusicParam,
   TXSystemVolumeType,
   TRTCVideoEncParam,
+  TRTCNetworkQosParam,
 };
