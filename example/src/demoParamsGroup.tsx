@@ -66,6 +66,50 @@ const demoParamsGroup: Array<Config> = [
     },
   },
   {
+    title: 'isFrontCamera',
+    handler: async () => {
+      Alert.alert((await txDeviceManager.isFrontCamera()).toString());
+    },
+  },
+  {
+    title: 'switchCamera',
+    handler: async () => {
+      txDeviceManager.switchCamera(false);
+    },
+  },
+  {
+    title: 'setCameraZoomRatio',
+    handler: async () => {
+      txDeviceManager.setCameraZoomRatio(5);
+    },
+  },
+  {
+    title: 'enableCameraTorch',
+    handler: async () => {
+      Alert.alert((await txDeviceManager.enableCameraTorch(true)).toString());
+    },
+  },
+  {
+    title: 'setCameraFocusPosition',
+    handler: async () => {
+      txDeviceManager.setCameraFocusPosition(0, 0);
+    },
+  },
+  {
+    title: 'getCameraZoomMaxRatio',
+    handler: async () => {
+      Alert.alert((await txDeviceManager.getCameraZoomMaxRatio()).toString());
+    },
+  },
+  {
+    title: 'enableCameraAutoFocus',
+    handler: async () => {
+      Alert.alert(
+        (await txDeviceManager.enableCameraAutoFocus(true)).toString()
+      );
+    },
+  },
+  {
     title: 'setBeautyStyle',
     handler: async () => {
       txBeautyManager.setBeautyStyle(TRTCCloudDef.TRTC_BEAUTY_STYLE_NATURE);

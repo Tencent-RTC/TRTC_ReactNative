@@ -983,4 +983,76 @@ public class TrtcReactNativeSdkModule extends ReactContextBaseJavaModule {
     txBeautyManager.setRuddyLevel(ruddyLevel);
     promise.resolve(null);
   }
+
+  /**
+   * 查询是否是前置摄像头
+   */
+  @ReactMethod
+  private void isFrontCamera(Promise promise) {
+    promise.resolve(txDeviceManager.isFrontCamera());
+  }
+
+  /**
+   * 切换摄像头。
+   */
+  @ReactMethod
+  private void switchCamera(ReadableMap params, Promise promise) {
+    boolean isFrontCamera = params.getBoolean("isFrontCamera");
+    promise.resolve(txDeviceManager.switchCamera(isFrontCamera));
+  }
+
+  /**
+   * 获取摄像头的缩放因子。
+   */
+  @ReactMethod
+  private void getCameraZoomMaxRatio(Promise promise) {
+    promise.resolve(txDeviceManager.getCameraZoomMaxRatio());
+  }
+
+  /**
+   * 设置摄像头缩放因子（焦距）。
+   */
+  @ReactMethod
+  private void setCameraZoomRatio(ReadableMap params, Promise promise) {
+    String value = params.getString("value");
+    float ratioValue = Float.parseFloat(value);
+    promise.resolve(txDeviceManager.setCameraZoomRatio(ratioValue));
+  }
+
+  /**
+   * 设置是否自动识别人脸位置
+   */
+  @ReactMethod
+  private void enableCameraAutoFocus(ReadableMap params, Promise promise) {
+    boolean enable = params.getBoolean("enable");
+    promise.resolve(txDeviceManager.enableCameraAutoFocus(enable));
+  }
+
+  /**
+   * 查询是否支持自动识别人脸位置。
+   */
+  @ReactMethod
+  private void isAutoFocusEnabled(Promise promise) {
+    promise.resolve(txDeviceManager.isAutoFocusEnabled());
+  }
+
+  /**
+   * 开启闪光灯
+   */
+  @ReactMethod
+  private void enableCameraTorch(ReadableMap params, Promise promise) {
+    boolean enable = params.getBoolean("enable");
+    promise.resolve(txDeviceManager.enableCameraTorch(enable));
+  }
+
+  /**
+   * 设置摄像头焦点。
+   */
+  @ReactMethod
+  private void setCameraFocusPosition(ReadableMap params, Promise promise) {
+    int x = params.getInt("x");
+    int y = params.getInt("y");
+    txDeviceManager.setCameraFocusPosition(x, y);
+    promise.resolve(null);
+  }
 }

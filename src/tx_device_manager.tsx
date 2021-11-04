@@ -13,7 +13,7 @@ export default class TXDeviceManager {
   /**
   - 切换摄像头。
   - 注意：此接口只支持和Android和iOS平台
-  @param isFrontCamera：true 前置摄像头   false 后置摄像头
+  @param isFrontCamera 前置摄像头   false 后置摄像头
   */
   switchCamera(isFrontCamera: boolean): Promise<void> {
     return TrtcReactNativeSdk.switchCamera({ isFrontCamera });
@@ -22,7 +22,7 @@ export default class TXDeviceManager {
   - 获取摄像头的缩放因子
   - 注意：此接口只支持和Android和iOS平台
   */
-  getCameraZoomMaxRatio(): Promise<void> {
+  getCameraZoomMaxRatio(): Promise<number> {
     return TrtcReactNativeSdk.getCameraZoomMaxRatio();
   }
   /**
@@ -43,7 +43,7 @@ export default class TXDeviceManager {
   @param enable true：开启；false：关闭，默认值：true
   @return 0：操作成功 负数：失败
   */
-  enableCameraAutoFocus(enable: boolean): Promise<void> {
+  enableCameraAutoFocus(enable: boolean): Promise<number> {
     return TrtcReactNativeSdk.enableCameraAutoFocus({
       enable: enable,
     });
@@ -73,7 +73,7 @@ export default class TXDeviceManager {
   - 注意：此接口只支持和Android和iOS平台
   @param enable	true：开启；false：关闭，默认值：false
   */
-  enableCameraTorch(enable: boolean): Promise<void> {
+  enableCameraTorch(enable: boolean): Promise<boolean> {
     return TrtcReactNativeSdk.enableCameraTorch({
       enable: enable,
     });
