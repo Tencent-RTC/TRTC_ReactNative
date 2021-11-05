@@ -33,14 +33,11 @@ const TXSurfaceView = requireNativeComponent<
 /**
  * @ignore
  */
-export class RtcVideoView extends Component<
-  ViewProps & TXVideoViewProps & TRTCRenderParams,
-  {}
-> {
+export class RtcVideoView extends Component<ViewProps & TXVideoViewProps, {}> {
   render() {
-    const { viewType, userId, streamType, renderParams, ...otherProps } =
-      this.props;
-    console.log('renderp', renderParams);
+    const { viewType, userId, streamType, ...otherProps } = this.props;
+    // @ts-ignore
+    let renderParams = this.props.renderParams;
     if (renderParams) {
       if (!renderParams.fillMode) {
         renderParams.fillMode = TRTCCloudDef.TRTC_VIDEO_RENDER_MODE_FILL;
