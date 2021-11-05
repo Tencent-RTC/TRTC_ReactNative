@@ -1,35 +1,43 @@
 import React, { useState } from 'react';
 import {
   StyleSheet,
-  // View,
-  // NativeEventEmitter,
-  // NativeModules,
   Button,
   Platform,
   PermissionsAndroid,
   SafeAreaView,
+  TextInput,
+  View,
   ScrollView,
+  Alert,
 } from 'react-native';
 
 import TRTCCloud, {
   TRTCCloudDef,
   TRTCCloudListener,
+  TRTCParams,
   TXVideoView,
 } from '../../src/trtc_cloud';
 import { demoParamsGroup } from './demoParamsGroup';
 
-// import TRTCCloud, {
-//   TRTCParams,
-//   TRTCCloudListener,
-// } from 'trtc-react-native';
+// @ts-ignore
+import getLatestUserSig from './debug/index';
+// @ts-ignore
+import { SDKAPPID } from './debug/config';
 
 export default function App() {
+  const [meetId, setMeetId] = React.useState('6868');
+  const [userId, setUserId] = React.useState('');
   const [isEnter, setIsEnter] = useState(false);
   const [remoteUserId, setRemoteUserId] = useState(null);
   const [remoteVideo, setRemoteVideo] = useState(false);
   const [remoteSub, setRemoteSub] = useState(false);
   React.useEffect(() => {
     initInfo();
+    return () => {
+      console.log('destroy');
+      const trtcCloud = TRTCCloud.sharedInstance();
+      trtcCloud.unRegisterListener(onRtcListener);
+    };
   }, []);
 
   async function initInfo() {
@@ -39,13 +47,13 @@ export default function App() {
         PermissionsAndroid.PERMISSIONS.CAMERA, // 视频需要
       ]);
     }
-    const trtcCloud = (await TRTCCloud.sharedInstance())!;
+    const trtcCloud = TRTCCloud.sharedInstance();
     trtcCloud.registerListener(onRtcListener);
   }
 
   function onRtcListener(type: TRTCCloudListener, params: any) {
     if (type === TRTCCloudListener.onEnterRoom) {
-      console.log('===onEnterRoom');
+      console.log('==onEnterRoom');
       if (params.result > 0) {
         setIsEnter(true);
       }
@@ -76,6 +84,62 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={{ padding: 20 }}>
+        <TextInput
+          style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+          onChangeText={(text) => setMeetId(text)}
+          value={meetId}
+          placeholder="请输入房间id"
+        />
+        <TextInput
+          // eslint-disable-next-line react-native/no-inline-styles
+          style={{
+            height: 40,
+            borderColor: 'gray',
+            borderWidth: 1,
+            marginTop: 10,
+            marginBottom: 10,
+          }}
+          onChangeText={(text) => setUserId(text)}
+          value={userId}
+          placeholder="请输入用户id"
+        />
+        <View style={styles.fixToText}>
+          <Button
+            title="进入房间"
+            onPress={() => {
+              if (!SDKAPPID) {
+                Alert.alert('请配置SDKAPPID信息');
+                return;
+              }
+              if (!meetId || !userId) {
+                Alert.alert('请输入房间id和用户id');
+                return;
+              }
+              const userSig = getLatestUserSig(userId).userSig;
+              const params = new TRTCParams({
+                sdkAppId: SDKAPPID,
+                userId,
+                userSig,
+                roomId: Number(meetId),
+              });
+              const trtcCloud = TRTCCloud.sharedInstance();
+              trtcCloud.enterRoom(
+                params,
+                TRTCCloudDef.TRTC_APP_SCENE_VIDEOCALL
+              );
+              // trtcCloud.startLocalAudio(TRTCCloudDef.TRTC_AUDIO_QUALITY_SPEECH);
+            }}
+          />
+          <Button
+            title="退出房间"
+            onPress={() => {
+              const trtcCloud = TRTCCloud.sharedInstance();
+              trtcCloud.exitRoom();
+            }}
+          />
+        </View>
+      </View>
       {isEnter && (
         <TXVideoView.LocalView
           style={styles.video}
@@ -124,6 +188,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  fixToText: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   scrollView: {
     backgroundColor: 'white',
     marginHorizontal: 20,
@@ -133,6 +201,6 @@ const styles = StyleSheet.create({
   },
   video: {
     width: 240,
-    height: 240,
+    height: 180,
   },
 });

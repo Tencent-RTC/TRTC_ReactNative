@@ -24,7 +24,10 @@ const TRTCEventEmitter = new NativeEventEmitter(TrtcReactNativeSdk);
 
 export default class TRTCCloud {
   static _trtcCloud: TRTCCloud | undefined;
-  constructor() {}
+  private _listeners: Map<any, any>;
+  constructor() {
+    this._listeners = new Map();
+  }
   /**
   创建 TRTCCloud 单例。
   */
@@ -50,7 +53,7 @@ export default class TRTCCloud {
    * @returns {{remove: remove}}
    */
   registerListener(listener: { (type: TRTCCloudListener, params: any): void }) {
-    TRTCEventEmitter.addListener('onListener', (args) => {
+    const callback = (args: { params: any; type: TRTCCloudListener }) => {
       let params;
       if (Platform.OS === 'android') {
         try {
@@ -62,7 +65,14 @@ export default class TRTCCloud {
         params = args.params;
       }
       listener(args.type, params);
-    });
+    };
+    TRTCEventEmitter.addListener('onListener', callback);
+    this._listeners.set(listener, callback);
+    return {
+      remove: () => {
+        this.unRegisterListener(listener);
+      },
+    };
   }
 
   /**
@@ -73,7 +83,21 @@ export default class TRTCCloud {
   unRegisterListener(listener: {
     (type: TRTCCloudListener, params: any): void;
   }) {
-    TRTCEventEmitter.removeListener('onListener', listener);
+    const callback = this._listeners.get(listener);
+    if (!callback) {
+      return;
+    }
+    TRTCEventEmitter.removeListener('onListener', callback);
+  }
+
+  /**
+   * 移除所有事件
+   * @param event
+   * @param listener
+   */
+  unRegisterAllListener() {
+    this._listeners.clear();
+    TRTCEventEmitter.removeAllListeners('onListener');
   }
   /**
   - 进入房间

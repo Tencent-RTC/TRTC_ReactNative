@@ -89,7 +89,7 @@ public class TXVideoView extends FrameLayout {
         }
     }
 
-    public void stopPlayView(){
+    public void stopPlayView() {
         String userId = txView.getUserId();
         if("".equals(userId)) {
             getEngine().stopLocalPreview();

@@ -24,7 +24,6 @@ public class TXVideoViewManager extends SimpleViewManager<TXVideoView> {
     }
     @Override
     public void onDropViewInstance(TXVideoView trtcVideoView) {
-        System.out.println("stopview===");
         super.onDropViewInstance(trtcVideoView);
         trtcVideoView.stopPlayView();
     }
