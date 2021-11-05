@@ -47,25 +47,6 @@ const demoParamsGroup: Array<Config> = [
     },
   },
   {
-    title: 'enterRoom',
-    handler: async () => {
-      const params = new TRTCParams({
-        sdkAppId: SDKAPPID,
-        userId,
-        userSig,
-        roomId: 3366,
-        // role: TRTCCloudDef.TRTCRoleAudience,
-      });
-      trtcCloud.enterRoom(params, TRTCCloudDef.TRTC_APP_SCENE_VIDEOCALL);
-    },
-  },
-  {
-    title: 'exitRoom',
-    handler: async () => {
-      trtcCloud.exitRoom();
-    },
-  },
-  {
     title: 'isFrontCamera',
     handler: async () => {
       Alert.alert((await txDeviceManager.isFrontCamera()).toString());
