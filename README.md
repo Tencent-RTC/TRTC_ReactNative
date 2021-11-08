@@ -1,5 +1,5 @@
 # trtc-react-native
-该React Native sdk是基于 腾讯云 iOS/Android平台的 SDK进行封装。目前仅支持音频通话，后续会支持视频。
+该React Native sdk是基于 腾讯云 iOS/Android平台的 SDK进行封装。目前已支持音视频通话。
 
 ### sdk类文件说明
 
