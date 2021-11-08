@@ -166,6 +166,10 @@ export default class TRTCCloud {
     return new TXDeviceManager();
   }
 
+  /**
+  - 获取 SDK 版本信息
+  @return 版本号信息
+  */
   getSDKVersion(): Promise<string> {
     return TrtcReactNativeSdk.getSDKVersion();
   }
@@ -211,6 +215,7 @@ export default class TRTCCloud {
   - 设置音视频数据接收模式（需要在进房前设置才能生效）。
   - 为实现进房秒开的绝佳体验，SDK 默认进房后自动接收音视频。即在您进房成功的同时，您将立刻收到远端所有用户的音视频数据。 若您没有调用 startRemoteView，视频数据将自动超时取消。 若您主要用于语音聊天等没有自动接收视频数据需求的场景，您可以根据实际需求选择接收模式。
   @param autoRecvAudio	true：自动接收音频数据；false：需要调用 muteRemoteAudio 进行请求或取消。默认值：true。autoRecvVideo	true：自动接收视频数据；false：需要调用 startRemoteView/stopRemoteView 进行请求或取消。默认值：true。注意：需要在进房前设置才能生效。
+  @param autoRecvAudio	true：自动订阅视频；
   */
   setDefaultStreamRecvMode(
     autoRecvAudio: boolean,
@@ -225,6 +230,7 @@ export default class TRTCCloud {
   - 切换房间
   - 调用接口后，会退出原来的房间，并且停止原来房间的音视频数据发送和所有远端用户的音视频播放，但不会停止本地视频的预览。 进入新房间成功后，会自动恢复原来的音视频数据发送状态。
   - 接口调用结果会通过onSwitchRoom(errCode, errMsg) 回调。
+  @param config	房间参数，详情请参考 TRTCSwitchRoomConfig
   */
   switchRoom(config: TRTCSwitchRoomConfig): Promise<void> {
     return TrtcReactNativeSdk.switchRoom({
@@ -346,6 +352,8 @@ export default class TRTCCloud {
   - 暂停/恢复接收指定的远端视频流。
   - 该接口仅暂停/恢复接收指定的远端用户的视频流，但并不释放显示资源，视频画面会冻屏在 mute 前的最后一帧。
   - 您在 enterRoom 之前或之后调用此 API 均能生效，在您调用 exitRoom 之后会被重置为 False。
+  @param userId	指定远端用户的 ID。
+  @param mute	是否暂停接收。
   */
   muteRemoteVideoStream(userId: string, mute: boolean): Promise<void> {
     return TrtcReactNativeSdk.muteRemoteVideoStream({
@@ -357,6 +365,7 @@ export default class TRTCCloud {
   /**
   - 设置视频编码器相关参数
   - 该设置决定了远端用户看到的画面质量（同时也是云端录制出的视频文件的画面质量）
+  @param param	用于设置视频编码器的相关参数，详情请参考 TRTCVideoEncParam。
   */
   setVideoEncoderParam(param: TRTCVideoEncParam): Promise<void> {
     return TrtcReactNativeSdk.setVideoEncoderParam({
@@ -367,7 +376,7 @@ export default class TRTCCloud {
   /**
   - 设置网络流控相关参数
   - 该设置决定 SDK 在各种网络环境下的调控策略（例如弱网下选择“保清晰”或“保流畅”）
-  - 参数：param	网络流控参数，详情请参考 TRTCCloudDef.tsx 中的 TRTCNetworkQosParam 定义
+  @param 用于设置网络质量控制的相关参数，详情请参考 TRTCNetworkQosParam
   */
   setNetworkQosParam(param: TRTCNetworkQosParam): Promise<void> {
     return TrtcReactNativeSdk.setNetworkQosParam({
@@ -378,9 +387,9 @@ export default class TRTCCloud {
   /**
   - 设置视频编码输出的画面方向，即设置远端用户观看到的和服务器录制的画面方向
   - 当用户的手机或者 Android Pad 做了一个180度旋转时，由于摄像头的采集方向没有变，所以另一边的用户看到的画面是上下颠倒的， 在这种情况下，您可以通过该接口将 SDK 输出到对方的画面旋转180度，这样可以可以确保对方看到的画面依然正常。
-  - 参数：rotation	顺时针旋转角度，目前仅支持0度和180度两个角度：
   - TRTCCloudDef.TRTC_VIDEO_ROTATION_0，不旋转（默认值）
   - TRTCCloudDef.TRTC_VIDEO_ROTATION_180，顺时针旋转180度
+  @param rotation	目前支持0和180两个旋转角度，默认值：TRTCVideoRotation_0，即不旋转。
   */
   setVideoEncoderRotation(rotation: number): Promise<void> {
     return TrtcReactNativeSdk.setVideoEncoderRotation({
@@ -391,7 +400,7 @@ export default class TRTCCloud {
   /**
   - 设置编码器输出的画面镜像模式
   - 该接口不改变本地摄像头的预览画面，但会改变另一端用户看到的（以及服务器录制下来的）画面效果。
-  - 参数：mirror	true：镜像；false：不镜像；默认值：false
+  @param mirror	true：镜像；false：不镜像；默认值：false
   */
   setVideoEncoderMirror(mirror: boolean): Promise<void> {
     return TrtcReactNativeSdk.setVideoEncoderMirror({
@@ -401,7 +410,7 @@ export default class TRTCCloud {
 
   /**
   - 设置重力感应的适应模式
-  - 参数 mode	重力感应模式：
+  @param 参数 mode	重力感应模式：
   - TRTCCloudDef.TRTC_GSENSOR_MODE_DISABLE ：关闭重力感应
   - TRTCCloudDef.TRTC_GSENSOR_MODE_UIFIXLAYOUT ：开启重力感应，SDK 会自动调整远端用户和本地 View 的画面旋转方向。
   - TRTCCloudDef.TRTC_GSENSOR_MODE_UIAUTOLAYOUT：关闭重力感应，SDK 会自动调整远端用户看到的画面方向，但不会调整本地 View 的画面旋转方向。 如果您的 App 界面开启了重力感应适配选项，推荐选择该模式，否则 SDK 的方向调整逻辑会跟系统的发生冲突。
@@ -416,6 +425,7 @@ export default class TRTCCloud {
   - 暂停/恢复接收所有远端视频流。
   - 该接口仅暂停/恢复接收所有远端用户的视频流，但并不释放显示资源，视频画面会冻屏在 mute 前的最后一帧。
   - 您在 enterRoom 之前或之后调用此 API 均能生效，在您调用 exitRoom 之后会被重置为 False。
+  @param mute	是否暂停接收
   */
   muteAllRemoteVideoStreams(mute: boolean): Promise<void> {
     return TrtcReactNativeSdk.muteAllRemoteVideoStreams({
@@ -427,6 +437,10 @@ export default class TRTCCloud {
   - 开启本地音频的采集和上行,并设置音频质量。
   - 该函数会启动麦克风采集，并将音频数据传输给房间里的其他用户。 SDK 不会默认开启本地音频采集和上行，您需要调用该函数开启，否则房间里的其他用户将无法听到您的声音。
   - 主播端的音质越高，观众端的听感越好，但传输所依赖的带宽也就越高，在带宽有限的场景下也更容易出现卡顿。
+  @param quality	声音音质
+  - TRTCAudioQualitySpeech，流畅：采样率：16k；单声道；音频裸码率：16kbps；适合语音通话为主的场景，比如在线会议，语音通话。
+  - TRTCAudioQualityDefault，默认：采样率：48k；单声道；音频裸码率：50kbps；SDK 默认的音频质量，如无特殊需求推荐选择之。
+  - TRTCAudioQualityMusic，高音质：采样率：48k；双声道 + 全频带；音频裸码率：128kbps；适合需要高保真传输音乐的场景，比如在线K歌、音乐直播等。
   */
   startLocalAudio(quality: number): Promise<void> {
     return TrtcReactNativeSdk.startLocalAudio({ quality: quality });
