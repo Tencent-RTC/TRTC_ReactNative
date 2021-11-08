@@ -56,7 +56,6 @@ public class TXVideoView extends FrameLayout {
     public void startView(ReadableMap params) {
         String userId = params.getString("userId");
         int streamType = params.getInt("streamType");
-        System.out.println("userId====" + userId.toString());
         txView.setUserId(userId);
         if(!"".equals(userId)) {
             txStreamType = streamType;
@@ -65,18 +64,9 @@ public class TXVideoView extends FrameLayout {
             getEngine().startLocalPreview(true, txView);
         }
     }
-    public void setRenderMode(int renderMode){
-        String userId = txView.getUserId();
-        if("".equals(userId)){
-            getEngine().setLocalViewFillMode(renderMode);
-        }else{
-            getEngine().setRemoteViewFillMode(userId, renderMode);
-        }
-    }
 
     public void setRenderParams(ReadableMap params) {
         String userId = params.getString("userId");
-        System.out.println(userId);
         TRTCCloudDef.TRTCRenderParams renderParams = new TRTCCloudDef.TRTCRenderParams();
         renderParams.rotation = params.getInt("rotation");
         renderParams.fillMode = params.getInt("fillMode");

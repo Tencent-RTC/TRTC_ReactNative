@@ -27,10 +27,6 @@ public class TXVideoViewManager extends SimpleViewManager<TXVideoView> {
         super.onDropViewInstance(trtcVideoView);
         trtcVideoView.stopPlayView();
     }
-    @ReactProp(name = "renderMode")
-    public void setRenderMode(final TXVideoView trtcVideoView, int renderMode) {
-        trtcVideoView.setRenderMode(renderMode);
-    }
     @ReactProp(name = "renderParams")
     public void setRenderParams(final TXVideoView trtcVideoView, ReadableMap renderParams) {
         trtcVideoView.setRenderParams(renderParams);
