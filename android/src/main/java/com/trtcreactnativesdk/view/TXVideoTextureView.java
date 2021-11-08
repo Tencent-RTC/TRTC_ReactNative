@@ -65,7 +65,6 @@ public class TXVideoTextureView extends FrameLayout {
 
     public void setRenderParams(ReadableMap params) {
       String userId = params.getString("userId");
-      System.out.println(userId);
       TRTCCloudDef.TRTCRenderParams renderParams = new TRTCCloudDef.TRTCRenderParams();
       renderParams.rotation = params.getInt("rotation");
       renderParams.fillMode = params.getInt("fillMode");

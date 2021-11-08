@@ -11,7 +11,6 @@ import com.tencent.rtmp.ui.TXCloudVideoView;
  */
 public class TXVideoViewManager extends SimpleViewManager<TXVideoView> {
     public static final String REACT_CLASS = "TXVideoView";
-    public TXCloudVideoView videoView;
 
     @Override
     public String getName() {

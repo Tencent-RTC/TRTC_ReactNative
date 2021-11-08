@@ -11,7 +11,6 @@ import com.tencent.rtmp.ui.TXCloudVideoView;
  */
 public class TXVideoTextureViewManager extends SimpleViewManager<TXVideoTextureView> {
     public static final String REACT_CLASS = "TXVideoTextureView";
-    public TXCloudVideoView videoView;
 
     @Override
     public String getName() {
@@ -28,11 +27,11 @@ public class TXVideoTextureViewManager extends SimpleViewManager<TXVideoTextureV
         trtcVideoView.stopPlayView();
     }
     @ReactProp(name = "renderParams")
-    public void setRenderParams(final TXVideoView trtcVideoView, ReadableMap renderParams) {
+    public void setRenderParams(final TXVideoTextureView trtcVideoView, ReadableMap renderParams) {
       trtcVideoView.setRenderParams(renderParams);
     }
     @ReactProp(name = "data")
-    public void startView(final TXVideoView trtcVideoView, ReadableMap data) {
+    public void startView(final TXVideoTextureView trtcVideoView, ReadableMap data) {
       trtcVideoView.startView(data);
     }
 }
