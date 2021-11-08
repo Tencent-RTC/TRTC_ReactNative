@@ -1,6 +1,5 @@
 import { Alert } from 'react-native';
 import TRTCCloud, {
-  TRTCParams,
   TRTCCloudDef,
   TXVoiceChangerType,
   TXVoiceReverbType,
@@ -26,8 +25,6 @@ type Config = {
 const trtcCloud = TRTCCloud.sharedInstance();
 // 获取设备管理模块
 const txDeviceManager = trtcCloud.getDeviceManager();
-// 获取美颜管理对象
-// const txBeautyManager = trtcCloud.getBeautyManager();
 // 获取音效管理类 TXAudioEffectManager
 const txAudioManager = trtcCloud.getAudioEffectManager();
 // 获取美颜类
