@@ -1,71 +1,71 @@
 # trtc-react-native
-该React Native sdk是基于 腾讯云 iOS/Android平台的 SDK进行封装。目前仅支持音频通话，后续会支持视频。
+The SDK for React Native is packaged from the TRTC SDK for iOS and Android. It supports only audio calls currently, and is expected to enable video calls as well in the future.
 
-### sdk类文件说明
+### SDK class files
 
-* trtc_cloud-腾讯云视频通话功能的主要接口类
-* tx_audio_effect_manager-腾讯云音视频通话功能音乐和人声设置接口
-* tx_device_manager-设备管理类
-* trtc_cloud_def-腾讯云音视频通话功能的关键类型定义
-* trtc_cloud_listener-腾讯云音视频通话功能的事件回调监听接口
+* trtc_cloud: main TRTC API classes
+* tx_audio_effect_manager: music and audio effect APIs
+* tx_device_manager: device management class
+* trtc_cloud_def: definitions of key TRTC types
+* trtc_cloud_listener: TRTC event callback APIs
 
-### 调用示例
+### Sample calls
 
-1.初始化
+1. Initialization
 ```
-// 创建 TRTCCloud 单例
+// Create a `TRTCCloud` singleton
 const trtcCloud = TRTCCloud.sharedInstance();
-// 获取设备管理模块
+// Get the device management module
 const txDeviceManager = trtcCloud.getDeviceManager();
-// 获取音效管理类
+// Get the audio effect management class
 const txAudioManager = trtcCloud.getAudioEffectManager();
 ```
 
-2.进退房
+2. Room entry/exit
 ```
-//进房
+// Enter a room
 const params = new TRTCParams({
-        sdkAppId: SDKAPPID,//应用id
-        userId,//用户id
-        userSig,//用户签名
-        roomId: 2366,//房间Id
+        sdkAppId: SDKAPPID,//Application ID
+        userId,//User ID
+        userSig,//User signature
+        roomId: 2366,//Room ID
       });
       trtcCloud.enterRoom(params, TRTCCloudDef.TRTC_APP_SCENE_VIDEOCALL);
-//退房
+// Leave a room
 trtcCloud.exitRoom();
 ```
 
-3.事件监听
+3. Listener registration
 ```
-//设置事件监听
+// Register a listener
 trtcCloud.registerListener(onRtcListener);
 
 function onRtcListener(type: TRTCCloudListener, params: any) {
-  //进房回调事件
+  // Callback for room entry
   if (type === TRTCCloudListener.onEnterRoom) {
     if (params.result > 0) {
-      //进房成功
+      // Entered room successfully
     }
   }
-  // 远端用户进房
+  // Callback for the entry of a remote user
   if (type === TRTCCloudListener.onRemoteUserEnterRoom) {
-    //params.userId参数为远端用户userId
+    //params.userId: ID of the remote user
   }
-  //远端用户是否打开麦克风
+  //Whether a remote user’s mic is turned on
   if (type === TRTCCloudListener.onUserAudioAvailable) {
-    //param.userId 表示远端用户id
-    //param.visible true表示打开麦克风
+    //param.userId: ID of the remote user
+    //param.visible: `true` indicates that the user’s mic is turned on.
   }
 }
-//移除事件监听
+// Unregister a listener
 trtcCloud.unRegisterListener(onRtcListener);
 ```
 
-### Android接入环境说明
-根据官网文档指引搭建安卓开发环境。[文档指引](https://reactnative.dev/docs/environment-setup)
-注意：Android仅支持真机调试
-#### 配置 App 权限
-在 AndroidManifest.xml 中配置 App 的权限，TRTC SDK 需要以下权限：
+### Android development environment
+You can refer to React Native’s [official document](https://reactnative.dev/docs/environment-setup) to set up a development environment for Android.
+Note: You must debug your project on a real device.
+#### Configuring app permissions
+Configure application permissions in `AndroidManifest.xml`. The TRTC SDK requires the following permissions:
 
 ```
 <uses-permission android:name="android.permission.INTERNET" />
@@ -82,19 +82,19 @@ trtcCloud.unRegisterListener(onRtcListener);
 <uses-feature android:name="android.hardware.camera.autofocus" />
 ```
 
->! 请勿设置 `android:hardwareAccelerated="false"`，关闭硬件加速之后，会导致对方的视频流无法渲染。
+>! Do not set `android:hardwareAccelerated="false"`. Disabling hardware acceleration will result in failure to render remote users’ videos.
 
 ```
-// 安卓音视频权限需要手动申请
+// You need to request audio and video permissions manually for Android.
 if (Platform.OS === 'android') {
   await PermissionsAndroid.requestMultiple([
-    PermissionsAndroid.PERMISSIONS.RECORD_AUDIO, //音频需要
-    // PermissionsAndroid.PERMISSIONS.CAMERA, // 视频需要
+    PermissionsAndroid.PERMISSIONS.RECORD_AUDIO, //For audio calls
+    // PermissionsAndroid.PERMISSIONS.CAMERA, // For video calls
   ]);
 }
 ```
 
-#### 开发调试
+#### Developing and debugging
 1.To start Metro, run npx react-native start inside your React Native project folder
 ```
 npx react-native start

@@ -1,12 +1,12 @@
 {
   "name": "trtc-react-native",
-  "version": "0.1.0",
-  "description": "trtc",
-  "main": "lib/commonjs/index",
-  "module": "lib/module/index",
-  "types": "lib/typescript/index.d.ts",
-  "react-native": "src/index",
-  "source": "src/index",
+  "version": "1.1.1",
+  "description": "trtc-react-native",
+  "main": "lib/commonjs/trtc_cloud",
+  "module": "lib/module/trtc_cloud",
+  "types": "lib/typescript/trtc_cloud.d.ts",
+  "react-native": "src/trtc_cloud",
+  "source": "src/trtc_cloud",
   "files": [
     "src",
     "lib",
@@ -36,13 +36,13 @@
     "ios",
     "android"
   ],
-  "repository": "https://git.woa.com/29294-22989-29805-29810/trtc-react-native-sdk",
-  "author": "gavinwjwang <gavinwjwang@tencent.com> (https://git.woa.com/29294-22989-29805-29810/trtc-react-native-sdk)",
+  "repository": "",
+  "author": "gavinwjwang <gavinwjwang@tencent.com> ()",
   "license": "MIT",
   "bugs": {
-    "url": "https://git.woa.com/29294-22989-29805-29810/trtc-react-native-sdk/issues"
+    "url": "https://cloud.tencent.com/product/trtc"
   },
-  "homepage": "https://git.woa.com/29294-22989-29805-29810/trtc-react-native-sdk#readme",
+  "homepage": "https://cloud.tencent.com/product/trtc",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
