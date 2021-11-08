@@ -167,7 +167,7 @@ export default function App() {
           style={styles.video}
         />
       )}
-      <ScrollView style={styles.scrollView}>
+      {/* <ScrollView style={styles.scrollView}>
         {demoParamsGroup.map((value) => {
           return (
             <Button
@@ -179,7 +179,7 @@ export default function App() {
             />
           );
         })}
-      </ScrollView>
+      </ScrollView> */}
     </SafeAreaView>
   );
 }

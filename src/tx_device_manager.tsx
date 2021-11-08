@@ -21,6 +21,7 @@ export default class TXDeviceManager {
   /**
   - 获取摄像头的缩放因子
   - 注意：此接口只支持和Android和iOS平台
+  @return  最大缩放倍数
   */
   getCameraZoomMaxRatio(): Promise<number> {
     return TrtcReactNativeSdk.getCameraZoomMaxRatio();
