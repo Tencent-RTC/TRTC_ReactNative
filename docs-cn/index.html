@@ -2,27 +2,97 @@
 <a href="#trtc-react-native" id="trtc-react-native" style="color: inherit; text-decoration: none;">
   <h1>trtc-react-native</h1>
 </a>
-<p>trtc</p>
+<p>该React Native sdk是基于 腾讯云 iOS/Android平台的 SDK进行封装。目前仅支持音频通话，后续会支持视频。</p>
 
-<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
-  <h2>Installation</h2>
+<a href="#sdk类文件说明" id="sdk类文件说明" style="color: inherit; text-decoration: none;">
+  <h3>sdk类文件说明</h3>
 </a>
-<pre><code class="language-sh"><span class="hl-0">npm install trtc-react-native</span>
+<ul>
+<li>trtc_cloud-腾讯云视频通话功能的主要接口类</li>
+<li>tx_audio_effect_manager-腾讯云音视频通话功能音乐和人声设置接口</li>
+<li>tx_device_manager-设备管理类</li>
+<li>trtc_cloud_def-腾讯云音视频通话功能的关键类型定义</li>
+<li>trtc_cloud_listener-腾讯云音视频通话功能的事件回调监听接口</li>
+</ul>
+
+<a href="#调用示例" id="调用示例" style="color: inherit; text-decoration: none;">
+  <h3>调用示例</h3>
+</a>
+<p>1.初始化</p>
+<pre><code><span class="hl-0">// 创建 TRTCCloud 单例</span><br/><span class="hl-1">const</span><span class="hl-2"> </span><span class="hl-3">trtcCloud</span><span class="hl-2"> = </span><span class="hl-4">TRTCCloud</span><span class="hl-2">.</span><span class="hl-5">sharedInstance</span><span class="hl-2">();</span><br/><span class="hl-0">// 获取设备管理模块</span><br/><span class="hl-1">const</span><span class="hl-2"> </span><span class="hl-3">txDeviceManager</span><span class="hl-2"> = </span><span class="hl-4">trtcCloud</span><span class="hl-2">.</span><span class="hl-5">getDeviceManager</span><span class="hl-2">();</span><br/><span class="hl-0">// 获取音效管理类</span><br/><span class="hl-1">const</span><span class="hl-2"> </span><span class="hl-3">txAudioManager</span><span class="hl-2"> = </span><span class="hl-4">trtcCloud</span><span class="hl-2">.</span><span class="hl-5">getAudioEffectManager</span><span class="hl-2">();</span>
+</code></pre>
+<p>2.进退房</p>
+<pre><code><span class="hl-0">//进房</span><br/><span class="hl-1">const</span><span class="hl-2"> </span><span class="hl-3">params</span><span class="hl-2"> = </span><span class="hl-1">new</span><span class="hl-2"> </span><span class="hl-5">TRTCParams</span><span class="hl-2">({</span><br/><span class="hl-2">        </span><span class="hl-4">sdkAppId:</span><span class="hl-2"> </span><span class="hl-3">SDKAPPID</span><span class="hl-2">,</span><span class="hl-0">//应用id</span><br/><span class="hl-2">        </span><span class="hl-4">userId</span><span class="hl-2">,</span><span class="hl-0">//用户id</span><br/><span class="hl-2">        </span><span class="hl-4">userSig</span><span class="hl-2">,</span><span class="hl-0">//用户签名</span><br/><span class="hl-2">        </span><span class="hl-4">roomId:</span><span class="hl-2"> </span><span class="hl-6">2366</span><span class="hl-2">,</span><span class="hl-0">//房间Id</span><br/><span class="hl-2">      });</span><br/><span class="hl-2">      </span><span class="hl-4">trtcCloud</span><span class="hl-2">.</span><span class="hl-5">enterRoom</span><span class="hl-2">(</span><span class="hl-4">params</span><span class="hl-2">, </span><span class="hl-4">TRTCCloudDef</span><span class="hl-2">.</span><span class="hl-3">TRTC_APP_SCENE_VIDEOCALL</span><span class="hl-2">);</span><br/><span class="hl-0">//退房</span><br/><span class="hl-4">trtcCloud</span><span class="hl-2">.</span><span class="hl-5">exitRoom</span><span class="hl-2">();</span>
+</code></pre>
+<p>3.事件监听</p>
+<pre><code><span class="hl-0">//设置事件监听</span><br/><span class="hl-4">trtcCloud</span><span class="hl-2">.</span><span class="hl-5">registerListener</span><span class="hl-2">(</span><span class="hl-4">onRtcListener</span><span class="hl-2">);</span><br/><br/><span class="hl-1">function</span><span class="hl-2"> </span><span class="hl-5">onRtcListener</span><span class="hl-2">(</span><span class="hl-4">type</span><span class="hl-2">: </span><span class="hl-7">TRTCCloudListener</span><span class="hl-2">, </span><span class="hl-4">params</span><span class="hl-2">: </span><span class="hl-7">any</span><span class="hl-2">) {</span><br/><span class="hl-2">  </span><span class="hl-0">//进房回调事件</span><br/><span class="hl-2">  </span><span class="hl-8">if</span><span class="hl-2"> (</span><span class="hl-4">type</span><span class="hl-2"> === </span><span class="hl-4">TRTCCloudListener</span><span class="hl-2">.</span><span class="hl-4">onEnterRoom</span><span class="hl-2">) {</span><br/><span class="hl-2">    </span><span class="hl-8">if</span><span class="hl-2"> (</span><span class="hl-4">params</span><span class="hl-2">.</span><span class="hl-4">result</span><span class="hl-2"> &gt; </span><span class="hl-6">0</span><span class="hl-2">) {</span><br/><span class="hl-2">      </span><span class="hl-0">//进房成功</span><br/><span class="hl-2">    }</span><br/><span class="hl-2">  }</span><br/><span class="hl-2">  </span><span class="hl-0">// 远端用户进房</span><br/><span class="hl-2">  </span><span class="hl-8">if</span><span class="hl-2"> (</span><span class="hl-4">type</span><span class="hl-2"> === </span><span class="hl-4">TRTCCloudListener</span><span class="hl-2">.</span><span class="hl-4">onRemoteUserEnterRoom</span><span class="hl-2">) {</span><br/><span class="hl-2">    </span><span class="hl-0">//params.userId参数为远端用户userId</span><br/><span class="hl-2">  }</span><br/><span class="hl-2">  </span><span class="hl-0">//远端用户是否打开麦克风</span><br/><span class="hl-2">  </span><span class="hl-8">if</span><span class="hl-2"> (</span><span class="hl-4">type</span><span class="hl-2"> === </span><span class="hl-4">TRTCCloudListener</span><span class="hl-2">.</span><span class="hl-4">onUserAudioAvailable</span><span class="hl-2">) {</span><br/><span class="hl-2">    </span><span class="hl-0">//param.userId 表示远端用户id</span><br/><span class="hl-2">    </span><span class="hl-0">//param.visible true表示打开麦克风</span><br/><span class="hl-2">  }</span><br/><span class="hl-2">}</span><br/><span class="hl-0">//移除事件监听</span><br/><span class="hl-4">trtcCloud</span><span class="hl-2">.</span><span class="hl-5">unRegisterListener</span><span class="hl-2">(</span><span class="hl-4">onRtcListener</span><span class="hl-2">);</span>
+</code></pre>
+<ol start="4">
+<li><p>显示本地视频</p>
+<pre><code><span class="hl-2">&lt;</span><span class="hl-4">TXVideoView</span><span class="hl-2">.</span><span class="hl-4">LocalView</span><span class="hl-2"> /&gt;</span>
+</code></pre>
+</li>
+<li><p>显示远端视频</p>
+<pre><code><span class="hl-2">&lt;</span><span class="hl-4">TXVideoView</span><span class="hl-2">.</span><span class="hl-4">RemoteView</span><br/><span class="hl-2">  </span><span class="hl-4">userId</span><span class="hl-2">={</span><span class="hl-4">remoteUserId</span><span class="hl-2">}</span><br/><span class="hl-2">  </span><span class="hl-4">streamType</span><span class="hl-2">={TRTCCloudDef.</span><span class="hl-4">TRTC_VIDEO_STREAM_TYPE_BIG</span><span class="hl-2">}</span><br/><span class="hl-2">/&gt;</span>
+</code></pre>
+</li>
+<li><p>显示远端屏幕分享</p>
+<pre><code><span class="hl-2">&lt;</span><span class="hl-4">TXVideoView</span><span class="hl-2">.</span><span class="hl-4">RemoteView</span><br/><span class="hl-2">  </span><span class="hl-4">userId</span><span class="hl-2">={</span><span class="hl-4">remoteUserId</span><span class="hl-2">}</span><br/><span class="hl-2">  </span><span class="hl-4">streamType</span><span class="hl-2">={TRTCCloudDef.</span><span class="hl-4">TRTC_VIDEO_STREAM_TYPE_SUB</span><span class="hl-2">}</span><br/><span class="hl-2">/&gt;</span>
 </code></pre>
 
-<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
-  <h2>Usage</h2>
+<a href="#android接入环境说明" id="android接入环境说明" style="color: inherit; text-decoration: none;">
+  <h3>Android接入环境说明</h3>
 </a>
-<pre><code class="language-js"><span class="hl-1">import</span><span class="hl-0"> </span><span class="hl-2">TrtcReactNativeSdk</span><span class="hl-0"> </span><span class="hl-1">from</span><span class="hl-0"> </span><span class="hl-3">&quot;trtc-react-native&quot;</span><span class="hl-0">;</span><br/><br/><span class="hl-4">// ...</span><br/><br/><span class="hl-5">const</span><span class="hl-0"> </span><span class="hl-6">result</span><span class="hl-0"> = </span><span class="hl-1">await</span><span class="hl-0"> </span><span class="hl-2">TrtcReactNativeSdk</span><span class="hl-0">.</span><span class="hl-7">multiply</span><span class="hl-0">(</span><span class="hl-8">3</span><span class="hl-0">, </span><span class="hl-8">7</span><span class="hl-0">);</span>
+<p>根据官网文档指引搭建安卓开发环境。<a href="https://reactnative.dev/docs/environment-setup">文档指引</a>
+注意：Android仅支持真机调试</p>
+
+<a href="#配置-app-权限" id="配置-app-权限" style="color: inherit; text-decoration: none;">
+  <h4>配置 App 权限</h4>
+</a>
+<p>在 AndroidManifest.xml 中配置 App 的权限，TRTC SDK 需要以下权限：</p>
+</li>
+</ol>
+<pre><code><span class="hl-2">&lt;</span><span class="hl-4">uses</span><span class="hl-2">-</span><span class="hl-4">permission</span><span class="hl-2"> </span><span class="hl-9">android</span><span class="hl-2">:</span><span class="hl-4">name</span><span class="hl-2">=</span><span class="hl-10">&quot;android.permission.INTERNET&quot;</span><span class="hl-2"> /&gt;</span><br/><span class="hl-2">&lt;</span><span class="hl-4">uses</span><span class="hl-2">-</span><span class="hl-4">permission</span><span class="hl-2"> </span><span class="hl-9">android</span><span class="hl-2">:</span><span class="hl-4">name</span><span class="hl-2">=</span><span class="hl-10">&quot;android.permission.ACCESS_NETWORK_STATE&quot;</span><span class="hl-2"> /&gt;</span><br/><span class="hl-2">&lt;</span><span class="hl-4">uses</span><span class="hl-2">-</span><span class="hl-4">permission</span><span class="hl-2"> </span><span class="hl-9">android</span><span class="hl-2">:</span><span class="hl-4">name</span><span class="hl-2">=</span><span class="hl-10">&quot;android.permission.ACCESS_WIFI_STATE&quot;</span><span class="hl-2"> /&gt;</span><br/><span class="hl-2">&lt;</span><span class="hl-4">uses</span><span class="hl-2">-</span><span class="hl-4">permission</span><span class="hl-2"> </span><span class="hl-9">android</span><span class="hl-2">:</span><span class="hl-4">name</span><span class="hl-2">=</span><span class="hl-10">&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot;</span><span class="hl-2"> /&gt;</span><br/><span class="hl-2">&lt;</span><span class="hl-4">uses</span><span class="hl-2">-</span><span class="hl-4">permission</span><span class="hl-2"> </span><span class="hl-9">android</span><span class="hl-2">:</span><span class="hl-4">name</span><span class="hl-2">=</span><span class="hl-10">&quot;android.permission.READ_EXTERNAL_STORAGE&quot;</span><span class="hl-2"> /&gt;</span><br/><span class="hl-2">&lt;</span><span class="hl-4">uses</span><span class="hl-2">-</span><span class="hl-4">permission</span><span class="hl-2"> </span><span class="hl-9">android</span><span class="hl-2">:</span><span class="hl-4">name</span><span class="hl-2">=</span><span class="hl-10">&quot;android.permission.RECORD_AUDIO&quot;</span><span class="hl-2"> /&gt;</span><br/><span class="hl-2">&lt;</span><span class="hl-4">uses</span><span class="hl-2">-</span><span class="hl-4">permission</span><span class="hl-2"> </span><span class="hl-9">android</span><span class="hl-2">:</span><span class="hl-4">name</span><span class="hl-2">=</span><span class="hl-10">&quot;android.permission.MODIFY_AUDIO_SETTINGS&quot;</span><span class="hl-2"> /&gt;</span><br/><span class="hl-2">&lt;</span><span class="hl-4">uses</span><span class="hl-2">-</span><span class="hl-4">permission</span><span class="hl-2"> </span><span class="hl-9">android</span><span class="hl-2">:</span><span class="hl-4">name</span><span class="hl-2">=</span><span class="hl-10">&quot;android.permission.BLUETOOTH&quot;</span><span class="hl-2"> /&gt;</span><br/><span class="hl-2">&lt;</span><span class="hl-4">uses</span><span class="hl-2">-</span><span class="hl-4">permission</span><span class="hl-2"> </span><span class="hl-9">android</span><span class="hl-2">:</span><span class="hl-4">name</span><span class="hl-2">=</span><span class="hl-10">&quot;android.permission.CAMERA&quot;</span><span class="hl-2"> /&gt;</span><br/><span class="hl-2">&lt;</span><span class="hl-4">uses</span><span class="hl-2">-</span><span class="hl-4">permission</span><span class="hl-2"> </span><span class="hl-9">android</span><span class="hl-2">:</span><span class="hl-4">name</span><span class="hl-2">=</span><span class="hl-10">&quot;android.permission.READ_PHONE_STATE&quot;</span><span class="hl-2"> /&gt;</span><br/><span class="hl-2">&lt;</span><span class="hl-4">uses</span><span class="hl-2">-</span><span class="hl-4">feature</span><span class="hl-2"> </span><span class="hl-9">android</span><span class="hl-2">:</span><span class="hl-4">name</span><span class="hl-2">=</span><span class="hl-10">&quot;android.hardware.camera&quot;</span><span class="hl-2"> /&gt;</span><br/><span class="hl-2">&lt;</span><span class="hl-4">uses</span><span class="hl-2">-</span><span class="hl-4">feature</span><span class="hl-2"> </span><span class="hl-9">android</span><span class="hl-2">:</span><span class="hl-4">name</span><span class="hl-2">=</span><span class="hl-10">&quot;android.hardware.camera.autofocus&quot;</span><span class="hl-2"> /&gt;</span>
+</code></pre>
+<blockquote>
+<p>! 请勿设置 <code>android:hardwareAccelerated=&quot;false&quot;</code>，关闭硬件加速之后，会导致对方的视频流无法渲染。</p>
+</blockquote>
+<pre><code><span class="hl-0">// 安卓音视频权限需要手动申请</span><br/><span class="hl-8">if</span><span class="hl-2"> (</span><span class="hl-4">Platform</span><span class="hl-2">.</span><span class="hl-3">OS</span><span class="hl-2"> === </span><span class="hl-10">&#39;android&#39;</span><span class="hl-2">) {</span><br/><span class="hl-2">  </span><span class="hl-8">await</span><span class="hl-2"> </span><span class="hl-4">PermissionsAndroid</span><span class="hl-2">.</span><span class="hl-5">requestMultiple</span><span class="hl-2">([</span><br/><span class="hl-2">    </span><span class="hl-4">PermissionsAndroid</span><span class="hl-2">.</span><span class="hl-3">PERMISSIONS</span><span class="hl-2">.</span><span class="hl-3">RECORD_AUDIO</span><span class="hl-2">, </span><span class="hl-0">//音频需要</span><br/><span class="hl-2">    </span><span class="hl-0">// PermissionsAndroid.PERMISSIONS.CAMERA, // 视频需要</span><br/><span class="hl-2">  ]);</span><br/><span class="hl-2">}</span>
 </code></pre>
 
-<a href="#contributing" id="contributing" style="color: inherit; text-decoration: none;">
-  <h2>Contributing</h2>
+<a href="#开发调试" id="开发调试" style="color: inherit; text-decoration: none;">
+  <h4>开发调试</h4>
 </a>
-<p>See the <a href="CONTRIBUTING.md">contributing guide</a> to learn how to contribute to the repository and the development workflow.</p>
+<p>1.To start Metro, run npx react-native start inside your React Native project folder</p>
+<pre><code><span class="hl-4">npx</span><span class="hl-2"> </span><span class="hl-4">react</span><span class="hl-2">-</span><span class="hl-4">native</span><span class="hl-2"> </span><span class="hl-4">start</span>
+</code></pre>
+<p>2.Let Metro Bundler run in its own terminal. Open a new terminal inside your React Native project folder. Run the following</p>
+<pre><code><span class="hl-4">npx</span><span class="hl-2"> </span><span class="hl-4">react</span><span class="hl-2">-</span><span class="hl-4">native</span><span class="hl-2"> </span><span class="hl-4">run</span><span class="hl-2">-</span><span class="hl-4">android</span>
+</code></pre>
 
-<a href="#license" id="license" style="color: inherit; text-decoration: none;">
-  <h2>License</h2>
+<a href="#ios接入环境说明" id="ios接入环境说明" style="color: inherit; text-decoration: none;">
+  <h3>iOS接入环境说明</h3>
 </a>
-<p>MIT</p>
-</div></div><div class="col-4 col-menu menu-sticky-wrap menu-highlight"><nav class="tsd-navigation primary"><ul><li class="current"><a href="modules.html">Modules</a></li><li class=" tsd-kind-module"><a href="modules/trtc_cloud.html">trtc_<wbr/>cloud</a></li><li class=" tsd-kind-module"><a href="modules/tx_audio_effect_manager.html">tx_<wbr/>audio_<wbr/>effect_<wbr/>manager</a></li><li class=" tsd-kind-module"><a href="modules/tx_device_manager.html">tx_<wbr/>device_<wbr/>manager</a></li></ul></nav></div></div></div><footer class="with-border-bottom"><div class="container"><h2>Legend</h2><div class="tsd-legend-group"><ul class="tsd-legend"><li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li></ul></div><h2>Settings</h2><p>Theme <select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></p></div></footer><div class="container tsd-generator"><p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div><div class="overlay"></div><script src="assets/main.js"></script></body></html>
+<p>根据官网文档指引搭建iOS开发环境。<a href="https://reactnative.dev/docs/environment-setup">文档指引</a></p>
+
+<a href="#配置-app-权限-1" id="配置-app-权限-1" style="color: inherit; text-decoration: none;">
+  <h4>配置 App 权限</h4>
+</a>
+<p>在 Info.plist 中配置 App 的权限，TRTC SDK 需要以下权限：</p>
+<pre><code><span class="hl-2">&lt;</span><span class="hl-7">key</span><span class="hl-2">&gt;</span><span class="hl-4">NSCameraUsageDescription</span><span class="hl-2">&lt;/</span><span class="hl-4">key</span><span class="hl-2">&gt;</span><br/><span class="hl-2">&lt;</span><span class="hl-7">string</span><span class="hl-2">&gt;</span><span class="hl-4">授权摄像头权限才能正常视频通话</span><span class="hl-2">&lt;/</span><span class="hl-4">string</span><span class="hl-2">&gt;</span><br/><span class="hl-2">&lt;</span><span class="hl-7">key</span><span class="hl-2">&gt;</span><span class="hl-4">NSMicrophoneUsageDescription</span><span class="hl-2">&lt;/</span><span class="hl-4">key</span><span class="hl-2">&gt;</span><br/><span class="hl-2">&lt;</span><span class="hl-7">string</span><span class="hl-2">&gt;</span><span class="hl-4">授权麦克风权限才能正常语音通话</span><span class="hl-2">&lt;/</span><span class="hl-4">string</span><span class="hl-2">&gt;</span>
+</code></pre>
+
+<a href="#开发调试-1" id="开发调试-1" style="color: inherit; text-decoration: none;">
+  <h4>开发调试</h4>
+</a>
+<ol>
+<li>启动 Metro, 在你的React Native 项目目录下运行 npx react-native start<pre><code><span class="hl-4">npx</span><span class="hl-2"> </span><span class="hl-4">react</span><span class="hl-2">-</span><span class="hl-4">native</span><span class="hl-2"> </span><span class="hl-4">start</span>
+</code></pre>
+</li>
+<li>在项目目录里启动新命令行窗口，运行一下代码，程序会自行pod install并编译iOS工程<pre><code><span class="hl-4">npx</span><span class="hl-2"> </span><span class="hl-4">react</span><span class="hl-2">-</span><span class="hl-4">native</span><span class="hl-2"> </span><span class="hl-4">run</span><span class="hl-2">-</span><span class="hl-4">ios</span>
+</code></pre>
+</li>
+<li>如果对iOS目录有任何修改，再次运行yarn ios就可以</li>
+<li>如果需要调试iOS，在ios目录下，打开.xcworkspace运行</li>
+</ol>
+</div></div><div class="col-4 col-menu menu-sticky-wrap menu-highlight"><nav class="tsd-navigation primary"><ul><li class="current"><a href="modules.html">Modules</a></li><li class=" tsd-kind-module"><a href="modules/trtc_cloud.html">trtc_<wbr/>cloud</a></li><li class=" tsd-kind-module"><a href="modules/trtc_cloud_def.html">trtc_<wbr/>cloud_<wbr/>def</a></li><li class=" tsd-kind-module"><a href="modules/tx_audio_effect_manager.html">tx_<wbr/>audio_<wbr/>effect_<wbr/>manager</a></li><li class=" tsd-kind-module"><a href="modules/tx_beauty_manager.html">tx_<wbr/>beauty_<wbr/>manager</a></li><li class=" tsd-kind-module"><a href="modules/tx_device_manager.html">tx_<wbr/>device_<wbr/>manager</a></li><li class=" tsd-kind-module"><a href="modules/tx_video_view.html">tx_<wbr/>video_<wbr/>view</a></li></ul></nav></div></div></div><footer class="with-border-bottom"><div class="container"><h2>Legend</h2><div class="tsd-legend-group"><ul class="tsd-legend"><li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li></ul></div><h2>Settings</h2><p>Theme <select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></p></div></footer><div class="container tsd-generator"><p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div><div class="overlay"></div><script src="assets/main.js"></script></body></html>
