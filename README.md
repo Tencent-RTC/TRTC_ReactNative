@@ -125,7 +125,7 @@ npx react-native run-android
 ```
 
 ### iOS接入环境说明
-根据官网文档指引搭建安卓开发环境。[文档指引](https://reactnative.dev/docs/environment-setup)
+根据官网文档指引搭建iOS开发环境。[文档指引](https://reactnative.dev/docs/environment-setup)
 #### 配置 App 权限
 在 Info.plist 中配置 App 的权限，TRTC SDK 需要以下权限：
 
