@@ -19,7 +19,6 @@ RCT_CUSTOM_VIEW_PROPERTY(renderParams, NSDictionary, TRTCVideoView)
 
 - (UIView *)view
 {
-//	TRTCVideoView *videoView = [TRTCVideoView new];
 	return [TRTCVideoView new];
 }
 

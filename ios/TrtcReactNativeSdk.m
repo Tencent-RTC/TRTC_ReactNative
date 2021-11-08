@@ -5,27 +5,20 @@
 // sdk manager begin
 RCT_EXTERN_METHOD(sharedInstance: (RCTPromiseResolveBlock)resolve
 				 withRejecter:(RCTPromiseRejectBlock)reject)
-
 RCT_EXTERN_METHOD(getSDKVersion: (RCTPromiseResolveBlock)resolve
 				 withRejecter:(RCTPromiseRejectBlock)reject)
-
 RCT_EXTERN_METHOD(enterRoom:(NSDictionary)params
 				  withScene:(int)scene
 				 withResolver:(RCTPromiseResolveBlock)resolve
 				 withRejecter:(RCTPromiseRejectBlock)reject)
-
 RCT_EXTERN_METHOD(exitRoom:(RCTPromiseResolveBlock)resolve
 				 withRejecter:(RCTPromiseRejectBlock)reject)
-
 RCT_EXTERN_METHOD(getAudioEffectManager:(RCTPromiseResolveBlock)resolve
 				 withRejecter:(RCTPromiseRejectBlock)reject)
-                 
 RCT_EXTERN_METHOD(getDeviceManager:(RCTPromiseResolveBlock)resolve
 				 withRejecter:(RCTPromiseRejectBlock)reject)
-				 
 RCT_EXTERN_METHOD(getBeautyManager:(RCTPromiseResolveBlock)resolve
-				 withRejecter:(RCTPromiseRejectBlock)reject)
-
+				  withRejecter:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(connectOtherRoom:(NSDictionary)params
   withResolver:(RCTPromiseResolveBlock)resolve
 	withRejecter:(RCTPromiseRejectBlock)reject)
@@ -42,11 +35,11 @@ RCT_EXTERN_METHOD(setVideoMuteImage:(NSDictionary)params
 RCT_EXTERN_METHOD(setWatermark:(NSDictionary)params
   withResolver:(RCTPromiseResolveBlock)resolve
 	withRejecter:(RCTPromiseRejectBlock)reject)
-
 RCT_EXTERN_METHOD(startPublishing:(NSDictionary)params
   withResolver:(RCTPromiseResolveBlock)resolve
 	withRejecter:(RCTPromiseRejectBlock)reject)
-RCT_EXTERN_METHOD(stopPublishing: (RCTPromiseResolveBlock)resolve withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(stopPublishing: (RCTPromiseResolveBlock)resolve
+  withRejecter:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(startPublishCDNStream:(NSDictionary)params
   withResolver:(RCTPromiseResolveBlock)resolve
 	withRejecter:(RCTPromiseRejectBlock)reject)
@@ -78,15 +71,11 @@ RCT_EXTERN_METHOD(setGSensorMode:(NSDictionary)params
 RCT_EXTERN_METHOD(muteAllRemoteVideoStreams:(NSDictionary)params
   withResolver:(RCTPromiseResolveBlock)resolve
 	withRejecter:(RCTPromiseRejectBlock)reject)
-
-
-
-
-
 RCT_EXTERN_METHOD(startLocalAudio:(NSDictionary)params
   withResolver:(RCTPromiseResolveBlock)resolve
 	withRejecter:(RCTPromiseRejectBlock)reject)
-RCT_EXTERN_METHOD(stopLocalAudio: (RCTPromiseResolveBlock)resolve withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(stopLocalAudio: (RCTPromiseResolveBlock)resolve
+  withRejecter:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(muteLocalAudio:(NSDictionary)params
   withResolver:(RCTPromiseResolveBlock)resolve
 	withRejecter:(RCTPromiseRejectBlock)reject)
@@ -114,7 +103,8 @@ RCT_EXTERN_METHOD(startAudioRecording:(NSDictionary)params
   withResolver:(RCTPromiseResolveBlock)resolve
 	withRejecter:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(stopAudioRecording: (RCTPromiseResolveBlock)resolve withRejecter:(RCTPromiseRejectBlock)reject)
-RCT_EXTERN_METHOD(stopSpeedTest: (RCTPromiseResolveBlock)resolve withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(stopSpeedTest: (RCTPromiseResolveBlock)resolve
+  withRejecter:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(setLogLevel:(NSDictionary)params
   withResolver:(RCTPromiseResolveBlock)resolve
 	withRejecter:(RCTPromiseRejectBlock)reject)
@@ -130,7 +120,6 @@ RCT_EXTERN_METHOD(setLogDirPath:(NSDictionary)params
 RCT_EXTERN_METHOD(callExperimentalAPI:(NSDictionary)params
   withResolver:(RCTPromiseResolveBlock)resolve
 	withRejecter:(RCTPromiseRejectBlock)reject)
-
 // sdk manager end
 // audio manager begin
 RCT_EXTERN_METHOD(enableVoiceEarMonitor:(NSDictionary)params
@@ -184,7 +173,6 @@ RCT_EXTERN_METHOD(seekMusicToPosInMS:(NSDictionary)params
 RCT_EXTERN_METHOD(getMusicDurationInMS:(NSDictionary)params
   withResolver:(RCTPromiseResolveBlock)resolve
 	withRejecter:(RCTPromiseRejectBlock)reject)
-
 // audio manager end
 // device manager begin
 RCT_EXTERN_METHOD(isFrontCamera:(RCTPromiseResolveBlock)resolve
@@ -214,7 +202,6 @@ RCT_EXTERN_METHOD(setSystemVolumeType:(NSDictionary)params
 RCT_EXTERN_METHOD(setAudioRoute:(NSDictionary)params
   withResolver:(RCTPromiseResolveBlock)resolve
 	withRejecter:(RCTPromiseRejectBlock)reject)
-
 // device manager end
 // beauty manager begin
 RCT_EXTERN_METHOD(setBeautyStyle:(NSDictionary)params
@@ -239,6 +226,4 @@ RCT_EXTERN_METHOD(enableSharpnessEnhancement:(NSDictionary)params
   withResolver:(RCTPromiseResolveBlock)resolve
 	withRejecter:(RCTPromiseRejectBlock)reject)
 // beauty manager end
-
-
 @end
