@@ -66,3 +66,4 @@ example/android/.settings/
 example/package-lock.json
 package-lock.json
 example/src/debug/config.js
+docs-en/.tox.yml
