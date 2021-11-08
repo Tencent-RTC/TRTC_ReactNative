@@ -1,5 +1,5 @@
 # trtc-react-native
-该React Native sdk是基于 腾讯云 iOS/Android平台的 SDK进行封装。目前已支持音视频通话。
+该React Native sdk是基于 腾讯云 iOS/Android平台的 SDK进行封装，目前已支持音视频通话。
 
 ### sdk类文件说明
 
@@ -61,12 +61,12 @@ function onRtcListener(type: TRTCCloudListener, params: any) {
 trtcCloud.unRegisterListener(onRtcListener);
 ```
 
-4. 显示本地视频
+4.显示本地视频
 ```
 <TXVideoView.LocalView />
 ```
 
-5. 显示远端视频
+5.显示远端视频
 ```
 <TXVideoView.RemoteView
   userId={remoteUserId}
@@ -74,7 +74,7 @@ trtcCloud.unRegisterListener(onRtcListener);
 />
 ```
 
-6. 显示远端屏幕分享
+6.显示远端屏幕分享
 ```
 <TXVideoView.RemoteView
   userId={remoteUserId}
@@ -114,12 +114,12 @@ if (Platform.OS === 'android') {
 }
 ```
 
-#### 开发调试
-1.To start Metro, run npx react-native start inside your React Native project folder
+#### 安卓开发调试
+1.在Demo目录下启动Metro，本项目是/example
 ```
 npx react-native start
 ```
-2.Let Metro Bundler run in its own terminal. Open a new terminal inside your React Native project folder. Run the following
+2.新开窗口，启动开发调试
 ```
 npx react-native run-android
 ```
@@ -138,13 +138,13 @@ npx react-native run-android
 
 #### 开发调试
 
-1. 启动 Metro, 在你的React Native 项目目录下运行 npx react-native start
+1.启动 Metro, 在你的React Native 项目目录下运行 npx react-native start
 ```
 npx react-native start
 ```
-2. 在项目目录里启动新命令行窗口，运行一下代码，程序会自行pod install并编译iOS工程
+2.在项目目录里启动新命令行窗口，运行一下代码，程序会自行pod install并编译iOS工程
 ```
 npx react-native run-ios
 ```
-3. 如果对iOS目录有任何修改，再次运行yarn ios就可以
-4. 如果需要调试iOS，在ios目录下，打开.xcworkspace运行
+3.如果对iOS目录有任何修改，再次运行yarn ios就可以
+4.如果需要调试iOS，在ios目录下，打开.xcworkspace运行
