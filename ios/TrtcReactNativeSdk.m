@@ -22,6 +22,9 @@ RCT_EXTERN_METHOD(getAudioEffectManager:(RCTPromiseResolveBlock)resolve
                  
 RCT_EXTERN_METHOD(getDeviceManager:(RCTPromiseResolveBlock)resolve
 				 withRejecter:(RCTPromiseRejectBlock)reject)
+				 
+RCT_EXTERN_METHOD(getBeautyManager:(RCTPromiseResolveBlock)resolve
+				 withRejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(connectOtherRoom:(NSDictionary)params
   withResolver:(RCTPromiseResolveBlock)resolve
@@ -33,6 +36,13 @@ RCT_EXTERN_METHOD(switchRole:(NSDictionary)params
 RCT_EXTERN_METHOD(switchRoom:(NSDictionary)params
   withResolver:(RCTPromiseResolveBlock)resolve
 	withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(setVideoMuteImage:(NSDictionary)params
+  withResolver:(RCTPromiseResolveBlock)resolve
+	withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(setWatermark:(NSDictionary)params
+  withResolver:(RCTPromiseResolveBlock)resolve
+	withRejecter:(RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(startPublishing:(NSDictionary)params
   withResolver:(RCTPromiseResolveBlock)resolve
 	withRejecter:(RCTPromiseRejectBlock)reject)
@@ -41,6 +51,38 @@ RCT_EXTERN_METHOD(startPublishCDNStream:(NSDictionary)params
   withResolver:(RCTPromiseResolveBlock)resolve
 	withRejecter:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(stopPublishCDNStream: (RCTPromiseResolveBlock)resolve withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(setMixTranscodingConfig:(NSDictionary)params
+  withResolver:(RCTPromiseResolveBlock)resolve
+	withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(muteLocalVideo:(NSDictionary)params
+  withResolver:(RCTPromiseResolveBlock)resolve
+	withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(muteRemoteVideoStream:(NSDictionary)params
+  withResolver:(RCTPromiseResolveBlock)resolve
+	withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(setVideoEncoderParam:(NSDictionary)params
+  withResolver:(RCTPromiseResolveBlock)resolve
+	withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(setNetworkQosParam:(NSDictionary)params
+  withResolver:(RCTPromiseResolveBlock)resolve
+	withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(setVideoEncoderRotation:(NSDictionary)params
+  withResolver:(RCTPromiseResolveBlock)resolve
+	withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(setVideoEncoderMirror:(NSDictionary)params
+  withResolver:(RCTPromiseResolveBlock)resolve
+	withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(setGSensorMode:(NSDictionary)params
+  withResolver:(RCTPromiseResolveBlock)resolve
+	withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(muteAllRemoteVideoStreams:(NSDictionary)params
+  withResolver:(RCTPromiseResolveBlock)resolve
+	withRejecter:(RCTPromiseRejectBlock)reject)
+
+
+
+
+
 RCT_EXTERN_METHOD(startLocalAudio:(NSDictionary)params
   withResolver:(RCTPromiseResolveBlock)resolve
 	withRejecter:(RCTPromiseRejectBlock)reject)
@@ -174,7 +216,29 @@ RCT_EXTERN_METHOD(setAudioRoute:(NSDictionary)params
 	withRejecter:(RCTPromiseRejectBlock)reject)
 
 // device manager end
-
+// beauty manager begin
+RCT_EXTERN_METHOD(setBeautyStyle:(NSDictionary)params
+  withResolver:(RCTPromiseResolveBlock)resolve
+	withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(setFilter:(NSDictionary)params
+  withResolver:(RCTPromiseResolveBlock)resolve
+	withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(setFilterStrength:(NSDictionary)params
+  withResolver:(RCTPromiseResolveBlock)resolve
+	withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(setBeautyLevel:(NSDictionary)params
+  withResolver:(RCTPromiseResolveBlock)resolve
+	withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(setWhitenessLevel:(NSDictionary)params
+  withResolver:(RCTPromiseResolveBlock)resolve
+	withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(setRuddyLevel:(NSDictionary)params
+  withResolver:(RCTPromiseResolveBlock)resolve
+	withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(enableSharpnessEnhancement:(NSDictionary)params
+  withResolver:(RCTPromiseResolveBlock)resolve
+	withRejecter:(RCTPromiseRejectBlock)reject)
+// beauty manager end
 
 
 @end

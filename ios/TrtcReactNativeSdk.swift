@@ -1,4 +1,6 @@
+import AVFoundation
 import TXLiteAVSDK_TRTC
+
 
 @objc(TrtcReactNativeSdk)
 class TrtcReactNativeSdk: RCTEventEmitter, TRTCCloudDelegate {
@@ -8,6 +10,7 @@ class TrtcReactNativeSdk: RCTEventEmitter, TRTCCloudDelegate {
 	private var txCloudManager: TRTCCloud = TRTCCloud.sharedInstance();
 	private var txAudioEffectManager: TXAudioEffectManager = TRTCCloud.sharedInstance().getAudioEffectManager();
 	private var txDeviceManager: TXDeviceManager = (TRTCCloud.sharedInstance()?.getDeviceManager())!;
+	private var txBeautyManager: TXBeautyManager = (TRTCCloud.sharedInstance()?.getBeautyManager())!;
 	
 	override func supportedEvents() -> [String]! {
 		return ["onListener"]
@@ -63,15 +66,22 @@ class TrtcReactNativeSdk: RCTEventEmitter, TRTCCloudDelegate {
 		resolve(0);
 	}
 
-    @objc(getAudioEffectManager:withRejecter:)
+  @objc(getAudioEffectManager:withRejecter:)
 	func getAudioEffectManager(resolve: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
 		txCloudManager.getAudioEffectManager();
 		resolve(0);
 	}
 
-    @objc(getDeviceManager:withRejecter:)
+  @objc(getDeviceManager:withRejecter:)
 	func getDeviceManager(resolve: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
 		txCloudManager.getDeviceManager();
+		txCloudManager.getDeviceManager();
+		resolve(0);
+	}
+	
+	@objc(getBeautyManager:withRejecter:)
+	func getBeautyManager(resolve: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+		txCloudManager.getBeautyManager();
 		resolve(0);
 	}
 	
@@ -1186,6 +1196,81 @@ class TrtcReactNativeSdk: RCTEventEmitter, TRTCCloudDelegate {
 			}
 		}
 //	device end
+
+// beauty manager begin
+		/**
+		* 设置美颜、美白以及红润效果级别
+		*/
+		@objc(setBeautyStyle:withResolver:withRejecter:)
+		func setBeautyStyle(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+			if let beautyStyle = param["beautyStyle"] as? Int {
+				txBeautyManager.setBeautyStyle(TXBeautyStyle(rawValue: beautyStyle)!);
+				result(nil);
+			}
+		}
+		/**
+		* 设置指定素材滤镜特效
+		* image 指定素材，即颜色查找表图片。必须使用 png 格式
+		*/
+		@objc(setFilter:withResolver:withRejecter:)
+		func setFilter(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+			if let imageUrl = param["imageUrl"] as? String {
+//				let img = NSImage(contentsOfFile:self.getFlutterBundlePath(assetPath:imageUrl)!)!;
+//				txBeautyManager.setFilter(img);
+				result(nil);
+			}
+		}
+		/**
+		* 设置滤镜浓度
+		*/
+		@objc(setFilterStrength:withResolver:withRejecter:)
+		func setFilterStrength(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+			if let strength = param["strength"] as? String {
+				txBeautyManager.setFilterStrength(Float(strength)!);
+				result(nil);
+			}
+		}
+		/**
+		* 设置美颜级别
+		*/
+		@objc(setBeautyLevel:withResolver:withRejecter:)
+		func setBeautyLevel(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+			if let beautyLevel = param["beautyLevel"] as? Int {
+				txBeautyManager.setBeautyLevel(Float(beautyLevel));
+				result(nil);
+			}
+		}
+		/**
+		* 设置美白级别
+		*/
+		@objc(setWhitenessLevel:withResolver:withRejecter:)
+		func setWhitenessLevel(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+			if let whitenessLevel = param["whitenessLevel"] as? Int {
+				txBeautyManager.setWhitenessLevel(Float(whitenessLevel));
+				result(nil);
+			}
+		}
+		/**
+		* 设置红润级别
+		*/
+		@objc(setRuddyLevel:withResolver:withRejecter:)
+		func setRuddyLevel(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+			if let ruddyLevel = param["ruddyLevel"] as? Float {
+				txBeautyManager.setRuddyLevel(ruddyLevel);
+				result(nil);
+			}
+		}
+		/**
+		* 开启清晰度增强
+		*/
+		@objc(enableSharpnessEnhancement:withResolver:withRejecter:)
+		func enableSharpnessEnhancement(param: NSDictionary, result: @escaping RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+			if let enable = param["enable"] as? Bool {
+				txBeautyManager.enableSharpnessEnhancement(enable);
+				result(nil);
+			}
+		}
+// beauty manager end
 	
 	// Listener begin
 	public func sendEventFormat(name: String, params: Any?) {

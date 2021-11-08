@@ -9,6 +9,7 @@ target 'TrtcReactNativeSdkExample' do
   use_react_native!(:path => config["reactNativePath"])
 
   pod 'trtc-react-native', :path => '../..'
+  pod 'Flipper-Folly', '2.6.7'
 
   # Enables Flipper.
   #
