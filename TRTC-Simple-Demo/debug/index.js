@@ -16,7 +16,7 @@ import LibGenerateTestUserSig from './lib-generate-test-usersig.min.js';
 // a soft reminder to guide developer to configure sdkAppId/secretKey
 if (SDKAPPID === '' || SECRETKEY === '') {
   alert(
-    '请先配置好您的账号信息： SDKAPPID 及 SECRETKEY ' +
+    'Please configure your account information first: SDKAPPID and SECRETKEY ' +
       '\r\n\r\nPlease configure your SDKAPPID/SECRETKEY in src/app/config.js'
   );
 }

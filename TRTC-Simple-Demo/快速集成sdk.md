@@ -19,7 +19,7 @@ ReactNative SDK 已经发布到 [npm](https://www.npmjs.com/package/trtc-react-n
 1. 在项目的 `package.json` 中写如下依赖：
 ```
 "dependencies": {
-  "trtc-react-native": "^2.0.0"
+  "trtc-react-native": "^2.2.0"
 },
 ```
 2. 开通**摄像头**和**麦克风**的权限，即可开启语音通话功能。

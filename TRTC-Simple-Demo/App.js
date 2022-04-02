@@ -39,8 +39,8 @@ export default function App() {
   async function initInfo() {
     if (Platform.OS === 'android') {
       await PermissionsAndroid.requestMultiple([
-        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO, //音频需要
-        PermissionsAndroid.PERMISSIONS.CAMERA, // 视频需要
+        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+        PermissionsAndroid.PERMISSIONS.CAMERA,
       ]);
     }
     const trtcCloud = TRTCCloud.sharedInstance();
@@ -85,7 +85,7 @@ export default function App() {
           style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
           onChangeText={(text) => setMeetId(text)}
           value={meetId}
-          placeholder="请输入房间id"
+          placeholder="Please enter room ID"
         />
         <TextInput
           style={{
@@ -97,18 +97,18 @@ export default function App() {
           }}
           onChangeText={(text) => setUserId(text)}
           value={userId}
-          placeholder="请输入用户id"
+          placeholder="Please enter user ID"
         />
         <View style={styles.fixToText}>
           <Button
-            title="进入房间"
+            title="Enter Room"
             onPress={() => {
               if (!SDKAPPID) {
-                Alert.alert('请配置SDKAPPID信息');
+                Alert.alert('Please configure sdkappId information');
                 return;
               }
               if (!meetId || !userId) {
-                Alert.alert('请输入房间id和用户id');
+                Alert.alert('Please enter room ID and user ID');
                 return;
               }
               const userSig = getLatestUserSig(userId).userSig;
@@ -127,7 +127,7 @@ export default function App() {
             }}
           />
           <Button
-            title="退出房间"
+            title="Exit Room"
             onPress={() => {
               const trtcCloud = TRTCCloud.sharedInstance();
               trtcCloud.exitRoom();

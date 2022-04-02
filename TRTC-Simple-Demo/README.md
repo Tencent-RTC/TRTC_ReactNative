@@ -1,59 +1,64 @@
-# 跑通Demo(ReactNative)
+[简体中文](./README-zh_CN.md) | English
 
-本文主要介绍如何快速运行腾讯云 TRTC Demo（ReactNative）。
+# Run Demo(React Native)
 
-## 环境要求
-- ReactNative 0.63 及以上版本。
-- Node & Watchman，node版本需在 v12 以上。
-- **Android 端开发：**
-  - Android Studio 3.5及以上版本。
-  - App 要求 Android 4.1及以上版本设备。
-- **iOS & macOS 端开发：**
-  - Xcode 11.0及以上版本。
-  - osx 系统版本要求 10.11 及以上版本
-  - 请确保您的项目已设置有效的开发者签名。
-- 环境安装可以参考 [官方文档](https://reactnative.cn/docs/environment-setup)
+This document describes how to quickly run the TRTC demo for React Native.
 
+## Environment Requirements
+- React Native 0.63 or above
+- Node (above v12) & Watchman
+- **Developing for Android:**
+  - Android Studio 3.5 or above
+  - Devices with Android 4.1 or above
+- **Developing for iOS and macOS:**
+  - Xcode 11.0 or above
+  - OS X 10.11 or above
+  - A valid developer signature for your project
+- For how to set up the environment, see the React Native [official document](https://reactnative.dev/docs/environment-setup).
 
-## 前提条件
-您已 [注册腾讯云](https://cloud.tencent.com) 账号，并完成实名认证。
+## Prerequisites
+You have [signed up for a Tencent Cloud account](https://intl.cloud.tencent.com) and verified your identity.
 
-## 操作步骤
+## Directions
 [](id:step1)
-### 步骤1：创建新的应用
-1. 登录实时音视频控制台，选择【开发辅助】>【[快速跑通Demo](https://console.cloud.tencent.com/trtc/quickstart)】。
-2. 单击【新建应用】输入应用名称，例如 `TestTRTC`；若您已创建应用可单击【选择已有应用】。
-3. 根据实际业务需求添加或编辑标签，单击【创建】。
-![](https://main.qcloudimg.com/raw/f04d288ed091c98a5e8056eb86fb49e8.png)
+### Step 1. Create an application
+1. Log in to the TRTC console and select **Development Assistance** > **[Demo Quick Run](https://console.cloud.tencent.com/trtc/quickstart)**.
+2. Select **New** and enter an application name such as `TestTRTC`. If you have already created an application, select **Existing**.
+3. Add or edit tags according to your actual business needs and click **Create**.
+![](https://qcloudimg.tencent-cloud.cn/raw/7d1d1940f02ee954c369b5f749e0c663.png)
 
->- 应用名称只能包含数字、中英文字符和下划线，长度不能超过15个字符。
->- 标签用于标识和组织您在腾讯云的各种资源。例如：企业可能有多个业务部门，每个部门有1个或多个 TRTC 应用，这时，企业可以通过给 TRTC 应用添加标签来标记部门信息。标签并非必选项，您可根据实际业务需求添加或编辑。
+>?
+>- An application name can contain up to 15 characters. Only digits, letters, Chinese characters, and underscores are allowed.
+>- Tags are used to identify and organize your Tencent Cloud resources. For example, an enterprise may have multiple business units, each of which has one or more TRTC applications. In this case, the enterprise can tag TRTC applications to mark out the unit information. Tags are optional and can be added or edited according to your actual business needs.
 
 [](id:step2)
-### 步骤2：下载 SDK 和 Demo 源码
-1. 根据实际业务需求下载 SDK 及配套的 [Demo 源码](https://github.com/c1avie/TRTCReactNativeDemo)。
-2. 下载完成后，单击【已下载，下一步】。
-注意：ReactNative的demo直接在上面链接下载，控制台暂时无法下载。
+### Step 2. Download the SDK and demo source code
+1. Download the SDK and [demo source code](https://github.com/LiteAVSDK/TRTC_ReactNative) for your platform.
+2. Click **Next**.
+
+>! You cannot download the demo for React Native via the console at the moment. **Please download the source code via the above link**.
 
 [](id:step3)
-### 步骤3：配置 Demo 工程文件
-1. 进入修改配置页，根据您下载的源码包，选择相应的开发环境。
-2. 找到并打开 `/debug/config.js` 文件。
-3. 设置 `SDKAPPID`和`SECRETKEY` 参数：
-<ul><li/>SDKAPPID：默认为 PLACEHOLDER ，请设置为实际的 SDKAppID。
-  <li/>SECRETKEY：默认为 PLACEHOLDER ，请设置为实际的密钥信息。</ul>
-  <img src="https://main.qcloudimg.com/raw/fba60aa9a44a94455fe31b809433cfa4.png"/>
-4. 粘贴完成后，单击【已复制粘贴，下一步】即创建成功。
-5. 编译完成后，单击【回到控制台概览】即可。
+### Step 3. Configure demo project files
+1. In the **Modify Configuration** step, select the development platform in line with the source package downloaded.
+2. Find and open `/TRTC-Simple-Demo/debug/config.js`.
+3. Set the `SDKAPPID` and `SECRETKEY` parameters:
+<ul><li/>SDKAPPID: a placeholder by default. Set it to the actual `SDKAppID`.
+    <li>`SECRETKEY`: a placeholder by default. Set it to the actual key.</ul>
 
->- 本文提到的生成 UserSig 的方案是在客户端代码中配置 SECRETKEY，该方法中 SECRETKEY 很容易被反编译逆向破解，一旦您的密钥泄露，攻击者就可以盗用您的腾讯云流量，因此**该方法仅适合本地跑通 Demo 和功能调试**。
->- 正确的 UserSig 签发方式是将 UserSig 的计算代码集成到您的服务端，并提供面向 App 的接口，在需要 UserSig 时由您的 App 向业务服务器发起请求获取动态 UserSig。更多详情请参见 [服务端生成 UserSig](https://cloud.tencent.com/document/product/647/17275#Server)。
+4. Click **Next** to complete the creation.
+5. After compilation, click **Return to Overview Page**.
+
+>?
+>- The method for generating `UserSig` described in this document involves configuring `SECRETKEY` in client code. In this method, `SECRETKEY` may be easily decompiled and reversed, and if your key is leaked, attackers can steal your Tencent Cloud traffic. Therefore, **this method is only suitable for the local execution and debugging of the demo**.
+>- The correct `UserSig` distribution method is to integrate the calculation code of `UserSig` into your server and provide an application-oriented API. When `UserSig` is needed, your application can send a request to the business server for a dynamic `UserSig`. For more information, see [How do I calculate UserSig on the server?](https://intl.cloud.tencent.com/document/product/647/35166).
 
 [](id:step4)
-### 步骤4：权限配置
-需要配置App权限才能运行
-####  Android端
-1. 在 `AndroidManifest.xml` 中配置 App 的权限，TRTC SDK 需要以下权限
+### Step 4. Configure permission requests
+You need to configure permission requests in order to run the demo.
+
+#### Android
+1. Configure application permissions in `AndroidManifest.xml`. The TRTC SDK requires the following permissions:
 ```
 <uses-permission android:name="android.permission.INTERNET" />
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -68,49 +73,45 @@
 <uses-feature android:name="android.hardware.camera" />
 <uses-feature android:name="android.hardware.camera.autofocus" />
 ```
->! 请勿设置 android:hardwareAccelerated="false"，关闭硬件加速之后，会导致对方的视频流无法渲染。
->
-2. 安卓音视频权限需要手动申请
-```
+>! Do not set `android:hardwareAccelerated="false"`. Disabling hardware acceleration will result in failure to render remote users’ videos.
+2. Manually configure audio and video permission requests.
+```java
 if (Platform.OS === 'android') {
   await PermissionsAndroid.requestMultiple([
-    PermissionsAndroid.PERMISSIONS.RECORD_AUDIO, //音频需要
-    PermissionsAndroid.PERMISSIONS.CAMERA, // 视频需要
+    PermissionsAndroid.PERMISSIONS.RECORD_AUDIO, //For audio calls
+    PermissionsAndroid.PERMISSIONS.CAMERA, // For video calls
   ]);
 }
 ```
 
-####  iOS端
-1. 在 `Info.plist` 中配置 App 的权限，TRTC SDK 需要以下权限
-```
+#### iOS
+Configure application permissions in `Info.plist`. The TRTC SDK requires the following permissions:
+```objectiveC
 <key>NSCameraUsageDescription</key>
-<string>授权摄像头权限才能正常视频通话</string>
+<string>Video calls are possible only with camera permission.</string>
 <key>NSMicrophoneUsageDescription</key>
-<string>授权麦克风权限才能正常语音通话</string>
+<string>Audio calls are possible only with mic access.</string>
 ```
 
-### 步骤5：编译运行
-先执行 `npm install`
-#### 安卓开发调试
-1.在Demo目录下启动Metros
-```
-npx react-native start
-```
-2.在Demo目录下新开窗口，启动开发调试
+### Step 5. Build and run the demo
+Launch Metro and run `npx react-native start` under your React Native project directory.
+
+####  Android
+Open a new window and start debugging:
 ```
 npx react-native run-android
 ```
 
-#### iOS开发调试
-
-1.在Demo ios目录里执行 `pod install` 安装依赖。
-2.在Demo目录下启动Metros
+#### iOS
+1. Run `pod install` in the iOS directory to install dependencies.
+2. Launch Metro and run `npx react-native start` under your React Native project directory.
 ```
 npx react-native start
 ```
-3.在Demo目录下新开窗口，启动开发调试(如果报错请打开xcode编译调试)
+3. Open a new window in the demo directory and start development debugging (if an error is reported, please open Xcode compilation and debugging)
 ```
 npx react-native run-ios
 ```
 
 
+​                   

@@ -3,6 +3,13 @@
 # TRTC SDK （ReactNative）
 The SDK for React Native is packaged from the TRTC SDK for iOS and Android. It supports only audio calls currently, and is expected to enable video calls as well in the future.
 
+[API OverView-English](https://intl.cloud.tencent.com/document/product/647/43300)
+
+Note: Demo does not support simulator operation. Please use real machine development and debugging.
+
+### SDK npm
+[SDK npm](https://www.npmjs.com/package/trtc-react-native)
+
 ### SDK class files
 
 * trtc_cloud: main TRTC API classes

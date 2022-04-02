@@ -4,6 +4,12 @@
 
 该React Native sdk是基于 腾讯云 iOS/Android平台的 SDK进行封装，目前已支持音视频通话。
 
+[API 概览](https://cloud.tencent.com/document/product/647/63792)
+
+### SDK集成地址
+[npm地址](https://www.npmjs.com/package/trtc-react-native)
+
+
 ### 文档指引
 [快速跑通Demo文档](https://cloud.tencent.com/document/product/647/63790)，[快速集成sdk](https://cloud.tencent.com/document/product/647/63791)
 
