@@ -52,7 +52,7 @@
 [](id:step4)
 ### 步骤4：权限配置
 需要配置App权限才能运行
-:::  Android\s端
+####  Android端
 1. 在 `AndroidManifest.xml` 中配置 App 的权限，TRTC SDK 需要以下权限
 ```
 <uses-permission android:name="android.permission.INTERNET" />
@@ -79,8 +79,8 @@ if (Platform.OS === 'android') {
   ]);
 }
 ```
-:::
-:::  iOS\s端
+
+####  iOS端
 1. 在 `Info.plist` 中配置 App 的权限，TRTC SDK 需要以下权限
 ```
 <key>NSCameraUsageDescription</key>
@@ -88,21 +88,29 @@ if (Platform.OS === 'android') {
 <key>NSMicrophoneUsageDescription</key>
 <string>授权麦克风权限才能正常语音通话</string>
 ```
-:::
 
 ### 步骤5：编译运行
-<dx-tabs>
-:::  Android\s端
-1. 新开窗口，启动开发调试
+先执行 `npm install`
+#### 安卓开发调试
+1.在Demo目录下启动Metros
+```
+npx react-native start
+```
+2.在Demo目录下新开窗口，启动开发调试
 ```
 npx react-native run-android
 ```
-:::
-::: iOS\s端
-1. 在项目目录里启动新命令行窗口，运行以下代码，程序会自行pod install并编译iOS工程。
+
+#### iOS开发调试
+
+1.在Demo ios目录里执行 `pod install` 安装依赖。
+2.在Demo目录下启动Metros
+```
+npx react-native start
+```
+3.在Demo目录下新开窗口，启动开发调试(如果报错请打开xcode编译调试)
 ```
 npx react-native run-ios
 ```
-:::
-</dx-tabs>
+
 

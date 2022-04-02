@@ -54,3 +54,5 @@ buck-out/
 web-build/
 
 .history
+/ios/Podfile.lock
+/ios/testApp.xcworkspace/

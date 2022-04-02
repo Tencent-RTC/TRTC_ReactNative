@@ -18,7 +18,7 @@ const EXPIRETIME = 604800;
 /**
  * 计算签名用的加密密钥，获取步骤如下：
  *
- * step1. 进入腾讯云实时音视频[控制台](https://console.cloud.tencent.com/rav )，如果还没有应用就创建一个，
+ * step1. 进入腾讯云实时音视频[控制台](https://console.cloud.tencent.com/trtc)，如果还没有应用就创建一个，
  * step2. 单击“应用配置”进入基础配置页面，并进一步找到“帐号体系集成”部分。
  * step3. 点击“查看密钥”按钮，就可以看到计算 UserSig 使用的加密的密钥了，请将其拷贝并复制到如下的变量中
  *
