@@ -1,29 +1,40 @@
 /*eslint-disable*/
 /**
- * 腾讯云 SDKAppId，需要替换为您自己账号下的 SDKAppId。
+ * Module:   GenerateTestUserSig
  *
- * 进入腾讯云实时音视频[控制台](https://console.cloud.tencent.com/trtc ) 创建应用，即可看到 SDKAppId，
- * 它是腾讯云用于区分客户的唯一标识。
+ * Description: generates UserSig for testing. UserSig is a security signature designed by Tencent Cloud for its cloud services.
+ *           It is calculated based on `SDKAppID`, `UserID`, and `EXPIRETIME` using the HMAC-SHA256 encryption algorithm.
+ *
+ * Attention: do not use the code below in your commercial app. This is because:
+ *
+ *            The code may be able to calculate UserSig correctly, but it is only for quick testing of the SDK’s basic features, not for commercial apps.
+ *            `SECRETKEY` in client code can be easily decompiled and reversed, especially on web.
+ *             Once your key is disclosed, attackers will be able to steal your Tencent Cloud traffic.
+ *
+ *            The correct method is to deploy the `UserSig` calculation code and encryption key on your project server so that your app can request from your server a `UserSig` that is calculated whenever one is needed.
+ *           Given that it is more difficult to hack a server than a client app, server-end calculation can better protect your key.
+ *
+ * Reference: https://cloud.tencent.com/document/product/647/17275#Server
  */
 const SDKAPPID = 0;
 
 /**
- * 签名过期时间，建议不要设置的过短
+ * Signature validity period, which should not be set too short
  * <p>
- * 时间单位：秒
- * 默认时间：7 x 24 x 60 x 60 = 604800 = 7 天
+ * Unit: second
+ * Default value: 604800 (7 days)
  */
 const EXPIRETIME = 604800;
 
 /**
- * 计算签名用的加密密钥，获取步骤如下：
+ * Follow the steps below to obtain the key required for UserSig calculation.
  *
- * step1. 进入腾讯云实时音视频[控制台](https://console.cloud.tencent.com/trtc)，如果还没有应用就创建一个，
- * step2. 单击“应用配置”进入基础配置页面，并进一步找到“帐号体系集成”部分。
- * step3. 点击“查看密钥”按钮，就可以看到计算 UserSig 使用的加密的密钥了，请将其拷贝并复制到如下的变量中
+ * Step 1. Log in to the [TRTC console](https://console.cloud.tencent.com/rav), and create an application if you don’t have one.
+ * Step 2. Find your application, click “Application Info”, and click the “Quick Start” tab.
+ * Step 3. Copy and paste the key to the code, as shown below.
  *
- * 注意：该方案仅适用于调试Demo，正式上线前请将 UserSig 计算代码和密钥迁移到您的后台服务器上，以避免加密密钥泄露导致的流量盗用。
- * 文档：https://cloud.tencent.com/document/product/647/17275#Server
+ * Note: this method is for testing only. Before commercial launch, please migrate the UserSig calculation code and key to your backend server to prevent key disclosure and traffic stealing.
+ * Reference: https://cloud.tencent.com/document/product/647/17275#Server
  */
 const SECRETKEY = '';
 
