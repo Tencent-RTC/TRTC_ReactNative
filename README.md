@@ -1,25 +1,28 @@
-# 腾讯云实时音视频 TRTC ReactNative SDK
+[简体中文](./README-zh_CN.md) | English
 
-## 产品介绍
+# TRTC ReactNative SDK
 
-腾讯实时音视频（Tencent Real-Time Communication，TRTC），将腾讯多年来在网络与音视频技术上的深度积累，以多人音视频通话和低延时互动直播两大场景化方案，通过腾讯云服务向开发者开放，致力于帮助开发者快速搭建低成本、低延时、高品质的音视频互动解决方案，[更多](https://cloud.tencent.com/document/product/647/16788)...
+## Overview
 
-> TRTC SDK 支持Web、Android、iOS、Windows以及Flutter、小程序等所有主流平台， [更多平台](https://github.com/LiteAVSDK?q=TRTC_&type=all&sort=)...
+Leveraging Tencent's many years of experience in network and audio/video technologies, Tencent Real-Time Communication (TRTC) offers solutions for group audio/video calls and low-latency interactive live streaming. With TRTC, you can quickly develop cost-effective, low-latency, and high-quality interactive audio/video services. [Learn more](https://intl.cloud.tencent.com/document/product/647/35078)...
 
-## 目录说明
+> We offer SDKs for web, Android, iOS, Windows, Flutter, WeChat Mini Program, and [other mainstream platforms](https://github.com/LiteAVSDK?q=TRTC_&type=all&sort=).
+
+## Contents
 
 ```bash
-├─ TRTC-Simple-Demo // 音视频聊天Demo
+├─ TRTC-Simple-Demo // TRTC Lite Edition demo
 ├─ SDK 
-│  ├─README.md     // 提供有TRTC SDK最新版本的下载地址
+│  ├─README.md     // Download address of the latest version of TRTC SDK
 ```
 
+## Contact Us
+- If you have questions, see [FAQs](https://intl.cloud.tencent.com/document/product/647/42298).
 
-## 联系我们
-- 如果你遇到了困难，可以先参阅 [常见问题](https://cloud.tencent.com/document/product/647/43018)；
+- To learn about how the TRTC SDK can be used in different scenarios, see [Sample Code](https://intl.cloud.tencent.com/document/product/647/42963).
 
-- 如果你想了解TRTC SDK在复杂场景下的应用，可以参考[更多场景案例](https://cloud.tencent.com/document/product/647/57486)；
+- For complete API documentation, see [SDK API Documentation](https://intl.cloud.tencent.com/document/product/647/43300).
 
-- 如果需要售后技术支持, 你可以加qq群788910197咨询；你也可以点击[这里](https://cloud.tencent.com/document/product/647/19906)；
-- 如果发现了示例代码的 bug，欢迎提交 issue；
+- [Contact us](https://intl.cloud.tencent.com/contact-us) for technical support.
 
+- To report bugs in our sample code, please create an issue.
