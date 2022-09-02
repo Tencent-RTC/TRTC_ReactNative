@@ -17,12 +17,14 @@ Leveraging Tencent's many years of experience in network and audio/video technol
 ```
 
 ## Contact Us
-- If you have questions, see [FAQs](https://intl.cloud.tencent.com/document/product/647/42298).
+- If you have questions, see [FAQs](https://www.tencentcloud.com/document/product/647/36057).
 
-- To learn about how the TRTC SDK can be used in different scenarios, see [Sample Code](https://intl.cloud.tencent.com/document/product/647/42963).
-
-- For complete API documentation, see [SDK API Documentation](https://intl.cloud.tencent.com/document/product/647/43300).
-
-- [Contact us](https://intl.cloud.tencent.com/contact-us) for technical support.
+- For complete API documentation, see [SDK API Documentation](https://www.tencentcloud.com/document/product/647/43300).
 
 - To report bugs in our sample code, please create an issue.
+
+- Communication & Feedback   
+Welcome to join our Telegram Group to communicate with our professional engineers! We are more than happy to hear from you~
+Click to join: [https://t.me/+EPk6TMZEZMM5OGY1](https://t.me/+EPk6TMZEZMM5OGY1)   
+Or scan the QR code   
+  <img src="https://sdk-liteav-1252463788.cos.ap-hongkong.myqcloud.com/app/internal/upgrade/github/Telegram-TRTC-Android.jpg" width="300px">    
