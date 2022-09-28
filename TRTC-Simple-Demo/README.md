@@ -22,12 +22,11 @@ You have [signed up for a Tencent Cloud account](https://intl.cloud.tencent.com)
 ## Directions
 [](id:step1)
 ### Step 1. Create an application
-1. Log in to the TRTC console and select **Development Assistance** > **[Demo Quick Run](https://console.cloud.tencent.com/trtc/quickstart)**.
+1. Log in to the TRTC console and select **Development Assistance** > **[Create application](https://console.tencentcloud.com/trtc/app/create)**.
 2. Select **New** and enter an application name such as `TestTRTC`. If you have already created an application, select **Existing**.
 3. Add or edit tags according to your actual business needs and click **Create**.
-![](https://qcloudimg.tencent-cloud.cn/raw/7d1d1940f02ee954c369b5f749e0c663.png)
+![ #900px](https://qcloudimg.tencent-cloud.cn/raw/51c73a617e69a76ed26e6f74b0071ec9.png)
 
->?
 >- An application name can contain up to 15 characters. Only digits, letters, Chinese characters, and underscores are allowed.
 >- Tags are used to identify and organize your Tencent Cloud resources. For example, an enterprise may have multiple business units, each of which has one or more TRTC applications. In this case, the enterprise can tag TRTC applications to mark out the unit information. Tags are optional and can be added or edited according to your actual business needs.
 
@@ -49,7 +48,6 @@ You have [signed up for a Tencent Cloud account](https://intl.cloud.tencent.com)
 4. Click **Next** to complete the creation.
 5. After compilation, click **Return to Overview Page**.
 
->?
 >- The method for generating `UserSig` described in this document involves configuring `SECRETKEY` in client code. In this method, `SECRETKEY` may be easily decompiled and reversed, and if your key is leaked, attackers can steal your Tencent Cloud traffic. Therefore, **this method is only suitable for the local execution and debugging of the demo**.
 >- The correct `UserSig` distribution method is to integrate the calculation code of `UserSig` into your server and provide an application-oriented API. When `UserSig` is needed, your application can send a request to the business server for a dynamic `UserSig`. For more information, see [How do I calculate UserSig on the server?](https://intl.cloud.tencent.com/document/product/647/35166).
 
