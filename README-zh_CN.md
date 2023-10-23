@@ -1,3 +1,5 @@
+# 该sdk正在下线,请使用其它平台sdk
+
 简体中文 | [English](./README.md)
 
 # 腾讯云实时音视频 TRTC ReactNative SDK
