@@ -1,4 +1,4 @@
-# 该sdk正在下线,请使用其它平台sdk
+# 该SDK已经不再维护,请选择使用其它平台的SDK,如[Flutter](https://pub.dev/packages/tencent_trtc_cloud)
 
 简体中文 | [English](./README.md)
 
