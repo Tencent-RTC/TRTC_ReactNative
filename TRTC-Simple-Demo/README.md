@@ -50,7 +50,7 @@ You have [signed up for a Tencent Cloud account](https://intl.cloud.tencent.com)
 
 1. In the **Modify Configuration** step, select the development platform in line with the source package downloaded.
    ![#900px](https://qcloudimg.tencent-cloud.cn/raw/fa059c7b0dc9f601dbe1dc9b6548dd90.png)
-2. Find and open `/TRTC-Simple-Demo/debug/config.js`.
+2. Find and open `/TRTC-Simple-Demo/src/debug/config.js`.
 3. Set the `SDKAPPID` and `SECRETKEY` parameters:
 
 > - SDKAPPID: a placeholder by default. Set it to the actual `SDKAppID`.
