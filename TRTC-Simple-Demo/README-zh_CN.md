@@ -44,7 +44,7 @@
 ### 步骤 3：配置 Demo 工程文件
 
 1. 进入修改配置页，根据您下载的源码包，选择相应的开发环境。
-2. 找到并打开 `/debug/config.js` 文件。
+2. 找到并打开 `/src/debug/config.js` 文件。
 3. 设置 `SDKAPPID`和`SECRETKEY` 参数：
    > - SDKAPPID：默认为 PLACEHOLDER ，请设置为实际的 SDKAppID。
    > - SECRETKEY：默认为 PLACEHOLDER ，请设置为实际的密钥信息。

@@ -1,11 +1,4 @@
 {
-  "expo": {
-    "name": "testApp",
-    "slug": "testApp",
-    "version": "1.0.0",
-    "assetBundlePatterns": [
-      "**/*"
-    ]
-  },
-  "name": "testApp"
+  "name": "example",
+  "displayName": "example"
 }
