@@ -1,5 +1,3 @@
-# The SDK is currently offline. Please use another platform SDK
-
 [简体中文](./README-zh_CN.md) | English
 
 # TRTC ReactNative SDK
