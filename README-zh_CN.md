@@ -1,5 +1,3 @@
-# 该SDK已经不再维护,请选择使用其它平台的SDK,如[Flutter](https://pub.dev/packages/tencent_trtc_cloud)
-
 简体中文 | [English](./README.md)
 
 # 腾讯云实时音视频 TRTC ReactNative SDK
