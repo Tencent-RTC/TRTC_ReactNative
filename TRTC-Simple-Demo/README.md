@@ -115,9 +115,9 @@ if (Platform.OS === 'android') {
 
 #### Android
 
-1. Launch Metro and run `npx react-native start` under your React Native project directory.
-
-2. Open a new window and start debugging:
+1. First execute "npm install" to install dependencies.
+2. Launch Metro and run `npx react-native start` under your React Native project directory.
+3. Open a new window and start debugging:
 
 ```
 npx react-native run-android
@@ -125,9 +125,10 @@ npx react-native run-android
 
 #### iOS
 
-1. Run `pod install` in the iOS directory to install dependencies.
-2. Launch Metro and run `npx react-native start` under your React Native project directory.
-3. Open a new window in the demo directory and start development debugging (if an error is reported, please open Xcode compilation and debugging)
+1. First execute "npm install" to install dependencies.
+2. Run `pod install` in the iOS directory to install dependencies.
+3. Launch Metro and run `npx react-native start` under your React Native project directory.
+4. Open a new window in the demo directory and start development debugging (if an error is reported, please open Xcode compilation and debugging)
 
 ```
 npx react-native run-ios
