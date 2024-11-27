@@ -485,6 +485,14 @@ const demoParamsGroup: Array<Config> = [
     },
   },
   {
+    title: 'sendSEIMsg',
+    handler: async () => {
+      const sampleData = "hello trtc";
+      const repeat = 1;
+      trtcCloud.sendSEIMsg(sampleData, repeat);
+    },
+  },
+  {
     title: 'setLogLevel',
     handler: async () => {
       trtcCloud.setLogLevel(TRTCCloudDef.TRTC_LOG_LEVEL_NULL);
