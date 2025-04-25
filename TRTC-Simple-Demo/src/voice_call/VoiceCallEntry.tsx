@@ -17,7 +17,7 @@ const VoiceCall = () => {
     const [roomId, setRoomId] = useState('');
     const [userId, setUserId] = useState('');
     const navigation = useNavigation<NavigationProp>();
-    const listenerRegistered = useRef(false); // 标记监听器是否已注册
+    const listenerRegistered = useRef(false);
     const { t } = useTranslation();
 
     // 定义监听器回调
@@ -25,7 +25,6 @@ const VoiceCall = () => {
         const trtcCloud = TRTCCloud.sharedInstance();
         if (type === TRTCCloudListener.onEnterRoom) {
             console.log('onEnterRoom received:', params);
-            // 收到回调后，移除监听器
             if (listenerRegistered.current) {
                 trtcCloud.unRegisterListener(onRtcListener);
                 listenerRegistered.current = false;
@@ -48,10 +47,8 @@ const VoiceCall = () => {
 
         const trtcCloud = TRTCCloud.sharedInstance();
 
-        // 防止重复注册
         if (listenerRegistered.current) {
             console.log('Listener already registered, skipping.');
-            // return; // 根据需要决定是否阻止重复点击
         }
 
         try {
@@ -73,7 +70,6 @@ const VoiceCall = () => {
 
         } catch (error: any) {
             console.error('enterRoom failed:', error);
-            // 如果调用 enterRoom 本身失败，也移除监听器
             if (listenerRegistered.current) {
                 trtcCloud.unRegisterListener(onRtcListener);
                 listenerRegistered.current = false;
@@ -83,7 +79,6 @@ const VoiceCall = () => {
         }
     };
 
-    // 添加一个 Effect 来处理组件卸载时仍未移除的监听器 (以防万一)
     useEffect(() => {
         return () => {
             if (listenerRegistered.current) {

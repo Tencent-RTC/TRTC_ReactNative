@@ -24,7 +24,7 @@ interface RemoteUser {
 }
 
 const { width } = Dimensions.get('window');
-const REMOTE_VIEW_WIDTH = Math.floor(width / 3) - 20; // 每行显示约3个远端视图
+const REMOTE_VIEW_WIDTH = Math.floor(width / 3) - 20;
 
 const VideoRoom = () => {
     const navigation = useNavigation();
@@ -38,15 +38,14 @@ const VideoRoom = () => {
     const [remoteUsers, setRemoteUsers] = useState<RemoteUser[]>([]);
     const [isFrontCamera, setIsFrontCamera] = useState(true);
     const [isMicOpen, setIsMicOpen] = useState(true);
-    const [isEarpiece, setIsEarpiece] = useState(false); // 默认扬声器
+    const [isEarpiece, setIsEarpiece] = useState(false); 
     const [settingsVisible, setSettingsVisible] = useState(false);
 
-    // --- RTC Listeners --- (使用 useCallback 优化)
     const onRtcListener = useCallback((type: TRTCCloudListener, params: any) => {
         if (type === TRTCCloudListener.onRemoteUserEnterRoom) {
             setRemoteUsers((prev) => [
                 ...prev,
-                { userId: params.userId, videoAvailable: false }, // 初始视频不可用
+                { userId: params.userId, videoAvailable: false },
             ]);
         } else if (type === TRTCCloudListener.onRemoteUserLeaveRoom) {
             setRemoteUsers((prev) =>
@@ -54,7 +53,6 @@ const VideoRoom = () => {
             );
         } else if (type === TRTCCloudListener.onUserVideoAvailable) {
             setRemoteUsers((prev) => {
-                // 检查用户是否还在列表中
                 if (!prev.some(user => user.userId === params.userId)) {
                     return prev;
                 }
@@ -91,7 +89,6 @@ const VideoRoom = () => {
     useEffect(() => {
         const trtcCloud = TRTCCloud.sharedInstance();
 
-        // 启动本地音视频
         trtcCloud.startLocalAudio(TRTCCloudDef.TRTC_AUDIO_QUALITY_DEFAULT)
             .then(() => console.log('[VideoRoom] startLocalAudio success'))
             .catch((error) => console.error('[VideoRoom] startLocalAudio failed:', error));
@@ -101,10 +98,8 @@ const VideoRoom = () => {
         });
 
 
-        // 注册监听器
         trtcCloud.registerListener(onRtcListener);
 
-        // 处理导航返回
         const unsubscribeNav = navigation.addListener('beforeRemove', async () => {
             console.log('[VideoRoom] Navigating back...');
             try {
@@ -120,7 +115,6 @@ const VideoRoom = () => {
             trtcCloud.unRegisterListener(onRtcListener);
             unsubscribeNav();
 
-            // 只在组件卸载时（非导航返回）调用 exitRoom
             if (!navigation.isFocused()) {
                 exitRoom().catch(err => {
                     console.error('[VideoRoom] exitRoom failed on unmount:', err);
@@ -129,7 +123,6 @@ const VideoRoom = () => {
         };
     }, [navigation, onRtcListener]);
 
-    // --- Button Handlers ---
     const handleCameraSwitch = async () => {
         const trtcCloud = TRTCCloud.sharedInstance();
         try {
@@ -210,7 +203,6 @@ const VideoRoom = () => {
     // --- Render ---
     return (
         <SafeAreaView style={styles.container}>
-            {/* 本地视频视图 */}
             <View style={styles.localViewContainer}>
                 <TXVideoView.LocalView style={styles.localVideo} />
                 <Text style={styles.userIdText}>{localUserId} {t('chat.operation.me')}</Text>
@@ -222,7 +214,6 @@ const VideoRoom = () => {
                 </TouchableOpacity>
             </View>
 
-            {/* 远端视频区域 - 条件渲染 */}
             <View style={styles.remoteAreaContainer}>
                 {remoteUsers.length > 0 ? (
                     <ScrollView
@@ -257,7 +248,6 @@ const VideoRoom = () => {
                 )}
             </View>
 
-            {/* 控制按钮 */}
             <View style={styles.buttonContainer}>
                 <TouchableOpacity
                     style={[
@@ -313,10 +303,10 @@ const VideoRoom = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#222', // 深色背景
+        backgroundColor: '#222',
     },
     localViewContainer: {
-        flex: 1, // 占据大部分空间
+        flex: 1,
         position: 'relative',
     },
     localVideo: {
@@ -385,7 +375,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         paddingVertical: 15,
         paddingHorizontal: 10,
-        backgroundColor: 'rgba(0, 0, 0, 0.3)', // 半透明背景
+        backgroundColor: 'rgba(0, 0, 0, 0.3)',
     },
     button: {
         padding: 10,
@@ -396,13 +386,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     buttonActive: {
-        backgroundColor: '#0055CC', // 深蓝色，用于后置摄像头
+        backgroundColor: '#0055CC',
     },
     micButtonActive: {
-        backgroundColor: '#999999', // 灰色，用于麦克风关闭
+        backgroundColor: '#999999',
     },
     audioButtonActive: {
-        backgroundColor: '#66B3FF', // 浅蓝色，用于听筒模式
+        backgroundColor: '#66B3FF',
     },
     hangupButton: {
         backgroundColor: '#ff3b30',
