@@ -1,206 +1,111 @@
-import React, { useState } from 'react';
-import {
-  StyleSheet,
-  Button,
-  Platform,
-  PermissionsAndroid,
-  SafeAreaView,
-  TextInput,
-  View,
-  ScrollView,
-  Alert,
-} from 'react-native';
+import React from 'react';
+import { Platform, PermissionsAndroid } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { useTranslation } from 'react-i18next';
+import './i18n';
 
-import TRTCCloud, {
-  TRTCCloudDef,
-  TRTCCloudListener,
-  TRTCParams,
-  TXVideoView,
-} from 'trtc-react-native';
-import { demoParamsGroup } from './demoParamsGroup';
+import Navigation from './Navigation';
+import VoiceCall from './voice_call/VoiceCallEntry';
+import Room from './voice_call/VoiceCall';
+import VideoCall from './video_call/VideoCallEntry';
+import VideoRoom from './video_call/VideoCall';
+import VoiceLiveEntry from './chat/ChatRoomEntry';
+import VoiceChatRoom from './chat/ChatRoom';
+import VideoLiveEntry from './live/LiveRoomEntry';
+import LiveRoom from './live/LiveRoom';
 
-// @ts-ignore
-import getLatestUserSig from './debug/index';
-// @ts-ignore
-import { SDKAPPID } from './debug/config';
+type RootStackParamList = {
+  Navigation: undefined;
+  VoiceCall: undefined;
+  Room: { roomId: string; userId: string; type: string };
+  VideoCall: undefined;
+  VideoRoom: { roomId: string; userId: string; type: string };
+  VoiceLiveEntry: undefined;
+  VoiceChatRoom: { roomId: string; userId: string; role: number };
+  VideoLiveEntry: undefined;
+  LiveRoom: { roomId: string; userId: string; role: number };
+};
 
-export default function App() {
-  const [meetId, setMeetId] = React.useState('6868');
-  const [userId, setUserId] = React.useState('');
-  const [isEnter, setIsEnter] = useState(false);
-  const [remoteUserId, setRemoteUserId] = useState(null);
-  const [remoteVideo, setRemoteVideo] = useState(false);
-  const [remoteSub, setRemoteSub] = useState(false);
-  React.useEffect(() => {
-    initInfo();
-    return () => {
-      console.log('destroy');
-      const trtcCloud = TRTCCloud.sharedInstance();
-      trtcCloud.unRegisterListener(onRtcListener);
-    };
-  }, []);
+const Stack = createStackNavigator<RootStackParamList>();
+
+function App(): React.JSX.Element {
+  const { t } = useTranslation();
 
   async function initInfo() {
     if (Platform.OS === 'android') {
       await PermissionsAndroid.requestMultiple([
-        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO as 'android.permission.RECORD_AUDIO',
-        PermissionsAndroid.PERMISSIONS.CAMERA as  'android.permission.CAMERA', 
+        PermissionsAndroid.PERMISSIONS
+          .RECORD_AUDIO as 'android.permission.RECORD_AUDIO',
+        PermissionsAndroid.PERMISSIONS.CAMERA as 'android.permission.CAMERA',
       ]);
+      console.log('platform android');
     }
-    const trtcCloud = TRTCCloud.sharedInstance();
-    trtcCloud.registerListener(onRtcListener);
   }
 
-  function onRtcListener(type: TRTCCloudListener, params: any) {
-    if (type === TRTCCloudListener.onEnterRoom) {
-      console.log('==onEnterRoom');
-      if (params.result > 0) {
-        setIsEnter(true);
-      }
-    }
-    if (type === TRTCCloudListener.onExitRoom) {
-      setIsEnter(false);
-      setRemoteUserId(null);
-    }
-    if (type === TRTCCloudListener.onRemoteUserEnterRoom) {
-      setRemoteUserId(params.userId);
-    }
-    if (type === TRTCCloudListener.onRemoteUserLeaveRoom) {
-      setRemoteUserId(null);
-    }
-    if (type === TRTCCloudListener.onUserVideoAvailable) {
-      setRemoteVideo(params.available);
-    }
-    if (type === TRTCCloudListener.onUserSubStreamAvailable) {
-      setRemoteSub(params.available);
-    }
-    if (
-      type !== TRTCCloudListener.onNetworkQuality &&
-      type !== TRTCCloudListener.onStatistics
-    ) {
-      console.log(type, params);
-    }
-  }
+  React.useEffect(() => {
+    initInfo();
+  }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={{ padding: 20 }}>
-        <TextInput
-          style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-          onChangeText={(text) => setMeetId(text)}
-          value={meetId}
-          placeholder="Please enter the room ID"
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Navigation">
+        <Stack.Screen
+          name="Navigation"
+          component={Navigation}
+          options={{ title: t('navigation.appTitle') }}
         />
-        <TextInput
-          // eslint-disable-next-line react-native/no-inline-styles
-          style={{
-            height: 40,
-            borderColor: 'gray',
-            borderWidth: 1,
-            marginTop: 10,
-            marginBottom: 10,
-          }}
-          onChangeText={(text) => setUserId(text)}
-          value={userId}
-          placeholder="Please enter the user ID"
+        <Stack.Screen
+          name="VoiceCall"
+          component={VoiceCall}
+          options={{ title: t('navigation.voiceCall') }}
         />
-        <View style={styles.fixToText}>
-          <Button
-            title="Enter the room"
-            onPress={() => {
-              if (!SDKAPPID) {
-                Alert.alert('Please configure SDKAppid information');
-                return;
-              }
-              if (!meetId || !userId) {
-                Alert.alert('Please enter the room ID and user ID');
-                return;
-              }
-              const userSig = getLatestUserSig(userId).userSig;
-              const params = new TRTCParams({
-                sdkAppId: SDKAPPID,
-                userId,
-                userSig,
-                roomId: Number(meetId),
-              });
-              const trtcCloud = TRTCCloud.sharedInstance();
-              trtcCloud.enterRoom(
-                params,
-                TRTCCloudDef.TRTC_APP_SCENE_VIDEOCALL
-              );
-              // trtcCloud.startLocalAudio(TRTCCloudDef.TRTC_AUDIO_QUALITY_SPEECH);
-            }}
-          />
-          <Button
-            title="Exit the room"
-            onPress={() => {
-              const trtcCloud = TRTCCloud.sharedInstance();
-              trtcCloud.exitRoom();
-            }}
-          />
-        </View>
-      </View>
-      {isEnter && (
-        <TXVideoView.LocalView
-          style={styles.video}
-          renderParams={{
-            rotation: TRTCCloudDef.TRTC_VIDEO_ROTATION_0,
-          }}
+        <Stack.Screen
+          name="Room"
+          component={Room}
+          options={({ route }) => ({
+            title: `${t('navigation.room')} (${route.params?.roomId})`
+          })}
         />
-      )}
-      {remoteUserId && remoteVideo && (
-        <TXVideoView.RemoteView
-          userId={remoteUserId}
-          viewType={TRTCCloudDef.TRTC_VideoView_SurfaceView}
-          streamType={TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_BIG}
-          renderParams={{
-            rotation: TRTCCloudDef.TRTC_VIDEO_ROTATION_90,
-          }}
-          style={styles.video}
+        <Stack.Screen
+          name="VideoCall"
+          component={VideoCall}
+          options={{ title: t('navigation.videoCall') }}
         />
-      )}
-      {remoteUserId && remoteSub && (
-        <TXVideoView.RemoteView
-          userId={remoteUserId}
-          viewType={TRTCCloudDef.TRTC_VideoView_SurfaceView}
-          streamType={TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_SUB}
-          style={styles.video}
+        <Stack.Screen
+          name="VideoRoom"
+          component={VideoRoom}
+          options={({ route }) => ({
+            title: `${t('navigation.videoRoom')} (${route.params?.roomId})`
+          })}
         />
-      )}
-      <ScrollView style={styles.scrollView}>
-        {demoParamsGroup.map((value) => {
-          return (
-            <Button
-              title={value.title}
-              key={value.title}
-              onPress={() => {
-                value.handler();
-              }}
-            />
-          );
-        })}
-      </ScrollView>
-    </SafeAreaView>
+        <Stack.Screen
+          name="VoiceLiveEntry"
+          component={VoiceLiveEntry}
+          options={{ title: t('navigation.voiceLive') }}
+        />
+        <Stack.Screen
+          name="VoiceChatRoom"
+          component={VoiceChatRoom}
+          options={({ route }) => ({
+            title: `${t('navigation.voiceRoom')} (${route.params?.roomId})`
+          })}
+        />
+        <Stack.Screen
+          name="VideoLiveEntry"
+          component={VideoLiveEntry}
+          options={{ title: t('navigation.videoLive') }}
+        />
+        <Stack.Screen
+          name="LiveRoom"
+          component={LiveRoom}
+          options={({ route }) => ({
+            title: `${t('navigation.liveRoom')} (${route.params?.roomId})`
+          })}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  fixToText: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  scrollView: {
-    backgroundColor: 'white',
-    marginHorizontal: 20,
-  },
-  text: {
-    fontSize: 42,
-  },
-  video: {
-    width: 240,
-    height: 180,
-  },
-});
+export default App;
