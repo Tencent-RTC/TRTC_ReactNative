@@ -146,7 +146,6 @@ const VoiceChatRoom = () => {
         }
     };
 
-    // 设置返回按钮的处理
     useEffect(() => {
         navigation.setOptions({
             title: `${t('chat.title')} (${roomId})`,

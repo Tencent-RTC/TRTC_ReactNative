@@ -39,7 +39,6 @@ const VoiceLiveEntry = () => {
             ? TRTCCloudDef.TRTCRoleAnchor
             : TRTCCloudDef.TRTCRoleAudience;
 
-        // 直接导航到语音聊天室页面
         navigation.navigate('VoiceChatRoom', {
             roomId,
             userId,
@@ -67,7 +66,6 @@ const VoiceLiveEntry = () => {
                     placeholder={t('chat.userId')}
                 />
 
-                {/* 角色选择 */}
                 <View style={styles.roleSelectorContainer}>
                     <Text style={styles.roleLabel}>{t('chat.role.label')}</Text>
                     <TouchableOpacity

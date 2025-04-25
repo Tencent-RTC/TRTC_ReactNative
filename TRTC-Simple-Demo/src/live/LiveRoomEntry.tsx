@@ -37,7 +37,6 @@ const VideoLiveEntry = () => {
     const onRtcListener = useCallback((type: TRTCCloudListener, params: any) => {
         if (type === TRTCCloudListener.onEnterRoom) {
             console.log('onEnterRoom received:', params);
-            // 收到回调后，移除监听器
             if (listenerRegistered.current) {
                 trtcCloud.unRegisterListener(onRtcListener);
                 listenerRegistered.current = false;
@@ -70,7 +69,6 @@ const VideoLiveEntry = () => {
             return;
         }
 
-        // 防止重复注册
         if (listenerRegistered.current) {
             console.log('Listener already registered, skipping.');
             return;
@@ -100,7 +98,6 @@ const VideoLiveEntry = () => {
 
         } catch (error: any) {
             console.error('enterRoom failed:', error);
-            // 如果调用 enterRoom 本身失败，也移除监听器
             if (listenerRegistered.current) {
                 trtcCloud.unRegisterListener(onRtcListener);
                 listenerRegistered.current = false;
@@ -110,7 +107,6 @@ const VideoLiveEntry = () => {
         }
     };
 
-    // 添加一个 Effect 来处理组件卸载时仍未移除的监听器
     useEffect(() => {
         return () => {
             if (listenerRegistered.current) {
@@ -141,7 +137,6 @@ const VideoLiveEntry = () => {
                     placeholder={t('chat.userId')}
                 />
 
-                {/* 角色选择 */}
                 <View style={styles.roleSelectorContainer}>
                     <Text style={styles.roleLabel}>{t('chat.role.label')}</Text>
                     <TouchableOpacity

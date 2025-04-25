@@ -12,7 +12,6 @@ const getDeviceLanguage = () => {
               NativeModules.SettingsManager.settings.AppleLanguages[0]
             : NativeModules.I18nManager.localeIdentifier;
 
-    // 处理繁体中文
     if (deviceLanguage.includes('zh-Hant') || deviceLanguage.includes('zh_TW')) {
         return 'zh-Hant';
     }

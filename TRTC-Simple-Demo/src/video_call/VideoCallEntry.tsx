@@ -7,10 +7,8 @@ import { SDKAPPID } from '../debug/config';
 import getLatestUserSig from '../debug/index';
 import { useTranslation } from 'react-i18next';
 
-// 定义导航参数类型
 type RootStackParamList = {
-    VideoRoom: { roomId: string; userId: string; type: string }; // 目标房间页面
-    // 其他页面...
+    VideoRoom: { roomId: string; userId: string; type: string };
 };
 
 type NavigationProp = StackNavigationProp<RootStackParamList, 'VideoRoom'>;
@@ -19,10 +17,9 @@ const VideoCall = () => {
     const [roomId, setRoomId] = useState('');
     const [userId, setUserId] = useState('');
     const navigation = useNavigation<NavigationProp>();
-    const listenerRegistered = useRef(false); // 标记监听器是否已注册
+    const listenerRegistered = useRef(false);
     const { t } = useTranslation();
 
-    // 定义监听器回调
     const onRtcListener = useCallback((type: TRTCCloudListener, params: any) => {
         const trtcCloud = TRTCCloud.sharedInstance();
         if (type === TRTCCloudListener.onEnterRoom) {
@@ -34,7 +31,6 @@ const VideoCall = () => {
             }
 
             if (params.result > 0) {
-                // 导航到视频房间页面 (VideoRoom)
                 navigation.navigate('VideoRoom', { roomId, userId, type: 'video' });
             } else {
                 Alert.alert(t('common.error'), `${t('common.enterRoomFailed')} (${params.result})`);
@@ -52,7 +48,7 @@ const VideoCall = () => {
 
         if (listenerRegistered.current) {
             console.log('[VideoCall] Listener already registered, skipping.');
-            return; // 防止重复点击处理
+            return;
         }
 
         try {
@@ -69,7 +65,6 @@ const VideoCall = () => {
             });
 
             console.log('[VideoCall] Calling enterRoom with VIDEO_CALL scene...');
-            // 使用 TRTC_APP_SCENE_VIDEOCALL 场景
             await trtcCloud.enterRoom(params, TRTCCloudDef.TRTC_APP_SCENE_VIDEOCALL);
             console.log('[VideoCall] enterRoom called successfully (async)');
 
@@ -84,7 +79,6 @@ const VideoCall = () => {
         }
     };
 
-    // 处理组件卸载
     useEffect(() => {
         return () => {
             if (listenerRegistered.current) {
@@ -124,7 +118,6 @@ const VideoCall = () => {
     );
 };
 
-// 样式 (与 VoiceCall.tsx 相同，可以考虑提取公共样式)
 const styles = StyleSheet.create({
     container: {
         flex: 1,

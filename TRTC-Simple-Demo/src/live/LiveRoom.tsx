@@ -51,7 +51,6 @@ const LiveRoom = () => {
     const [isFrontCamera, setIsFrontCamera] = useState(true);
     const { t } = useTranslation();
 
-    // 处理远端用户进入房间
     const onRtcListener = useCallback((type: TRTCCloudListener, params: any) => {
         if (type === TRTCCloudListener.onRemoteUserEnterRoom) {
             console.log('[LiveRoom] onRemoteUserEnterRoom:', params);
@@ -72,7 +71,6 @@ const LiveRoom = () => {
         } else if (type === TRTCCloudListener.onUserVideoAvailable) {
             console.log('[LiveRoom] onUserVideoAvailable:', params);
             setRemoteUsers(prevUsers => {
-                // 检查用户是否还在列表中
                 if (!prevUsers.some(user => user.userId === params.userId)) {
                     return prevUsers;
                 }
@@ -85,7 +83,6 @@ const LiveRoom = () => {
         } else if (type === TRTCCloudListener.onUserAudioAvailable) {
             console.log('[LiveRoom] onUserAudioAvailable:', params);
             setRemoteUsers(prevUsers => {
-                // 检查用户是否还在列表中
                 if (!prevUsers.some(user => user.userId === params.userId)) {
                     return prevUsers;
                 }
@@ -98,7 +95,6 @@ const LiveRoom = () => {
         }
     }, []);
 
-    // 处理单个用户静音
     const handleMuteRemoteUser = async (targetUserId: string) => {
         try {
             const user = remoteUsers.find(u => u.userId === targetUserId);
@@ -117,7 +113,6 @@ const LiveRoom = () => {
         }
     };
 
-    // 处理麦克风开关
     const handleMicToggle = async () => {
         try {
             if (isMicOpen) {
@@ -131,7 +126,6 @@ const LiveRoom = () => {
         }
     };
 
-    // 处理全部静音
     const handleMuteToggle = async () => {
         try {
             if (isMuted) {
@@ -145,7 +139,6 @@ const LiveRoom = () => {
         }
     };
 
-    // 处理摄像头切换
     const handleCameraSwitch = async () => {
         try {
             await trtcCloud.getDeviceManager().switchCamera(!isFrontCamera);
@@ -155,7 +148,6 @@ const LiveRoom = () => {
         }
     };
 
-    // 处理退出房间
     const handleExitRoom = async () => {
         try {
             trtcCloud.unRegisterListener(onRtcListener);
@@ -166,7 +158,6 @@ const LiveRoom = () => {
         }
     };
 
-    // 计算当前页的视频列表
     const getCurrentPageVideos = (): VideoItem[] => {
         const allVideos: VideoItem[] = [
             ...(role === TRTCCloudDef.TRTCRoleAnchor && isCameraOpen ? [{
@@ -183,24 +174,20 @@ const LiveRoom = () => {
         return allVideos.slice(startIndex, startIndex + MAX_VIDEOS_PER_PAGE);
     };
 
-    // 计算总页数
     const getTotalPages = () => {
         const totalVideos = (role === TRTCCloudDef.TRTCRoleAnchor && isCameraOpen ? 1 : 0) + remoteUsers.length;
         return Math.ceil(totalVideos / MAX_VIDEOS_PER_PAGE);
     };
 
     useEffect(() => {
-        // 注册监听器
         trtcCloud.registerListener(onRtcListener);
 
-        // 设置导航标题
         navigation.setOptions({
             title: `${t('room.liveRoom')} (${roomId})`,
             headerBackTitle: t('common.back'),
             headerBackTitleVisible: true,
         });
 
-        // 如果是主播，启动本地音频
         if (role === TRTCCloudDef.TRTCRoleAnchor) {
             trtcCloud.startLocalAudio(TRTCCloudDef.TRTC_AUDIO_QUALITY_DEFAULT)
                 .catch(error => {
@@ -209,7 +196,6 @@ const LiveRoom = () => {
                 });
         }
 
-        // 组件卸载时清理
         return () => {
             trtcCloud.unRegisterListener(onRtcListener);
             if (role === TRTCCloudDef.TRTCRoleAnchor) {
@@ -226,21 +212,18 @@ const LiveRoom = () => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.mainContent}>
-                {/* 等待主播提示 */}
                 {role === TRTCCloudDef.TRTCRoleAudience && remoteUsers.length === 0 && (
                     <View style={styles.waitingContainer}>
                         <Text style={styles.waitingText}>{t('room.waitingAnchor')}</Text>
                     </View>
                 )}
 
-                {/* 视频水平滚动布局 */}
                 <ScrollView
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     style={styles.horizontalScroll}
                     contentContainerStyle={styles.scrollContent}
                 >
-                    {/* 主播本地画面 */}
                     {role === TRTCCloudDef.TRTCRoleAnchor && isCameraOpen && (
                         <View style={styles.videoView}>
                             <TXVideoView.LocalView style={styles.video} />
@@ -256,7 +239,6 @@ const LiveRoom = () => {
                         </View>
                     )}
 
-                    {/* 远端用户画面 */}
                     {remoteUsers.map(user => (
                         <View key={user.userId} style={styles.videoView}>
                             {user.isVideoAvailable && (
@@ -285,7 +267,6 @@ const LiveRoom = () => {
                 </ScrollView>
             </View>
 
-            {/* 底部控制按钮（仅主播可见） */}
             {role === TRTCCloudDef.TRTCRoleAnchor && (
                 <View style={styles.controlContainer}>
                     <View style={styles.controlRow}>
