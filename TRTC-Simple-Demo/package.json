@@ -12,7 +12,7 @@
   "dependencies": {
     "react": "18.2.0",
     "react-native": "0.74.2",
-    "trtc-react-native": "^3.1.0",
+    "trtc-react-native": "^3.1.1",
     "@react-native-community/slider": "^4.5.6",
     "@react-native-picker/picker": "^2.11.0",
     "@react-navigation/native": "^7.1.6",
