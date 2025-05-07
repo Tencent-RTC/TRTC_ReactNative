@@ -275,7 +275,7 @@ const LiveRoom = () => {
                             onPress={handleMicToggle}
                         >
                             <Text style={styles.controlButtonText}>
-                                {isMicOpen ? t('common.openMic') : t('common.closeMic')}
+                                {isMicOpen ? t('common.closeMic') : t('common.openMic')}
                             </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
@@ -283,7 +283,7 @@ const LiveRoom = () => {
                             onPress={() => setIsCameraOpen(!isCameraOpen)}
                         >
                             <Text style={styles.controlButtonText}>
-                                {isCameraOpen ? t('common.openCamera') : t('common.closeCamera')}
+                                {isCameraOpen ? t('common.closeCamera') : t('common.openCamera')}
                             </Text>
                         </TouchableOpacity>
                     </View>
