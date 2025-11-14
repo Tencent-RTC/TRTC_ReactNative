@@ -1,25 +1,19 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, SafeAreaView, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import type { StackNavigationProp } from '@react-navigation/stack';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { useNavigation } from '../navigation/NavigationContext';
 import TRTCCloud, { TRTCCloudDef, TRTCParams, TRTCCloudListener } from 'trtc-react-native';
 import { SDKAPPID } from '../debug/config';
 import getLatestUserSig from '../debug/index';
 import { useTranslation } from 'react-i18next';
 
-type RootStackParamList = {
-    VideoRoom: { roomId: string; userId: string; type: string };
-};
-
-type NavigationProp = StackNavigationProp<RootStackParamList, 'VideoRoom'>;
-
 const VideoCall = () => {
     const [roomId, setRoomId] = useState('');
     const [userId, setUserId] = useState('');
-    const navigation = useNavigation<NavigationProp>();
-    const listenerRegistered = useRef(false);
+    const navigation = useNavigation();
+    const listenerRegistered = useRef(false); // Flag to track if listener is registered
     const { t } = useTranslation();
 
+    // Define listener callback
     const onRtcListener = useCallback((type: TRTCCloudListener, params: any) => {
         const trtcCloud = TRTCCloud.sharedInstance();
         if (type === TRTCCloudListener.onEnterRoom) {
@@ -31,6 +25,7 @@ const VideoCall = () => {
             }
 
             if (params.result > 0) {
+                // Navigate to video room page (VideoRoom)
                 navigation.navigate('VideoRoom', { roomId, userId, type: 'video' });
             } else {
                 Alert.alert(t('common.error'), `${t('common.enterRoomFailed')} (${params.result})`);
@@ -48,7 +43,7 @@ const VideoCall = () => {
 
         if (listenerRegistered.current) {
             console.log('[VideoCall] Listener already registered, skipping.');
-            return;
+            return; // Prevent duplicate click handling
         }
 
         try {
@@ -65,6 +60,7 @@ const VideoCall = () => {
             });
 
             console.log('[VideoCall] Calling enterRoom with VIDEO_CALL scene...');
+            // Use TRTC_APP_SCENE_VIDEOCALL scene
             await trtcCloud.enterRoom(params, TRTCCloudDef.TRTC_APP_SCENE_VIDEOCALL);
             console.log('[VideoCall] enterRoom called successfully (async)');
 
@@ -79,6 +75,7 @@ const VideoCall = () => {
         }
     };
 
+    // Handle component unmount
     useEffect(() => {
         return () => {
             if (listenerRegistered.current) {
@@ -91,7 +88,7 @@ const VideoCall = () => {
     }, [onRtcListener]);
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.content}>
                 <Text style={styles.label}>{t('chat.roomId')}</Text>
                 <TextInput
@@ -114,10 +111,11 @@ const VideoCall = () => {
                     <Text style={styles.buttonText}>{t('chat.enterRoom')}</Text>
                 </TouchableOpacity>
             </View>
-        </SafeAreaView>
+        </View>
     );
 };
 
+// Styles (same as VoiceCall.tsx, consider extracting common styles)
 const styles = StyleSheet.create({
     container: {
         flex: 1,

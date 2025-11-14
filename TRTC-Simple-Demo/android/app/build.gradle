@@ -69,6 +69,27 @@ def enableProguardInReleaseBuilds = false
  */
 def jscFlavor = 'org.webkit:android-jsc:+'
 
+// Delete autolinking-generated PackageList to avoid duplicate class errors
+// React Native 0.76 uses both new Gradle plugin autolinking and old CLI autolinking
+// We keep the old CLI autolinking (native_modules.gradle) for PackageList generation
+// and exclude the new one to avoid conflicts
+project.afterEvaluate {
+    tasks.named('compileDebugJavaWithJavac').configure {
+        doFirst {
+            fileTree('build/generated/autolinking').matching {
+                include '**/*.java'
+            }.each { it.delete() }
+        }
+    }
+    tasks.named('compileReleaseJavaWithJavac').configure {
+        doFirst {
+            fileTree('build/generated/autolinking').matching {
+                include '**/*.java'
+            }.each { it.delete() }
+        }
+    }
+}
+
 android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -115,4 +136,5 @@ dependencies {
     }
 }
 
+// Keep this for autolinking native modules - generates PackageList with all native modules
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)

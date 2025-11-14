@@ -1,30 +1,24 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, SafeAreaView, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import type { StackNavigationProp } from '@react-navigation/stack';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { useNavigation } from '../navigation/NavigationContext';
 import TRTCCloud, { TRTCCloudDef, TRTCParams, TRTCCloudListener } from 'trtc-react-native';
 import { SDKAPPID } from '../debug/config';
 import getLatestUserSig from '../debug/index';
 import { useTranslation } from 'react-i18next';
 
-type RootStackParamList = {
-    Room: { roomId: string; userId: string; type: string };
-};
-
-type NavigationProp = StackNavigationProp<RootStackParamList, 'Room'>;
-
 const VoiceCall = () => {
     const [roomId, setRoomId] = useState('');
     const [userId, setUserId] = useState('');
-    const navigation = useNavigation<NavigationProp>();
-    const listenerRegistered = useRef(false);
+    const navigation = useNavigation();
+    const listenerRegistered = useRef(false); // Flag to track if listener is registered
     const { t } = useTranslation();
 
-    // 定义监听器回调
+    // Define listener callback
     const onRtcListener = useCallback((type: TRTCCloudListener, params: any) => {
         const trtcCloud = TRTCCloud.sharedInstance();
         if (type === TRTCCloudListener.onEnterRoom) {
             console.log('onEnterRoom received:', params);
+            // Remove listener after receiving callback
             if (listenerRegistered.current) {
                 trtcCloud.unRegisterListener(onRtcListener);
                 listenerRegistered.current = false;
@@ -47,8 +41,10 @@ const VoiceCall = () => {
 
         const trtcCloud = TRTCCloud.sharedInstance();
 
+        // Prevent duplicate registration
         if (listenerRegistered.current) {
             console.log('Listener already registered, skipping.');
+            // return; // Decide whether to prevent duplicate clicks based on needs
         }
 
         try {
@@ -70,6 +66,7 @@ const VoiceCall = () => {
 
         } catch (error: any) {
             console.error('enterRoom failed:', error);
+            // If enterRoom call itself fails, also remove listener
             if (listenerRegistered.current) {
                 trtcCloud.unRegisterListener(onRtcListener);
                 listenerRegistered.current = false;
@@ -79,6 +76,7 @@ const VoiceCall = () => {
         }
     };
 
+    // Add an Effect to handle listeners that are still not removed when component unmounts (just in case)
     useEffect(() => {
         return () => {
             if (listenerRegistered.current) {
@@ -91,7 +89,7 @@ const VoiceCall = () => {
     }, [onRtcListener]);
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.content}>
                 <Text style={styles.label}>{t('chat.roomId')}</Text>
                 <TextInput
@@ -114,7 +112,7 @@ const VoiceCall = () => {
                     <Text style={styles.buttonText}>{t('chat.enterRoom')}</Text>
                 </TouchableOpacity>
             </View>
-        </SafeAreaView>
+        </View>
     );
 };
 

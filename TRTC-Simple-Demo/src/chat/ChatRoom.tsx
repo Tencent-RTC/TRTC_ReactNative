@@ -1,29 +1,15 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import {
-    View,
-    Text,
-    StyleSheet,
-    TouchableOpacity,
-    SafeAreaView,
-    Image,
-    Alert,
-} from 'react-native';
-import { useRoute, useNavigation } from '@react-navigation/native';
-import type { RouteProp } from '@react-navigation/native';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, ScrollView, Image, Platform } from 'react-native';
+import { useNavigation, useRoute } from '../navigation/NavigationContext';
 import TRTCCloud, {
-    TRTCCloudDef,
     TRTCCloudListener,
+    TRTCCloudDef,
     TRTCParams,
+    TXVideoView,
 } from 'trtc-react-native';
 import { SDKAPPID } from '../debug/config';
 import getLatestUserSig from '../debug/index';
 import { useTranslation } from 'react-i18next';
-
-type RootStackParamList = {
-    VoiceChatRoom: { roomId: string; userId: string; role: number };
-};
-
-type VoiceChatRoomRouteProp = RouteProp<RootStackParamList, 'VoiceChatRoom'>;
 
 interface UserInfo {
     userId: string;
@@ -32,10 +18,14 @@ interface UserInfo {
 }
 
 const VoiceChatRoom = () => {
-    const route = useRoute<VoiceChatRoomRouteProp>();
     const navigation = useNavigation();
+    const route = useRoute();
     const { t } = useTranslation();
-    const { roomId, userId, role } = route.params;
+    const { roomId, userId, role } = route.params as {
+        roomId: string;
+        userId: string;
+        role: number;
+    };
     const [users, setUsers] = useState<UserInfo[]>([]);
     const [isMuted, setIsMuted] = useState(false);
     const [isOnMic, setIsOnMic] = useState(role === TRTCCloudDef.TRTCRoleAnchor);
@@ -64,15 +54,9 @@ const VoiceChatRoom = () => {
     );
 
     const handleExitRoom = useCallback(async () => {
-        try {
-            trtcCloud.unRegisterListener(onRtcListener);
-            await trtcCloud.exitRoom();
-            navigation.goBack();
-        } catch (error: any) {
-            console.error(t('common.exitRoomFailed'), error);
-            navigation.goBack();
-        }
-    }, [navigation, onRtcListener, t]);
+        // Directly return, beforeRemove listener will handle exit room logic
+        navigation.goBack();
+    }, [navigation]);
 
     useEffect(() => {
         const enterRoom = async () => {
@@ -106,11 +90,22 @@ const VoiceChatRoom = () => {
 
         enterRoom();
 
+        // Add cleanup logic when leaving the page
+        const unsubscribe = navigation.addBeforeRemoveListener(async () => {
+            try {
+                await trtcCloud.exitRoom();
+                console.log("Exited chat room on back navigation");
+            } catch (error) {
+                console.error("Failed to exit chat room on back navigation:", error);
+            }
+        });
+
         return () => {
             trtcCloud.unRegisterListener(onRtcListener);
-            trtcCloud.exitRoom();
+            unsubscribe(); // Remove beforeRemove listener
+            // Don't call exitRoom on component unmount, because beforeRemove already handled it
         };
-    }, [roomId, userId, role, onRtcListener, t]);
+    }, [roomId, userId, role, onRtcListener, t]); // Remove navigation dependency
 
     const handleMicToggle = async () => {
         try {
@@ -146,16 +141,13 @@ const VoiceChatRoom = () => {
         }
     };
 
+    // Set up back button handling
     useEffect(() => {
-        navigation.setOptions({
-            title: `${t('chat.title')} (${roomId})`,
-            headerBackTitle: t('common.back'),
-            headerBackTitleVisible: true,
-        });
-    }, [navigation, roomId, t]);
+        // Title is now automatically handled by Header component
+    }, [roomId]);
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.micArea}>
                 {users.map((user, index) => (
                     <View key={user.userId} style={styles.userItem}>
@@ -201,7 +193,7 @@ const VoiceChatRoom = () => {
                     <Text style={styles.buttonText}>{t('chat.operation.exit')}</Text>
                 </TouchableOpacity>
             </View>
-        </SafeAreaView>
+        </View>
     );
 };
 

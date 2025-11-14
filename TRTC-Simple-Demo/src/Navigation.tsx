@@ -1,21 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import type { StackNavigationProp } from '@react-navigation/stack';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from './navigation/NavigationContext';
 import { useTranslation } from 'react-i18next';
 
-type RootStackParamList = {
-    Navigation: undefined;
-    VoiceCall: undefined;
-    VideoCall: undefined;
-    VideoLiveEntry: undefined;
-    VoiceLiveEntry: undefined;
-};
-
-type NavigationScreenProp = StackNavigationProp<RootStackParamList, 'Navigation'>;
-
 const Navigation = () => {
-    const navigation = useNavigation<NavigationScreenProp>();
+    const navigation = useNavigation();
     const { t } = useTranslation();
 
     const menuItems = [
@@ -26,20 +15,20 @@ const Navigation = () => {
     ];
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <Text style={styles.title}>{t('navigation.title')}</Text>
             <View style={styles.menuContainer}>
                 {menuItems.map((item, index) => (
                     <TouchableOpacity
                         key={index}
                         style={styles.menuItem}
-                        onPress={() => navigation.navigate(item.screen as keyof RootStackParamList)}
+                        onPress={() => navigation.navigate(item.screen)}
                     >
                         <Text style={styles.menuText}>{item.title}</Text>
                     </TouchableOpacity>
                 ))}
             </View>
-        </SafeAreaView>
+        </View>
     );
 };
 

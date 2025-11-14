@@ -5,31 +5,23 @@ import {
     StyleSheet,
     TextInput,
     TouchableOpacity,
-    SafeAreaView,
     Alert,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import type { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigation } from '../navigation/NavigationContext';
 import TRTCCloud, {
     TRTCCloudDef,
-    TRTCCloudListener,
     TRTCParams,
+    TRTCCloudListener,
 } from 'trtc-react-native';
 import { SDKAPPID } from '../debug/config';
 import getLatestUserSig from '../debug/index';
 import { useTranslation } from 'react-i18next';
 
-type RootStackParamList = {
-    LiveRoom: { roomId: string; userId: string; role: number };
-};
-
-type NavigationProp = StackNavigationProp<RootStackParamList, 'LiveRoom'>;
-
 const VideoLiveEntry = () => {
     const [roomId, setRoomId] = useState('');
     const [userId, setUserId] = useState('');
-    const [isAnchor, setIsAnchor] = useState(true); // 默认选择主播
-    const navigation = useNavigation<NavigationProp>();
+    const [isAnchor, setIsAnchor] = useState(true); // Default to anchor
+    const navigation = useNavigation();
     const trtcCloud = TRTCCloud.sharedInstance();
     const listenerRegistered = useRef(false);
     const { t } = useTranslation();
@@ -37,6 +29,7 @@ const VideoLiveEntry = () => {
     const onRtcListener = useCallback((type: TRTCCloudListener, params: any) => {
         if (type === TRTCCloudListener.onEnterRoom) {
             console.log('onEnterRoom received:', params);
+            // Remove listener after receiving callback
             if (listenerRegistered.current) {
                 trtcCloud.unRegisterListener(onRtcListener);
                 listenerRegistered.current = false;
@@ -69,6 +62,7 @@ const VideoLiveEntry = () => {
             return;
         }
 
+        // Prevent duplicate registration
         if (listenerRegistered.current) {
             console.log('Listener already registered, skipping.');
             return;
@@ -98,6 +92,7 @@ const VideoLiveEntry = () => {
 
         } catch (error: any) {
             console.error('enterRoom failed:', error);
+            // If enterRoom call itself fails, also remove listener
             if (listenerRegistered.current) {
                 trtcCloud.unRegisterListener(onRtcListener);
                 listenerRegistered.current = false;
@@ -107,6 +102,7 @@ const VideoLiveEntry = () => {
         }
     };
 
+    // Add an Effect to handle listeners that are still not removed when component unmounts
     useEffect(() => {
         return () => {
             if (listenerRegistered.current) {
@@ -118,7 +114,7 @@ const VideoLiveEntry = () => {
     }, [onRtcListener]);
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.content}>
                 <Text style={styles.label}>{t('chat.roomId')}</Text>
                 <TextInput
@@ -137,6 +133,7 @@ const VideoLiveEntry = () => {
                     placeholder={t('chat.userId')}
                 />
 
+                {/* Role selection */}
                 <View style={styles.roleSelectorContainer}>
                     <Text style={styles.roleLabel}>{t('chat.role.label')}</Text>
                     <TouchableOpacity
@@ -161,7 +158,7 @@ const VideoLiveEntry = () => {
                     <Text style={styles.buttonText}>{t('chat.enterRoom')}</Text>
                 </TouchableOpacity>
             </View>
-        </SafeAreaView>
+        </View>
     );
 };
 

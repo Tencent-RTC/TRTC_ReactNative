@@ -1,32 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import {
     View,
     Text,
     StyleSheet,
     TextInput,
     TouchableOpacity,
-    SafeAreaView,
     Alert,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import type { StackNavigationProp } from '@react-navigation/stack';
-import { TRTCCloudDef } from 'trtc-react-native';
+import { useNavigation } from '../navigation/NavigationContext';
+import TRTCCloud, { TRTCCloudDef, TRTCParams, TRTCCloudListener } from 'trtc-react-native';
+import { SDKAPPID } from '../debug/config';
+import getLatestUserSig from '../debug/index';
 import { useTranslation } from 'react-i18next';
-
-type RootStackParamList = {
-    VoiceChatRoom: { roomId: string; userId: string; role: number };
-};
-
-type NavigationProp = StackNavigationProp<
-    RootStackParamList,
-    'VoiceChatRoom'
->;
 
 const VoiceLiveEntry = () => {
     const [roomId, setRoomId] = useState('');
     const [userId, setUserId] = useState('');
-    const [isAnchor, setIsAnchor] = useState(true); // 默认选择主播
-    const navigation = useNavigation<NavigationProp>();
+    const [isAnchor, setIsAnchor] = useState(true); // Default to anchor
+    const navigation = useNavigation();
+    const listenerRegistered = useRef(false);
     const { t } = useTranslation();
 
     const handleEnterRoom = () => {
@@ -39,6 +31,7 @@ const VoiceLiveEntry = () => {
             ? TRTCCloudDef.TRTCRoleAnchor
             : TRTCCloudDef.TRTCRoleAudience;
 
+        // Directly navigate to voice chat room page
         navigation.navigate('VoiceChatRoom', {
             roomId,
             userId,
@@ -47,7 +40,7 @@ const VoiceLiveEntry = () => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.content}>
                 <Text style={styles.label}>{t('chat.roomId')}</Text>
                 <TextInput
@@ -66,6 +59,7 @@ const VoiceLiveEntry = () => {
                     placeholder={t('chat.userId')}
                 />
 
+                {/* Role selection */}
                 <View style={styles.roleSelectorContainer}>
                     <Text style={styles.roleLabel}>{t('chat.role.label')}</Text>
                     <TouchableOpacity
@@ -90,7 +84,7 @@ const VoiceLiveEntry = () => {
                     <Text style={styles.buttonText}>{t('chat.enterRoom')}</Text>
                 </TouchableOpacity>
             </View>
-        </SafeAreaView>
+        </View>
     );
 };
 

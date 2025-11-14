@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView, Image, Alert, Platform } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, ScrollView, Image, Platform } from 'react-native';
+import { useNavigation, useRoute } from '../navigation/NavigationContext';
 import TRTCCloud, {
     TRTCCloudListener,
     TRTCCloudDef,
@@ -101,15 +101,19 @@ const Room = () => {
 
         trtcCloud.registerListener(onRtcListener);
 
-        const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+        // Add cleanup logic when leaving the page
+        const unsubscribe = navigation.addBeforeRemoveListener(async () => {
             const trtcCloud = TRTCCloud.sharedInstance();
-            trtcCloud.stopLocalAudio().catch(error => {
-                console.error("Failed to stop local audio on back navigation:", error);
-            });
-            trtcCloud.enableAudioVolumeEvaluation(0);
-            trtcCloud.exitRoom().catch(error => {
+            try {
+                trtcCloud.stopLocalAudio().catch(error => {
+                    console.error("Failed to stop local audio on back navigation:", error);
+                });
+                trtcCloud.enableAudioVolumeEvaluation(0);
+                await trtcCloud.exitRoom();
+                console.log("Exited room on back navigation");
+            } catch (error) {
                 console.error("Failed to exit room on back navigation:", error);
-            });
+            }
         });
 
         return () => {
@@ -119,13 +123,10 @@ const Room = () => {
             });
             trtcCloud.enableAudioVolumeEvaluation(0);
             trtcCloud.unRegisterListener(onRtcListener);
-            unsubscribe();
-            console.log("Exiting room on component unmount");
-            trtcCloud.exitRoom().catch(error => {
-                console.error("Failed to exit room on component unmount:", error);
-            });
+            unsubscribe(); // Remove beforeRemove listener
+            // Don't call exitRoom on component unmount, because beforeRemove already handled it
         };
-    }, [navigation, onRtcListener]);
+    }, [onRtcListener]); // Remove navigation dependency
 
     const handleEarpiece = async () => {
         const trtcCloud = TRTCCloud.sharedInstance();
@@ -160,6 +161,7 @@ const Room = () => {
     };
 
     const handleHangup = () => {
+        // Directly return, beforeRemove listener will handle exit room logic
         navigation.goBack();
     };
 
@@ -178,7 +180,7 @@ const Room = () => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.membersContainer}>
                 <ScrollView
                     horizontal={true}
@@ -252,7 +254,7 @@ const Room = () => {
                 onClose={() => setSettingsVisible(false)}
                 onConfirm={handleSettingsConfirm}
             />
-        </SafeAreaView>
+        </View>
     );
 };
 
