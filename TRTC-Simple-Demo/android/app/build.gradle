@@ -69,11 +69,29 @@ def enableProguardInReleaseBuilds = false
  */
 def jscFlavor = 'org.webkit:android-jsc:+'
 
+// Fix for React Native 0.76 autolinking.json missing file issue
+// Ensure the autolinking.json file exists before the generateAutolinkingPackageList task runs
+def autolinkingJsonFile = file("${project.rootDir}/build/generated/autolinking/autolinking.json")
+task ensureAutolinkingJson {
+    doFirst {
+        autolinkingJsonFile.parentFile.mkdirs()
+        if (!autolinkingJsonFile.exists()) {
+            autolinkingJsonFile.text = '{}'
+        }
+    }
+}
+
 // Delete autolinking-generated PackageList to avoid duplicate class errors
 // React Native 0.76 uses both new Gradle plugin autolinking and old CLI autolinking
 // We keep the old CLI autolinking (native_modules.gradle) for PackageList generation
 // and exclude the new one to avoid conflicts
 project.afterEvaluate {
+    // Disable the new autolinking task since we're using the old CLI autolinking system
+    // This fixes the "Could not find project.android.packageName" error in React Native 0.76
+    tasks.matching { it.name == 'generateAutolinkingPackageList' }.configureEach {
+        enabled = false
+    }
+    
     tasks.named('compileDebugJavaWithJavac').configure {
         doFirst {
             fileTree('build/generated/autolinking').matching {
