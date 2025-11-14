@@ -1,28 +1,22 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
     View,
     Text,
     StyleSheet,
     TouchableOpacity,
-    SafeAreaView,
     Alert,
     ScrollView,
     Dimensions,
+    Image,
+    Platform,
 } from 'react-native';
-import { useRoute, useNavigation } from '@react-navigation/native';
-import type { RouteProp } from '@react-navigation/native';
+import { useNavigation, useRoute } from '../navigation/NavigationContext';
 import TRTCCloud, {
     TRTCCloudDef,
     TRTCCloudListener,
+    TXVideoView,
 } from 'trtc-react-native';
-import { TXVideoView } from 'trtc-react-native';
 import { useTranslation } from 'react-i18next';
-
-type RootStackParamList = {
-    LiveRoom: { roomId: string; userId: string; role: number };
-};
-
-type RouteParams = RouteProp<RootStackParamList, 'LiveRoom'>;
 
 interface RemoteUser {
     userId: string;
@@ -38,9 +32,14 @@ interface VideoItem extends RemoteUser {
 const MAX_VIDEOS_PER_PAGE = 4;
 
 const LiveRoom = () => {
-    const route = useRoute<RouteParams>();
     const navigation = useNavigation();
-    const { roomId, userId, role } = route.params;
+    const route = useRoute();
+    const { t } = useTranslation();
+    const { roomId, userId, role } = route.params as {
+        roomId: string;
+        userId: string;
+        role: number;
+    };
     const [isMicOpen, setIsMicOpen] = useState(true);
     const [isCameraOpen, setIsCameraOpen] = useState(true);
     const [isMuted, setIsMuted] = useState(false);
@@ -49,8 +48,8 @@ const LiveRoom = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const windowWidth = Dimensions.get('window').width;
     const [isFrontCamera, setIsFrontCamera] = useState(true);
-    const { t } = useTranslation();
 
+    // Handle remote users entering room
     const onRtcListener = useCallback((type: TRTCCloudListener, params: any) => {
         if (type === TRTCCloudListener.onRemoteUserEnterRoom) {
             console.log('[LiveRoom] onRemoteUserEnterRoom:', params);
@@ -71,6 +70,7 @@ const LiveRoom = () => {
         } else if (type === TRTCCloudListener.onUserVideoAvailable) {
             console.log('[LiveRoom] onUserVideoAvailable:', params);
             setRemoteUsers(prevUsers => {
+                // Check if user is still in the list
                 if (!prevUsers.some(user => user.userId === params.userId)) {
                     return prevUsers;
                 }
@@ -83,6 +83,7 @@ const LiveRoom = () => {
         } else if (type === TRTCCloudListener.onUserAudioAvailable) {
             console.log('[LiveRoom] onUserAudioAvailable:', params);
             setRemoteUsers(prevUsers => {
+                // Check if user is still in the list
                 if (!prevUsers.some(user => user.userId === params.userId)) {
                     return prevUsers;
                 }
@@ -95,6 +96,7 @@ const LiveRoom = () => {
         }
     }, []);
 
+    // Handle muting a single user
     const handleMuteRemoteUser = async (targetUserId: string) => {
         try {
             const user = remoteUsers.find(u => u.userId === targetUserId);
@@ -113,6 +115,7 @@ const LiveRoom = () => {
         }
     };
 
+    // Handle microphone toggle
     const handleMicToggle = async () => {
         try {
             if (isMicOpen) {
@@ -126,6 +129,7 @@ const LiveRoom = () => {
         }
     };
 
+    // Handle mute all
     const handleMuteToggle = async () => {
         try {
             if (isMuted) {
@@ -139,6 +143,7 @@ const LiveRoom = () => {
         }
     };
 
+    // Handle camera switch
     const handleCameraSwitch = async () => {
         try {
             await trtcCloud.getDeviceManager().switchCamera(!isFrontCamera);
@@ -148,16 +153,13 @@ const LiveRoom = () => {
         }
     };
 
+    // Handle exit room
     const handleExitRoom = async () => {
-        try {
-            trtcCloud.unRegisterListener(onRtcListener);
-            await trtcCloud.exitRoom();
-            navigation.goBack();
-        } catch (error: any) {
-            Alert.alert(t('common.error'), `${t('common.exitRoomFailed')}: ${error.message || error}`);
-        }
+        // Directly return, beforeRemove listener will handle exit room logic
+        navigation.goBack();
     };
 
+    // Calculate current page's video list
     const getCurrentPageVideos = (): VideoItem[] => {
         const allVideos: VideoItem[] = [
             ...(role === TRTCCloudDef.TRTCRoleAnchor && isCameraOpen ? [{
@@ -174,20 +176,17 @@ const LiveRoom = () => {
         return allVideos.slice(startIndex, startIndex + MAX_VIDEOS_PER_PAGE);
     };
 
+    // Calculate total pages
     const getTotalPages = () => {
         const totalVideos = (role === TRTCCloudDef.TRTCRoleAnchor && isCameraOpen ? 1 : 0) + remoteUsers.length;
         return Math.ceil(totalVideos / MAX_VIDEOS_PER_PAGE);
     };
 
     useEffect(() => {
+        // Register listener
         trtcCloud.registerListener(onRtcListener);
 
-        navigation.setOptions({
-            title: `${t('room.liveRoom')} (${roomId})`,
-            headerBackTitle: t('common.back'),
-            headerBackTitleVisible: true,
-        });
-
+        // If anchor, start local audio
         if (role === TRTCCloudDef.TRTCRoleAnchor) {
             trtcCloud.startLocalAudio(TRTCCloudDef.TRTC_AUDIO_QUALITY_DEFAULT)
                 .catch(error => {
@@ -196,34 +195,47 @@ const LiveRoom = () => {
                 });
         }
 
+        // Add cleanup logic when leaving the page
+        const unsubscribe = navigation.addBeforeRemoveListener(async () => {
+            try {
+                if (role === TRTCCloudDef.TRTCRoleAnchor) {
+                    trtcCloud.stopLocalAudio().catch(error => {
+                        console.error('[LiveRoom] stopLocalAudio failed:', error);
+                    });
+                }
+                await trtcCloud.exitRoom();
+                console.log("Exited live room on back navigation");
+            } catch (error) {
+                console.error("Failed to exit live room on back navigation:", error);
+            }
+        });
+
+        // Cleanup on component unmount
         return () => {
             trtcCloud.unRegisterListener(onRtcListener);
-            if (role === TRTCCloudDef.TRTCRoleAnchor) {
-                trtcCloud.stopLocalAudio().catch(error => {
-                    console.error('[LiveRoom] stopLocalAudio failed:', error);
-                });
-            }
-            trtcCloud.exitRoom().catch(error => {
-                console.error('[LiveRoom] exitRoom failed:', error);
-            });
+            unsubscribe(); // Remove beforeRemove listener
+            // Don't call exitRoom on component unmount, because beforeRemove already handled it
         };
-    }, [navigation, roomId, role, onRtcListener, t]);
+    }, [roomId, role, onRtcListener]); // Remove navigation dependency
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.mainContent}>
+                {/* Wait for anchor prompt */}
                 {role === TRTCCloudDef.TRTCRoleAudience && remoteUsers.length === 0 && (
                     <View style={styles.waitingContainer}>
                         <Text style={styles.waitingText}>{t('room.waitingAnchor')}</Text>
                     </View>
                 )}
 
+                {/* Horizontal scroll layout for videos */}
                 <ScrollView
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     style={styles.horizontalScroll}
                     contentContainerStyle={styles.scrollContent}
                 >
+                    {/* Anchor local view */}
                     {role === TRTCCloudDef.TRTCRoleAnchor && isCameraOpen && (
                         <View style={styles.videoView}>
                             <TXVideoView.LocalView style={styles.video} />
@@ -239,6 +251,7 @@ const LiveRoom = () => {
                         </View>
                     )}
 
+                    {/* Remote user views */}
                     {remoteUsers.map(user => (
                         <View key={user.userId} style={styles.videoView}>
                             {user.isVideoAvailable && (
@@ -267,6 +280,7 @@ const LiveRoom = () => {
                 </ScrollView>
             </View>
 
+            {/* Bottom control buttons (only visible to anchor) */}
             {role === TRTCCloudDef.TRTCRoleAnchor && (
                 <View style={styles.controlContainer}>
                     <View style={styles.controlRow}>
@@ -305,7 +319,7 @@ const LiveRoom = () => {
                     </View>
                 </View>
             )}
-        </SafeAreaView>
+        </View>
     );
 };
 

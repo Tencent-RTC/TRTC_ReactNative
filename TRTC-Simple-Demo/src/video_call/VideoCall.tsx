@@ -1,15 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import {
-    View,
-    StyleSheet,
-    TouchableOpacity,
-    SafeAreaView,
-    ScrollView,
-    Text,
-    Dimensions,
-    Alert
-} from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, ScrollView, Image, Platform, Dimensions } from 'react-native';
+import { useNavigation, useRoute } from '../navigation/NavigationContext';
 import TRTCCloud, {
     TRTCCloudListener,
     TRTCCloudDef,
@@ -24,7 +15,7 @@ interface RemoteUser {
 }
 
 const { width } = Dimensions.get('window');
-const REMOTE_VIEW_WIDTH = Math.floor(width / 3) - 20;
+const REMOTE_VIEW_WIDTH = Math.floor(width / 3) - 20; // Display approximately 3 remote views per row
 
 const VideoRoom = () => {
     const navigation = useNavigation();
@@ -38,14 +29,15 @@ const VideoRoom = () => {
     const [remoteUsers, setRemoteUsers] = useState<RemoteUser[]>([]);
     const [isFrontCamera, setIsFrontCamera] = useState(true);
     const [isMicOpen, setIsMicOpen] = useState(true);
-    const [isEarpiece, setIsEarpiece] = useState(false); 
+    const [isEarpiece, setIsEarpiece] = useState(false); // Default speaker
     const [settingsVisible, setSettingsVisible] = useState(false);
 
+    // --- RTC Listeners --- (optimized with useCallback)
     const onRtcListener = useCallback((type: TRTCCloudListener, params: any) => {
         if (type === TRTCCloudListener.onRemoteUserEnterRoom) {
             setRemoteUsers((prev) => [
                 ...prev,
-                { userId: params.userId, videoAvailable: false },
+                { userId: params.userId, videoAvailable: false }, // Initial video unavailable
             ]);
         } else if (type === TRTCCloudListener.onRemoteUserLeaveRoom) {
             setRemoteUsers((prev) =>
@@ -53,6 +45,7 @@ const VideoRoom = () => {
             );
         } else if (type === TRTCCloudListener.onUserVideoAvailable) {
             setRemoteUsers((prev) => {
+                // Check if user is still in the list
                 if (!prev.some(user => user.userId === params.userId)) {
                     return prev;
                 }
@@ -78,17 +71,14 @@ const VideoRoom = () => {
     };
 
     const handleHangup = async () => {
-        try {
-            await exitRoom();
-            navigation.goBack();
-        } catch (err) {
-            Alert.alert(t('common.error'), t('common.exitRoomFailed'));
-        }
+        // Directly return, beforeRemove listener will handle exit room logic
+        navigation.goBack();
     };
 
     useEffect(() => {
         const trtcCloud = TRTCCloud.sharedInstance();
 
+        // Start local audio and video
         trtcCloud.startLocalAudio(TRTCCloudDef.TRTC_AUDIO_QUALITY_DEFAULT)
             .then(() => console.log('[VideoRoom] startLocalAudio success'))
             .catch((error) => console.error('[VideoRoom] startLocalAudio failed:', error));
@@ -97,32 +87,28 @@ const VideoRoom = () => {
             setIsFrontCamera(isFront);
         });
 
-
+        // Register listener
         trtcCloud.registerListener(onRtcListener);
 
-        const unsubscribeNav = navigation.addListener('beforeRemove', async () => {
-            console.log('[VideoRoom] Navigating back...');
+        // Add cleanup logic when leaving the page
+        const unsubscribe = navigation.addBeforeRemoveListener(async () => {
             try {
                 await exitRoom();
-            } catch (err) {
-                console.error('[VideoRoom] exitRoom failed on back nav:', err);
+                console.log("Exited room on back navigation");
+            } catch (error) {
+                console.error("Failed to exit room on back navigation:", error);
             }
         });
 
+        // Handle component unmount
         return () => {
-            console.log('[VideoRoom] Cleaning up...');
-            const trtcCloud = TRTCCloud.sharedInstance();
             trtcCloud.unRegisterListener(onRtcListener);
-            unsubscribeNav();
-
-            if (!navigation.isFocused()) {
-                exitRoom().catch(err => {
-                    console.error('[VideoRoom] exitRoom failed on unmount:', err);
-                });
-            }
+            unsubscribe(); // Remove beforeRemove listener
+            // Don't call exitRoom on component unmount, because beforeRemove already handled it
         };
-    }, [navigation, onRtcListener]);
+    }, [onRtcListener]); // Remove navigation dependency
 
+    // --- Button Handlers ---
     const handleCameraSwitch = async () => {
         const trtcCloud = TRTCCloud.sharedInstance();
         try {
@@ -202,7 +188,8 @@ const VideoRoom = () => {
 
     // --- Render ---
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
+            {/* Local video view */}
             <View style={styles.localViewContainer}>
                 <TXVideoView.LocalView style={styles.localVideo} />
                 <Text style={styles.userIdText}>{localUserId} {t('chat.operation.me')}</Text>
@@ -214,6 +201,7 @@ const VideoRoom = () => {
                 </TouchableOpacity>
             </View>
 
+            {/* Remote video area - conditional rendering */}
             <View style={styles.remoteAreaContainer}>
                 {remoteUsers.length > 0 ? (
                     <ScrollView
@@ -248,6 +236,7 @@ const VideoRoom = () => {
                 )}
             </View>
 
+            {/* Control buttons */}
             <View style={styles.buttonContainer}>
                 <TouchableOpacity
                     style={[
@@ -295,7 +284,7 @@ const VideoRoom = () => {
                 onClose={() => setSettingsVisible(false)}
                 onConfirm={handleSettingsConfirm}
             />
-        </SafeAreaView>
+        </View>
     );
 };
 
@@ -303,10 +292,10 @@ const VideoRoom = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#222',
+        backgroundColor: '#222', // Dark background
     },
     localViewContainer: {
-        flex: 1,
+        flex: 1, // Takes up most of the space
         position: 'relative',
     },
     localVideo: {
@@ -375,7 +364,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         paddingVertical: 15,
         paddingHorizontal: 10,
-        backgroundColor: 'rgba(0, 0, 0, 0.3)',
+        backgroundColor: 'rgba(0, 0, 0, 0.3)', // Semi-transparent background
     },
     button: {
         padding: 10,
@@ -386,13 +375,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     buttonActive: {
-        backgroundColor: '#0055CC',
+        backgroundColor: '#0055CC', // Dark blue for rear camera
     },
     micButtonActive: {
-        backgroundColor: '#999999',
+        backgroundColor: '#999999', // Gray for microphone off
     },
     audioButtonActive: {
-        backgroundColor: '#66B3FF',
+        backgroundColor: '#66B3FF', // Light blue for earpiece mode
     },
     hangupButton: {
         backgroundColor: '#ff3b30',
