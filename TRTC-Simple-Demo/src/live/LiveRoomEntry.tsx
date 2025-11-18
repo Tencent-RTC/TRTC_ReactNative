@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
     View,
     Text,
@@ -11,7 +11,6 @@ import { useNavigation } from '../navigation/NavigationContext';
 import TRTCCloud, {
     TRTCCloudDef,
     TRTCParams,
-    TRTCCloudListener,
 } from 'trtc-react-native';
 import { SDKAPPID } from '../debug/config';
 import getLatestUserSig from '../debug/index';
@@ -23,33 +22,7 @@ const VideoLiveEntry = () => {
     const [isAnchor, setIsAnchor] = useState(true); // Default to anchor
     const navigation = useNavigation();
     const trtcCloud = TRTCCloud.sharedInstance();
-    const listenerRegistered = useRef(false);
     const { t } = useTranslation();
-
-    const onRtcListener = useCallback((type: TRTCCloudListener, params: any) => {
-        if (type === TRTCCloudListener.onEnterRoom) {
-            console.log('onEnterRoom received:', params);
-            // Remove listener after receiving callback
-            if (listenerRegistered.current) {
-                trtcCloud.unRegisterListener(onRtcListener);
-                listenerRegistered.current = false;
-                console.log('Listener unregistered in onEnterRoom');
-            }
-
-            if (params.result > 0) {
-                const role = isAnchor
-                    ? TRTCCloudDef.TRTCRoleAnchor
-                    : TRTCCloudDef.TRTCRoleAudience;
-                navigation.navigate('LiveRoom', {
-                    roomId,
-                    userId,
-                    role,
-                });
-            } else {
-                Alert.alert(t('common.error'), `${t('common.enterRoomFailed')} (${params.result})`);
-            }
-        }
-    }, [navigation, roomId, userId, isAnchor, t]);
 
     const handleEnterRoom = async () => {
         if (!roomId || !userId) {
@@ -62,17 +35,7 @@ const VideoLiveEntry = () => {
             return;
         }
 
-        // Prevent duplicate registration
-        if (listenerRegistered.current) {
-            console.log('Listener already registered, skipping.');
-            return;
-        }
-
         try {
-            console.log('Registering listener...');
-            trtcCloud.registerListener(onRtcListener);
-            listenerRegistered.current = true;
-
             const userSig = getLatestUserSig(userId).userSig;
             const role = isAnchor
                 ? TRTCCloudDef.TRTCRoleAnchor
@@ -86,32 +49,19 @@ const VideoLiveEntry = () => {
                 role,
             });
 
-            console.log('Calling enterRoom...');
+            console.log('[LiveRoomEntry] Calling enterRoom...');
             await trtcCloud.enterRoom(params, TRTCCloudDef.TRTC_APP_SCENE_LIVE);
-            console.log('enterRoom called successfully (async)');
-
+            console.log('[LiveRoomEntry] enterRoom success, navigating to LiveRoom');
+            navigation.navigate('LiveRoom', {
+                roomId,
+                userId,
+                role,
+            });
         } catch (error: any) {
-            console.error('enterRoom failed:', error);
-            // If enterRoom call itself fails, also remove listener
-            if (listenerRegistered.current) {
-                trtcCloud.unRegisterListener(onRtcListener);
-                listenerRegistered.current = false;
-                console.log('Listener unregistered in catch block');
-            }
-            Alert.alert(t('common.error'), `${t('common.enterRoomFailed')}: ${error.message || error}`);
+            console.error('[LiveRoomEntry] enterRoom failed:', error);
+            Alert.alert(t('common.error'), `${t('common.enterRoomFailed')}: ${error?.message || error}`);
         }
     };
-
-    // Add an Effect to handle listeners that are still not removed when component unmounts
-    useEffect(() => {
-        return () => {
-            if (listenerRegistered.current) {
-                console.log('Unregistering listener on component unmount');
-                trtcCloud.unRegisterListener(onRtcListener);
-                listenerRegistered.current = false;
-            }
-        };
-    }, [onRtcListener]);
 
     return (
         <View style={styles.container}>

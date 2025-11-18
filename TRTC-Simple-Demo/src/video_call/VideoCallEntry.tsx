@@ -1,7 +1,7 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation } from '../navigation/NavigationContext';
-import TRTCCloud, { TRTCCloudDef, TRTCParams, TRTCCloudListener } from 'trtc-react-native';
+import TRTCCloud, { TRTCCloudDef, TRTCParams } from 'trtc-react-native';
 import { SDKAPPID } from '../debug/config';
 import getLatestUserSig from '../debug/index';
 import { useTranslation } from 'react-i18next';
@@ -10,28 +10,7 @@ const VideoCall = () => {
     const [roomId, setRoomId] = useState('');
     const [userId, setUserId] = useState('');
     const navigation = useNavigation();
-    const listenerRegistered = useRef(false); // Flag to track if listener is registered
     const { t } = useTranslation();
-
-    // Define listener callback
-    const onRtcListener = useCallback((type: TRTCCloudListener, params: any) => {
-        const trtcCloud = TRTCCloud.sharedInstance();
-        if (type === TRTCCloudListener.onEnterRoom) {
-            console.log('[VideoCall] onEnterRoom received:', params);
-            if (listenerRegistered.current) {
-                trtcCloud.unRegisterListener(onRtcListener);
-                listenerRegistered.current = false;
-                console.log('[VideoCall] Listener unregistered in onEnterRoom');
-            }
-
-            if (params.result > 0) {
-                // Navigate to video room page (VideoRoom)
-                navigation.navigate('VideoRoom', { roomId, userId, type: 'video' });
-            } else {
-                Alert.alert(t('common.error'), `${t('common.enterRoomFailed')} (${params.result})`);
-            }
-        }
-    }, [navigation, roomId, userId, t]);
 
     const handleEnterRoom = async () => {
         if (!roomId || !userId) {
@@ -41,16 +20,7 @@ const VideoCall = () => {
 
         const trtcCloud = TRTCCloud.sharedInstance();
 
-        if (listenerRegistered.current) {
-            console.log('[VideoCall] Listener already registered, skipping.');
-            return; // Prevent duplicate click handling
-        }
-
         try {
-            console.log('[VideoCall] Registering listener...');
-            trtcCloud.registerListener(onRtcListener);
-            listenerRegistered.current = true;
-
             const userSig = getLatestUserSig(userId).userSig;
             const params = new TRTCParams({
                 sdkAppId: SDKAPPID,
@@ -64,28 +34,13 @@ const VideoCall = () => {
             await trtcCloud.enterRoom(params, TRTCCloudDef.TRTC_APP_SCENE_VIDEOCALL);
             console.log('[VideoCall] enterRoom called successfully (async)');
 
+            navigation.navigate('VideoRoom', { roomId, userId, type: 'video' });
+
         } catch (error: any) {
             console.error('[VideoCall] enterRoom failed:', error);
-            if (listenerRegistered.current) {
-                trtcCloud.unRegisterListener(onRtcListener);
-                listenerRegistered.current = false;
-                console.log('[VideoCall] Listener unregistered in catch block');
-            }
             Alert.alert(t('common.error'), `${t('common.enterRoomFailed')}: ${error.message || error}`);
         }
     };
-
-    // Handle component unmount
-    useEffect(() => {
-        return () => {
-            if (listenerRegistered.current) {
-                console.log('[VideoCall] Unregistering listener on component unmount');
-                const trtcCloud = TRTCCloud.sharedInstance();
-                trtcCloud.unRegisterListener(onRtcListener);
-                listenerRegistered.current = false;
-            }
-        };
-    }, [onRtcListener]);
 
     return (
         <View style={styles.container}>

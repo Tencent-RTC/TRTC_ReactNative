@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
     View,
     Text,
@@ -8,7 +8,7 @@ import {
     Alert,
 } from 'react-native';
 import { useNavigation } from '../navigation/NavigationContext';
-import TRTCCloud, { TRTCCloudDef, TRTCParams, TRTCCloudListener } from 'trtc-react-native';
+import TRTCCloud, { TRTCCloudDef, TRTCParams } from 'trtc-react-native';
 import { SDKAPPID } from '../debug/config';
 import getLatestUserSig from '../debug/index';
 import { useTranslation } from 'react-i18next';
@@ -18,25 +18,47 @@ const VoiceLiveEntry = () => {
     const [userId, setUserId] = useState('');
     const [isAnchor, setIsAnchor] = useState(true); // Default to anchor
     const navigation = useNavigation();
-    const listenerRegistered = useRef(false);
     const { t } = useTranslation();
 
-    const handleEnterRoom = () => {
+    const handleEnterRoom = async () => {
         if (!roomId || !userId) {
             Alert.alert(t('common.tip'), t('common.inputRequired'));
             return;
         }
 
+        if (!SDKAPPID) {
+            Alert.alert(t('common.error'), t('common.sdkAppIdRequired'));
+            return;
+        }
+
+        const trtcCloud = TRTCCloud.sharedInstance();
         const role = isAnchor
             ? TRTCCloudDef.TRTCRoleAnchor
             : TRTCCloudDef.TRTCRoleAudience;
 
-        // Directly navigate to voice chat room page
-        navigation.navigate('VoiceChatRoom', {
-            roomId,
-            userId,
-            role,
-        });
+        try {
+            const userSig = getLatestUserSig(userId).userSig;
+            const params = new TRTCParams({
+                sdkAppId: SDKAPPID,
+                userId,
+                userSig,
+                roomId: Number(roomId),
+                role,
+            });
+
+            console.log('[ChatRoomEntry] Calling enterRoom...');
+            await trtcCloud.enterRoom(params, TRTCCloudDef.TRTC_APP_SCENE_VOICE_CHATROOM);
+            console.log('[ChatRoomEntry] enterRoom success, navigating to VoiceChatRoom');
+
+            navigation.navigate('VoiceChatRoom', {
+                roomId,
+                userId,
+                role,
+            });
+        } catch (error: any) {
+            console.error('[ChatRoomEntry] enterRoom failed:', error);
+            Alert.alert(t('common.error'), `${t('common.enterRoomFailed')}: ${error?.message || error}`);
+        }
     };
 
     return (
